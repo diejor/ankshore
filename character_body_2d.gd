@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:da499703ed26115b7bc155f12bcb70872034ce4063847177b4ecb95ca6113d18
-size 204
+extends CharacterBody2D
+
+@export var speed = 25.
+
+func _physics_process(_delta: float) -> void:
+	
+	var input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	position += input*speed
