@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://xkil2cmplfcd"]
 
 [ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://seasonal sample (winter).png" id="1_6tqpy"]
-[ext_resource type="Texture2D" uid="uid://c2hj2tre2kq6o" path="res://icon.svg" id="2_g3n1q"]
-[ext_resource type="Script" uid="uid://4kw71cdqjio6" path="res://character_body_2d.gd" id="2_pbgs7"]
+[ext_resource type="Script" path="res://character_body_2d.gd" id="2_pbgs7"]
+[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://limbusWolf.png" id="3_pbgs7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6tqpy"]
 
@@ -15,14 +15,13 @@ texture = ExtResource("1_6tqpy")
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(105, 171)
 script = ExtResource("2_pbgs7")
-speed = 2.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("CapsuleShape2D_6tqpy")
 
 [node name="Icon" type="Sprite2D" parent="CharacterBody2D"]
 scale = Vector2(0.15625001, 0.15625001)
-texture = ExtResource("2_g3n1q")
+texture = ExtResource("3_pbgs7")
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
 zoom = Vector2(2.535, 2.535)

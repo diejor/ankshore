@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfvoo60p3ut6n"]
+
+[ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://button.gd" id="1_uubjt"]
+[ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://winter.tscn" id="2_5yleq"]
+
+[sub_resource type="Theme" id="Theme_5yleq"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 409.0
+offset_top = 307.0
+offset_right = 724.0
+offset_bottom = 437.0
+script = ExtResource("1_uubjt")
+winterScene = ExtResource("2_5yleq")
+
+[node name="Label" type="Label" parent="Button"]
+layout_mode = 0
+offset_left = 3.0
+offset_right = 314.0
+offset_bottom = 127.0
+theme_override_font_sizes/font_size = 50
+text = "play game!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 332.0
+offset_top = 105.0
+offset_right = 803.0
+offset_bottom = 220.3179
+theme = SubResource("Theme_5yleq")
+theme_override_font_sizes/font_size = 67
+text = "ANKSHORE!!!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
