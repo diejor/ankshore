@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://xkil2cmplfcd"]
+
+[ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://assets/seasonal sample (winter).png" id="1_6tqpy"]
+[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/character_body_2d.gd" id="2_pbgs7"]
+[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://assets/limbusWolf.png" id="3_pbgs7"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6tqpy"]
+
+[node name="Winter" type="Node2D"]
+
+[node name="SeasonalSample(winter)" type="Sprite2D" parent="."]
+position = Vector2(254, 208)
+texture = ExtResource("1_6tqpy")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(105, 171)
+script = ExtResource("2_pbgs7")
+sprint_speed = 5.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CapsuleShape2D_6tqpy")
+
+[node name="Icon" type="Sprite2D" parent="CharacterBody2D"]
+scale = Vector2(0.15625001, 0.15625001)
+texture = ExtResource("3_pbgs7")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+zoom = Vector2(2.535, 2.535)
+position_smoothing_enabled = true
+position_smoothing_speed = 25.0
