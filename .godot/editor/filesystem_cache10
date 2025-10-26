@@ -1,7 +1,0 @@
-63f7b34db8d8cdea90c76aacccf841ec
-::res://::1761437883
-character_body_2d.gd::GDScript::-1::1761437648::0::1::::<>CharacterBody2D<><>0<>0<><>::
-icon.svg::CompressedTexture2D::8484589661973174664::1761436596::1761436638::0::::<><><>0<>0<>cb1c2c6ac7183a82fb00f77112a0d9d7<>::
-limbusWolf.png::CompressedTexture2D::7391817477008775926::1761437883::1761437883::1::::<><><>0<>0<>efba759a7e333efb2edef1e8427e87cb<>res://.godot/imported/limbusWolf.png-a78c8044dc6eaeffaad25e4ade86d8a5.ctex::
-seasonal sample (winter).png::CompressedTexture2D::5498382678577912403::1761436597::1761436638::1::::<><><>0<>0<>4afd21b333d676226054b3563edafbce<>res://.godot/imported/seasonal sample (winter).png-c5dc5d7bc9ffb8c7c72a573c2847da03.ctex::
-winter.tscn::PackedScene::1635493982676199203::1761437330::0::1::::<><><>0<>0<><>::uid://cklptawmhtnp0::::res://seasonal sample (winter).png<>res://character_body_2d.gd
