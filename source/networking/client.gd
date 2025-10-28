@@ -7,6 +7,9 @@ var smapi := SceneMultiplayer.new()
 var enet := ENetMultiplayerPeer.new()
 
 func _ready():
+	if "--no-client" in OS.get_cmdline_args():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		return
 	smapi.root_path = get_path()
 	enet.create_client(ip_address, port)
 	smapi.multiplayer_peer = enet
