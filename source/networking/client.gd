@@ -14,7 +14,8 @@ func _ready():
 	enet.create_client(ip_address, port)
 	smapi.multiplayer_peer = enet
 	get_tree().set_multiplayer(smapi, get_path())
-	print("Client connecting to ", ip_address, ":", port)
+	var client_msg = "Client (%d)" % enet.get_unique_id()
+	print(client_msg + " connecting to ", ip_address, ":", port)
 
 	smapi.peer_connected.connect(on_peer_connected)
 
