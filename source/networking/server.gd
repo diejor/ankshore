@@ -13,6 +13,7 @@ func _ready():
 	
 	multiplayer_peer.create_server(port)
 	
+	
 	multiplayer_api.root_path = get_path()
 	multiplayer_api.multiplayer_peer = multiplayer_peer
 	

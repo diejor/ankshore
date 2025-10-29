@@ -11,6 +11,9 @@ func _ready():
 		process_mode = Node.PROCESS_MODE_DISABLED
 		return
 	
+	print(IP.get_local_interfaces())
+	print(IP.get_local_addresses())
+	
 	multiplayer_peer.create_client(ip_address, port)
 		
 	multiplayer_api.multiplayer_peer = multiplayer_peer

@@ -43,6 +43,7 @@ y_sort_enabled = true
 [node name="Client" type="Node2D" parent="Network"]
 y_sort_enabled = true
 script = ExtResource("4_hsqqw")
+ip_address = "localhost"
 
 [node name="TestRPC" parent="Network/Client" instance=ExtResource("6_j3ccu")]
 peer = "client"
