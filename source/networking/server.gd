@@ -1,28 +1,33 @@
 # LocalServer.gd (Server side)
 extends Node
 
-@export var port = 9000
+@export var port = 21253
 
-var smapi := SceneMultiplayer.new()
-var enet := ENetMultiplayerPeer.new()
+var multiplayer_api: MultiplayerAPI = SceneMultiplayer.new()
+var multiplayer_peer: MultiplayerPeer = ENetMultiplayerPeer.new()
 
 func _ready():
 	if not "--server" in OS.get_cmdline_args():
 		process_mode = Node.PROCESS_MODE_DISABLED
 		return
-	smapi.root_path = get_path()
-	enet.create_server(port)
-	smapi.multiplayer_peer = enet
-	get_tree().set_multiplayer(smapi, get_path())
+	
+	multiplayer_peer.create_server(port)
+	
+	multiplayer_api.root_path = get_path()
+	multiplayer_api.multiplayer_peer = multiplayer_peer
+	
+	get_tree().set_multiplayer(multiplayer_api, get_path())
 	
 	print("Server ready on ", "*", ":", port)
 
-	smapi.peer_connected.connect(_on_peer_connected)
+	multiplayer_api.peer_connected.connect(_on_peer_connected)
 	
 func _on_peer_connected(peer_id: int) -> void:
-	var msg = "Hello to client %d, by: %d" % [peer_id, enet.get_unique_id()]
-	$TestRPC.rpc_id(peer_id, "rpc_send_message", msg)
+	var msg = "Hello to client %d, by: %d" % [peer_id, multiplayer_peer.get_unique_id()]
+	$TestRPC.rpc_send_message.rpc_id(peer_id,  msg)
 
+# We need to manually poll because we are overwriting the MultiplayerAPI.
+# Normally, we don't need to do this.
 func _process(_delta: float):
-	if smapi.has_multiplayer_peer():
-		smapi.poll()
+	if multiplayer_api.has_multiplayer_peer():
+		multiplayer_api.poll()
