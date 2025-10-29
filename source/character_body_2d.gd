@@ -1,10 +1,17 @@
+class_name Wolf
 extends CharacterBody2D
 
 @export var walk_speed: float = 3.
 @export var sprint_speed: float = 7.
 
+func _ready() -> void:
+	if multiplayer.is_server():
+		process_mode = Node.PROCESS_MODE_DISABLED
+
 func _physics_process(_delta: float) -> void:
-	
+	if not is_multiplayer_authority():
+		return
+
 	var movement_input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
 	var desired_speed: float

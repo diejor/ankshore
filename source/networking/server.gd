@@ -20,11 +20,19 @@ func _ready():
 	
 	print("Server ready on ", "*", ":", port)
 
-	multiplayer_api.peer_connected.connect(_on_peer_connected)
+	multiplayer_api.peer_connected.connect(on_peer_connected)
+	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 	
-func _on_peer_connected(peer_id: int) -> void:
+func on_peer_connected(peer_id: int) -> void:
 	var msg = "Hello to client %d, by: %d" % [peer_id, multiplayer_peer.get_unique_id()]
 	$TestRPC.rpc_send_message.rpc_id(peer_id,  msg)
+	
+	$Players/PlayerSpawner.spawn(peer_id)
+
+func on_peer_disconnected(peer_id: int) -> void:
+	for child in $Players.get_children():
+		if int(child.name) == peer_id:
+			child.queue_free()
 
 # We need to manually poll because we are overwriting the MultiplayerAPI.
 # Normally, we don't need to do this.
