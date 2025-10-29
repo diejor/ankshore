@@ -4,9 +4,9 @@ extends CharacterBody2D
 @export var walk_speed: float = 3.
 @export var sprint_speed: float = 7.
 
-func _ready() -> void:
-	if multiplayer.is_server():
-		process_mode = Node.PROCESS_MODE_DISABLED
+#func _ready() -> void:
+	#if multiplayer.is_server():
+		#process_mode = Node.PROCESS_MODE_DISABLED
 
 func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority():

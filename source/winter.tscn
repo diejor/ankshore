@@ -29,6 +29,7 @@ environment = SubResource("Environment_wo7us")
 y_sort_enabled = true
 
 [node name="Server" type="Node2D" parent="Network"]
+process_mode = 4
 script = ExtResource("3_wo7us")
 
 [node name="TestRPC" parent="Network/Server" instance=ExtResource("6_j3ccu")]
@@ -42,7 +43,6 @@ y_sort_enabled = true
 [node name="Client" type="Node2D" parent="Network"]
 y_sort_enabled = true
 script = ExtResource("4_hsqqw")
-ip_address = "localhost"
 
 [node name="TestRPC" parent="Network/Client" instance=ExtResource("6_j3ccu")]
 peer = "client"
