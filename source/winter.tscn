@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=4 uid="uid://xkil2cmplfcd"]
+[gd_scene load_steps=8 format=4 uid="uid://xkil2cmplfcd"]
 
-[ext_resource type="Script" uid="uid://c003d65ahq74f" path="res://source/networking/server.gd" id="3_wo7us"]
-[ext_resource type="Script" uid="uid://toxomgon6bbi" path="res://source/networking/client.gd" id="4_hsqqw"]
+[ext_resource type="Script" uid="uid://c003d65ahq74f" path="res://source/networking/server/server.gd" id="3_wo7us"]
+[ext_resource type="Script" uid="uid://toxomgon6bbi" path="res://source/networking/client/client.gd" id="4_hsqqw"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/networking/player_spawner.tscn" id="4_j3ccu"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/winter_tileset.tres" id="4_pldbb"]
+[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://source/networking/client/connect_server_ui.tscn" id="6_havic"]
 [ext_resource type="PackedScene" uid="uid://bl02rhx5lrldk" path="res://source/networking/test_rpc.tscn" id="6_j3ccu"]
 
 [sub_resource type="Environment" id="Environment_wo7us"]
@@ -28,6 +29,8 @@ environment = SubResource("Environment_wo7us")
 [node name="Network" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="ConnectServerUI" parent="Network" instance=ExtResource("6_havic")]
+
 [node name="Server" type="Node2D" parent="Network"]
 process_mode = 4
 script = ExtResource("3_wo7us")
@@ -43,7 +46,6 @@ y_sort_enabled = true
 [node name="Client" type="Node2D" parent="Network"]
 y_sort_enabled = true
 script = ExtResource("4_hsqqw")
-ip_address = "localhost"
 
 [node name="TestRPC" parent="Network/Client" instance=ExtResource("6_j3ccu")]
 peer = "client"
