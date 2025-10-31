@@ -8,7 +8,7 @@ func _physics_process(_delta: float) -> void:
 	if not is_multiplayer_authority():
 		return
 
-	var movement_input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var input_vector = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
 	var desired_speed: float
 	if Input.is_action_pressed("sprint"):
@@ -16,5 +16,5 @@ func _physics_process(_delta: float) -> void:
 	else:
 		desired_speed = walk_speed
 	
-	velocity = desired_speed * movement_input
+	velocity = desired_speed * input_vector
 	move_and_slide()

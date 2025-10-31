@@ -18,9 +18,5 @@ func on_connected_to_server():
 
 
 func _on_join_button_pressed() -> void:
-	var server_ip = server_ip_edit.text
-	game_client.init(server_ip)
-
-func _on_host_button_pressed() -> void:
-	var _creation_result = game_server.init()
-	game_client.init("localhost")
+	var server_address := server_ip_edit.text
+	game_client.init(server_address)
