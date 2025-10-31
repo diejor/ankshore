@@ -1,28 +1,26 @@
 extends CanvasLayer
 
-@onready var client: GameClient = $"../Client"
-@onready var server: GameServer = $"../Server"
+@onready var game_client: GameClient = $"../Client"
+@onready var game_server: GameServer = $"../Server"
 
-@onready var server_ip_edit: TextEdit = $VBoxContainer/HBoxContainer/ServerIpEdit
+@onready var server_ip_edit: TextEdit = %ServerIpEdit
 
 
 func _ready() -> void:
 	if "--server" in OS.get_cmdline_args():
 		visible = false
 	
-	client.multiplayer_api.connected_to_server.connect(on_connected_to_server)
-
-func join_player():
-	var server_ip = server_ip_edit.text
-	client.create_client(server_ip)
+	if game_client:
+		game_client.multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
 func on_connected_to_server():
 	visible = false
 
 
 func _on_join_button_pressed() -> void:
-	join_player()
+	var server_ip = server_ip_edit.text
+	game_client.init(server_ip)
 
 func _on_host_button_pressed() -> void:
-	var _creation_result = server.create_server()
-	join_player()
+	var _creation_result = game_server.init()
+	game_client.init("localhost")

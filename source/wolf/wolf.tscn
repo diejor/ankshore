@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bxpx2n4hugojx"]
 
-[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/character_body_2d.gd" id="1_jpx56"]
+[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/wolf/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://assets/limbusWolf.png" id="2_gjcb4"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/wolf/camera_2d.gd" id="3_cmaps"]
 
