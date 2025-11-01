@@ -11,11 +11,15 @@ config_version=5
 [application]
 
 config/name="Ankshore"
-run/main_scene="res://source/winter.tscn"
+run/main_scene="uid://dfvoo60p3ut6n"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 boot_splash/fullsize=false
 boot_splash/image="uid://ddkwfh5opq7yw"
 config/icon="uid://ddkwfh5opq7yw"
+
+[autoload]
+
+MyosoManager="*res://source/Myoso/MyosoManager.tscn"
 
 [display]
 
