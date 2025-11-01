@@ -1,11 +1,15 @@
 class_name GameClient
 extends Node
 
+@onready var player_spawner: MultiplayerSpawner = $Players/PlayerSpawner
+
 @export var port := 21253
 @export var public_host := "ws.diejor.tech"
 
 var multiplayer_api := SceneMultiplayer.new()
 var multiplayer_peer := WebSocketMultiplayerPeer.new()
+
+var client_username
 
 func _ready():
 	if "--server" in OS.get_cmdline_args():
@@ -13,9 +17,9 @@ func _ready():
 		return
 
 	multiplayer_api.peer_connected.connect(on_peer_connected)
-	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
-func init(server_address: String):
+func init(server_address: String, username: String):
+	client_username = username
 	var url := build_url(server_address)
 
 	var err := multiplayer_peer.create_client(url)
@@ -38,15 +42,6 @@ func on_peer_connected(peer_id: int) -> void:
 	var msg = "Hello to client %d, by: %d" % [peer_id, multiplayer_peer.get_unique_id()]
 	$TestRPC.rpc_send_message.rpc_id(peer_id, msg)
 
-func on_connected_to_server():
-	var player: Wolf = %Wolf
-	if player:
-		var player_data = {
-			peer_id = multiplayer_peer.get_unique_id(),
-			position = player.position
-		}
-		$Players/PlayerSpawner.request_spawn.rpc_id(1, player_data)
-		player.queue_free()
 
 func config_api():
 	multiplayer_api.multiplayer_peer = multiplayer_peer

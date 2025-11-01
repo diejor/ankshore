@@ -8,7 +8,7 @@ func _ready() -> void:
 
 func spawn_player(player_data: Dictionary) -> Wolf:
 	var wolf: Wolf = player_scene.instantiate()
-	wolf.position = player_data.position
+	wolf.propagate_call("on_player_data", [player_data])
 	wolf.set_multiplayer_authority(player_data.peer_id)
 	wolf.name = str(player_data.peer_id)
 	return wolf

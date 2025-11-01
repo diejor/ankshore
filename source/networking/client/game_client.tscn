@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cbvammugo4wib"]
+
+[ext_resource type="Script" uid="uid://toxomgon6bbi" path="res://source/networking/client/client.gd" id="1_ip4nq"]
+[ext_resource type="PackedScene" uid="uid://bl02rhx5lrldk" path="res://source/networking/test_rpc.tscn" id="2_isu4s"]
+[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/networking/player_spawner.tscn" id="3_r7vdo"]
+
+[node name="GameClient" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_ip4nq")
+
+[node name="TestRPC" parent="." instance=ExtResource("2_isu4s")]
+peer = "client"
+
+[node name="Players" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="PlayerSpawner" parent="Players" instance=ExtResource("3_r7vdo")]

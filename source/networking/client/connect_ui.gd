@@ -1,9 +1,10 @@
 extends CanvasLayer
 
-@onready var game_client: GameClient = $"../Client"
-@onready var game_server: GameServer = $"../Server"
+@onready var game_server: GameServer = %GameServer
+@onready var game_client: GameClient = %GameClient
 
 @onready var server_ip_edit: TextEdit = %ServerIpEdit
+@onready var username_edit: TextEdit = %UsernameEdit
 
 
 func _ready() -> void:
@@ -19,4 +20,5 @@ func on_connected_to_server():
 
 func _on_join_button_pressed() -> void:
 	var server_address := server_ip_edit.text
-	game_client.init(server_address)
+	var username := username_edit.text
+	game_client.init(server_address, username)
