@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmf6t1ybyj5xd"]
+
+[ext_resource type="PackedScene" uid="uid://dom8raac5bxdq" path="res://Source/Networking/Server/GameServer.tscn" id="2_ikbed"]
+[ext_resource type="PackedScene" uid="uid://cbvammugo4wib" path="res://Source/Networking/Client/GameClient.tscn" id="3_4fc0r"]
+
+[node name="Network" type="Node2D"]
+y_sort_enabled = true
+metadata/_edit_lock_ = true
+
+[node name="GameServer" parent="." instance=ExtResource("2_ikbed")]
+unique_name_in_owner = true
+
+[node name="GameClient" parent="." instance=ExtResource("3_4fc0r")]
+unique_name_in_owner = true

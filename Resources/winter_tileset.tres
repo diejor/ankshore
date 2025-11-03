@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=9 format=3 uid="uid://h637lr7t1rs1"]
 
-[ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://assets/seasonal sample (winter).png" id="1_a6xd0"]
+[ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://Assets/seasonal sample (winter).png" id="1_a6xd0"]
 
 [sub_resource type="TileMapPattern" id="TileMapPattern_0pca6"]
 tile_data = PackedInt32Array(0, 196608, 14, 65536, 196608, 15, 1, 262144, 14, 65537, 262144, 15)

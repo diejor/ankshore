@@ -1,13 +1,21 @@
-[gd_scene load_steps=8 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=12 format=3 uid="uid://bxpx2n4hugojx"]
 
-[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/Myoso/character_body_2d.gd" id="1_jpx56"]
-[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://assets/limbusWolf.png" id="2_gjcb4"]
-[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://source/Myoso/client_networking.gd" id="2_tlpap"]
-[ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/Myoso/camera_2d.gd" id="3_cmaps"]
-[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/Myoso/player_hud.tscn" id="5_wy3f0"]
+[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://Source/Myoso/character_body_2d.gd" id="1_jpx56"]
+[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://Assets/limbusWolf.png" id="2_gjcb4"]
+[ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://Source/Myoso/tp_component.gd" id="2_ko57k"]
+[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://Source/Myoso/client_networking.gd" id="2_tlpap"]
+[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://Source/Networking/Client/ConnectServerUI.tscn" id="3_2mjiv"]
+[ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://Source/Myoso/camera_2d.gd" id="3_cmaps"]
+[ext_resource type="Script" uid="uid://charwng8tw4dv" path="res://Source/Myoso/persistent_component.gd" id="5_sb6si"]
+[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="5_wy3f0"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2mjiv"]
+properties/0/path = NodePath(".:current_scene")
+properties/0/spawn = true
+properties/0/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
-properties/0/path = NodePath("CharacterBody2D:position")
+properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
@@ -15,29 +23,45 @@ properties/0/replication_mode = 2
 radius = 2.0
 height = 16.0
 
-[node name="Wolf" type="Node2D"]
-y_sort_enabled = true
-script = ExtResource("2_tlpap")
-metadata/_edit_lock_ = true
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
-replication_config = SubResource("SceneReplicationConfig_cmaps")
-
-[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+[node name="Myoso" type="CharacterBody2D" groups=["players"]]
 motion_mode = 1
 script = ExtResource("1_jpx56")
-metadata/_edit_lock_ = true
+sprint_speed = 96.0
 
-[node name="Icon" type="Sprite2D" parent="CharacterBody2D"]
+[node name="TPComponent" type="Node" parent="."]
+unique_name_in_owner = true
+process_priority = -1
+process_physics_priority = -1
+script = ExtResource("2_ko57k")
+
+[node name="ClientComponent" type="Node" parent="." groups=["clients"]]
+unique_name_in_owner = true
+script = ExtResource("2_tlpap")
+
+[node name="ServerSynchornizer" type="MultiplayerSynchronizer" parent="ClientComponent"]
+replication_config = SubResource("SceneReplicationConfig_2mjiv")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="ClientComponent"]
+root_path = NodePath("../..")
+replication_config = SubResource("SceneReplicationConfig_cmaps")
+
+[node name="ConnectServerUI" parent="ClientComponent" instance=ExtResource("3_2mjiv")]
+unique_name_in_owner = true
+
+[node name="PersistentComponent" type="Node" parent="."]
+script = ExtResource("5_sb6si")
+
+[node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("2_gjcb4")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_wo7us")
 
-[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
 zoom = Vector2(3, 3)
 process_callback = 0
 position_smoothing_enabled = true
@@ -48,5 +72,5 @@ drag_bottom_margin = 0.1
 script = ExtResource("3_cmaps")
 metadata/_edit_lock_ = true
 
-[node name="PlayerHUD" parent="CharacterBody2D" instance=ExtResource("5_wy3f0")]
+[node name="PlayerHUD" parent="." instance=ExtResource("5_wy3f0")]
 unique_name_in_owner = true

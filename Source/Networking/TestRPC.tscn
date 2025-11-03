@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bl02rhx5lrldk"]
+
+[ext_resource type="Script" uid="uid://ev8o6hrkr2kn" path="res://Source/Networking/test_rpc.gd" id="1_pugqn"]
+
+[node name="TestRPC" type="Node"]
+script = ExtResource("1_pugqn")

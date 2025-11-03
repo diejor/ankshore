@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cklptawmhtnp0"
-path="res://.godot/imported/seasonal sample (winter).png-0f7677cf7ac4bff6aff5a59ba21b8e56.ctex"
+path="res://.godot/imported/seasonal sample (winter).png-c6b15bc6b35e976f6b551a09c8183377.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/seasonal sample (winter).png"
-dest_files=["res://.godot/imported/seasonal sample (winter).png-0f7677cf7ac4bff6aff5a59ba21b8e56.ctex"]
+source_file="res://Assets/seasonal sample (winter).png"
+dest_files=["res://.godot/imported/seasonal sample (winter).png-c6b15bc6b35e976f6b551a09c8183377.ctex"]
 
 [params]
 

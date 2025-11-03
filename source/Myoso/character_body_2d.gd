@@ -17,6 +17,3 @@ func _physics_process(_delta: float) -> void:
 	
 	velocity = desired_speed * input_vector
 	move_and_slide()
-
-func on_player_data(player_data: Dictionary): # networking stuff
-	position = player_data.position
