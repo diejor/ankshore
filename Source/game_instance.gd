@@ -1,16 +1,53 @@
 extends Node2D
 
-func get_resource_uid(path: String) -> int:
-	assert(path, "Resource path must be non-null to get a uid.")
+const UID_CACHE_PATH := "res://.godot/uid_cache.bin"
 
+var _uid_by_path: Dictionary = {}
+var _uid_loaded := false
+var _tried_loading := false
+
+func _ready() -> void:
+	_load_uid_cache_once()
+
+func _load_uid_cache_once() -> void:
+	if _uid_loaded or _tried_loading:
+		return
+	_tried_loading = true
+
+	if Engine.is_editor_hint():
+		_uid_loaded = true
+		return
+
+	var f := FileAccess.open(UID_CACHE_PATH, FileAccess.READ)
+	if f == null:
+		push_warning("UID cache not found at %s (export should include it)." % UID_CACHE_PATH)
+		_uid_loaded = true
+		return
+
+	var count := f.get_32()
+	for i in count:
+		var id := f.get_64()
+		var _len := f.get_32()
+		var buf := f.get_buffer(_len)
+		var path := buf.get_string_from_utf8()
+		_uid_by_path[path] = id
+	_uid_loaded = true
+
+func get_uid_from_path(path: String) -> int:
 	if path.is_empty():
 		return ResourceUID.INVALID_ID
-	
+
 	var uid_text := ResourceUID.path_to_uid(path)
 	if uid_text.begins_with(&"uid://"):
 		return ResourceUID.text_to_id(uid_text)
 
-	return ResourceUID.INVALID_ID
+	_load_uid_cache_once()
+	return int(_uid_by_path.get(path, ResourceUID.INVALID_ID))
+
+func get_uid_from_node(node: Node) -> int:
+	if node == null:
+		return ResourceUID.INVALID_ID
+	return get_uid_from_path(node.scene_file_path)
 	
 func is_online() -> bool:
 	return get_node("%Network/%GameClient").get_multiplayer_authority() != 1

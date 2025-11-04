@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://Source/Myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://Assets/limbusWolf.png" id="2_gjcb4"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://Source/Myoso/tp_component.gd" id="2_ko57k"]
-[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://Source/Myoso/client_networking.gd" id="2_tlpap"]
+[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://Source/Myoso/client_component.gd" id="2_tlpap"]
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://Source/Networking/Client/ConnectServerUI.tscn" id="3_2mjiv"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://Source/Myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="Script" uid="uid://charwng8tw4dv" path="res://Source/Myoso/persistent_component.gd" id="5_sb6si"]

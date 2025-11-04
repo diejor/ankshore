@@ -19,6 +19,6 @@ tile_set = ExtResource("1_suw44")
 
 [node name="AreaTP1" parent="." instance=ExtResource("1_6x6co")]
 unique_name_in_owner = true
-position = Vector2(320, 206)
+position = Vector2(91, 2)
 scene_path = "uid://xkil2cmplfcd"
 target_tp_id = "AreaTPWinter"
