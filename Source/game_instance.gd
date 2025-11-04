@@ -1,5 +1,7 @@
 extends Node2D
 
+@onready var client: GameClient = $"/root/GameInstance/%Network/%GameClient"
+
 const UID_CACHE_PATH := "res://.godot/uid_cache.bin"
 
 var _uid_by_path: Dictionary = {}

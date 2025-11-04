@@ -12,7 +12,7 @@
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2mjiv"]
 properties/0/path = NodePath(".:current_scene")
 properties/0/spawn = true
-properties/0/replication_mode = 2
+properties/0/replication_mode = 1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
 properties/0/path = NodePath(".:position")

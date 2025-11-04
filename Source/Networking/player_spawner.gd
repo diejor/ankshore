@@ -5,7 +5,6 @@ extends MultiplayerSpawner
 func _ready() -> void:
 	spawn_function = spawn_player
 
-
 func spawn_player(player_data: Dictionary):
 	var player = player_scene.instantiate()
 	player.propagate_call("on_player_data", [player_data])

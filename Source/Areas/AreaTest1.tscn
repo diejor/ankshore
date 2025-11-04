@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=4 uid="uid://dta1ona6odgmr"]
+[gd_scene load_steps=4 format=4 uid="uid://dta1ona6odgmr"]
 
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://Source/Areas/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://Resources/winter_tileset.tres" id="1_suw44"]
+[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://Source/Myoso/Myoso.tscn" id="3_ed0e1"]
 
 [node name="AreaTest1" type="Node2D"]
 y_sort_enabled = true
@@ -22,3 +23,6 @@ unique_name_in_owner = true
 position = Vector2(91, 2)
 scene_path = "uid://xkil2cmplfcd"
 target_tp_id = "AreaTPWinter"
+
+[node name="Myoso" parent="." instance=ExtResource("3_ed0e1")]
+position = Vector2(447, 346)

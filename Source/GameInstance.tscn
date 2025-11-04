@@ -8,7 +8,8 @@
 y_sort_enabled = true
 script = ExtResource("1_x7qir")
 
-[node name="SceneManager" type="Node" parent="."]
+[node name="SceneManager" type="Node2D" parent="."]
+y_sort_enabled = true
 script = ExtResource("3_8bv3o")
 empty_scene = "uid://ceaf0ycnqjwgg"
 
