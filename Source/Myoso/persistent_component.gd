@@ -1,13 +1,21 @@
 extends Node
 
 func _ready() -> void:
-	if has_node("../%"+get_parent().name):
-		var p_name := get_parent().name
-		var node = get_node("../%"+p_name)
-		if not GameInstance.is_online():
-			if not GameInstance.has_node(NodePath(p_name)):
-				node.reparent.call_deferred(GameInstance)
-			else:
-				node.queue_free()
+	var offline_name := get_parent().name
+	var offline_node = get_parent().get_node_or_null("%"+offline_name)
+	if offline_node == null and not GameInstance.is_online():
+		push_warning("The player doesn't have a `Unique Name`. 
+		Right click the player node and enable `Access as Unique Name`")
+		return
+	
+	if offline_node and GameInstance.is_online():
+		offline_node.queue_free()
+		return
+		
+	if not GameInstance.is_online():
+		if GameInstance.scene_manager.has_node(NodePath(offline_name)):
+			# GameInstance has a player already
+			offline_node.queue_free()
 		else:
-			node.queue_free()
+			# GameInstance doesn't have a permanent player yet, add it
+			offline_node.reparent.call_deferred(GameInstance.scene_manager)

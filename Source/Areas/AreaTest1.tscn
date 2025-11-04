@@ -25,4 +25,5 @@ scene_path = "uid://xkil2cmplfcd"
 target_tp_id = "AreaTPWinter"
 
 [node name="Myoso" parent="." instance=ExtResource("3_ed0e1")]
+unique_name_in_owner = true
 position = Vector2(447, 346)

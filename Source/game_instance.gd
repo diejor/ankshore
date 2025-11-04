@@ -1,6 +1,8 @@
 extends Node2D
 
 @onready var client: GameClient = $"/root/GameInstance/%Network/%GameClient"
+@onready var server: GameServer = $"/root/GameInstance/%Network/%GameServer"
+@onready var scene_manager: SceneManager = $SceneManager
 
 const UID_CACHE_PATH := "res://.godot/uid_cache.bin"
 

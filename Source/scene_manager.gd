@@ -1,4 +1,5 @@
-extends Node
+class_name SceneManager
+extends Node2D
 
 @onready var current_scene_path: NodePath
 @export_file var empty_scene: String

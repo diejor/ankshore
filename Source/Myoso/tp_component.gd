@@ -10,7 +10,8 @@ func _ready() -> void:
 func begin_teleport(_tp_destination: String) -> void:
 	tp_destination = _tp_destination
 	
-	# tp the player far from tp area while the scene is changing
+	# Tp the player far from tp area before the scene changes,
+	# Fixes the bug of phantom body_entered after player moved
 	get_parent().global_position.y += 999999999
 
 func on_scene_changed(_node: Node) -> void:

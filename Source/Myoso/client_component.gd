@@ -2,7 +2,6 @@ class_name PlayerClient
 extends Node
 
 @onready var sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
-
 @export var current_scene: int = -1
 
 func _ready() -> void:
