@@ -1,6 +1,8 @@
 class_name SceneManager
 extends Node2D
 
+signal scene_changed(current_scene: Node)
+
 @onready var current_scene_path: NodePath
 @export_file var empty_scene: String
 
@@ -24,4 +26,8 @@ func reparent_current_scene():
 	var new_scene := get_tree().current_scene
 	current_scene_path = NodePath(new_scene.name)
 	current_scene = new_scene
-	new_scene.reparent.call_deferred($".")
+	reparent_with_signal.call_deferred(new_scene, $".")
+
+func reparent_with_signal(node: Node, new_parent: Node):
+	node.reparent(new_parent)
+	scene_changed.emit(node)

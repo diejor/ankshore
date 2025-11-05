@@ -1,6 +1,9 @@
 class_name GameServer
 extends Node2D
 
+signal peer_connected(peer_id: int)
+signal peer_disconnected(peer_id: int)
+
 @export var port := 21253
 
 var multiplayer_api := SceneMultiplayer.new()
@@ -24,12 +27,13 @@ func init() -> Error:
 	print("Server ready on *:%d" % port)
 	return OK
 
-func on_peer_connected(_peer_id: int) -> void:
-	pass
+func on_peer_connected(peer_id: int) -> void:
+	peer_connected.emit(peer_id)
 
-func on_peer_disconnected(id:int) -> void:
+func on_peer_disconnected(peer_id: int) -> void:
+	peer_disconnected.emit(peer_id)
 	for child in $Players.get_children():
-		if int(child.name) == id:
+		if int(child.name) == peer_id:
 			child.queue_free()
 
 func config_api():

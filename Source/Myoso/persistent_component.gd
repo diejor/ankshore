@@ -9,6 +9,7 @@ func _ready() -> void:
 		return
 	
 	if offline_node and GameInstance.is_online():
+		# Offline players are removed from the level.
 		offline_node.queue_free()
 		return
 		

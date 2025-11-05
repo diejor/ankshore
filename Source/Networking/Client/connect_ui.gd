@@ -7,12 +7,12 @@ extends CanvasLayer
 func _ready() -> void:
 	if "--server" in OS.get_cmdline_args():
 		visible = false
-	
+
 	# Already online, no need for ConnectUI
-	if get_multiplayer_authority() != 1:
+	if GameInstance.is_online():
 		visible = false
 	
-	GameInstance.client.multiplayer_api.connected_to_server.connect(on_connected_to_server)
+	GameInstance.client.connected_to_server.connect(on_connected_to_server)
 
 func on_connected_to_server():
 	visible = false

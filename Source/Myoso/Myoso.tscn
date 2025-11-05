@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="5_wy3f0"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2mjiv"]
-properties/0/path = NodePath(".:current_scene")
+properties/0/path = NodePath(".:current_scene_uid")
 properties/0/spawn = true
 properties/0/replication_mode = 2
 
