@@ -52,7 +52,8 @@ func on_connected_to_server():
 	var player_data = {
 		username = GameInstance.client.username,
 		peer_id = GameInstance.client.uid,
-		position = get_parent().position
+		position = get_parent().position,
+		current_scene_uid = current_scene_uid
 	}
 	
 	GameInstance.client.player_spawner.request_spawn.rpc_id(1, player_data)
@@ -64,3 +65,4 @@ func on_scene_changed(current_scene: Node):
 
 func on_player_data(player_data: Dictionary):
 	get_parent().position = player_data.position
+	current_scene_uid = player_data.current_scene_uid
