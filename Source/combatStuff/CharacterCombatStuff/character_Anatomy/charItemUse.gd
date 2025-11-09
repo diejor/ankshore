@@ -1,0 +1,2 @@
+extends charAction
+class_name charItemUse
