@@ -1,8 +1,11 @@
 extends Node
 
+@onready var player: CharacterBody2D = $"../.."
+
+
 func _ready() -> void:
-	var offline_name := get_parent().name
-	var offline_node = get_parent().get_node_or_null("%"+offline_name)
+	var offline_name := player.name
+	var offline_node = player.get_node_or_null("%"+offline_name)
 	if offline_node == null and not GameInstance.is_online():
 		push_warning("The player doesn't have a `Unique Name`. 
 		Right click the player node and enable `Access as Unique Name`")

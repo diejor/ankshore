@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://Source/Networking/Client/ConnectServerUI.tscn" id="3_2mjiv"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://Source/Myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="Script" uid="uid://charwng8tw4dv" path="res://Source/Myoso/persistent_component.gd" id="5_sb6si"]
-[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="5_wy3f0"]
+[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://Source/Myoso/input_component.gd" id="6_sb6si"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2mjiv"]
 properties/0/path = NodePath(".:current_scene_uid")
@@ -28,28 +28,35 @@ motion_mode = 1
 script = ExtResource("1_jpx56")
 sprint_speed = 96.0
 
-[node name="TPComponent" type="Node" parent="."]
+[node name="Components" type="Node" parent="."]
+
+[node name="TPComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
 process_priority = -1
 process_physics_priority = -1
 script = ExtResource("2_ko57k")
 
-[node name="ClientComponent" type="Node" parent="." groups=["clients"]]
+[node name="ClientComponent" type="Node" parent="Components" groups=["clients"]]
 unique_name_in_owner = true
 script = ExtResource("2_tlpap")
 
-[node name="ServerSynchornizer" type="MultiplayerSynchronizer" parent="ClientComponent"]
+[node name="ServerSynchornizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent"]
 replication_config = SubResource("SceneReplicationConfig_2mjiv")
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="ClientComponent"]
-root_path = NodePath("../..")
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent"]
+root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_cmaps")
 
-[node name="ConnectServerUI" parent="ClientComponent" instance=ExtResource("3_2mjiv")]
+[node name="ConnectServerUI" parent="Components/ClientComponent" instance=ExtResource("3_2mjiv")]
 unique_name_in_owner = true
 
-[node name="PersistentComponent" type="Node" parent="."]
+[node name="PersistentComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
 script = ExtResource("5_sb6si")
+
+[node name="InputComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
+script = ExtResource("6_sb6si")
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)
@@ -71,6 +78,3 @@ drag_right_margin = 0.1
 drag_bottom_margin = 0.1
 script = ExtResource("3_cmaps")
 metadata/_edit_lock_ = true
-
-[node name="PlayerHUD" parent="." instance=ExtResource("5_wy3f0")]
-unique_name_in_owner = true

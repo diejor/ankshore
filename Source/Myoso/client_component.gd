@@ -1,5 +1,8 @@
-class_name PlayerClient
+class_name ClientComponent
 extends Node
+
+# Functionality needed to allow networking with the server and level.
+
 
 @onready var sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @export var current_scene_uid: int = -1
@@ -40,7 +43,9 @@ func scene_visibility_filter(peer_id: int) -> bool:
 		#push_warning("Peer is null in GameClient when should not.")
 		return false
 	
-	var peer_client: PlayerClient = peer.get_node("%ClientComponent")
+	var peer_client: ClientComponent = peer.get_node_or_null("%ClientComponent")
+	assert(peer_client, "For some reason player doesn't have a ClientComponent")
+	
 	if peer_client.current_scene_uid != current_scene_uid or current_scene_uid == -1:
 		peer_client.sleep()
 		return false
