@@ -1,6 +1,7 @@
-# Player.gd
 extends CharacterBody2D
 
+# Use `InputComponent` to handle input inside `_unhandled_input` callback,
+# very important to not leak input to the controller when using UI elements.
 @onready var input : InputComponent = %InputComponent
 
 @export var walk_speed = 64.0

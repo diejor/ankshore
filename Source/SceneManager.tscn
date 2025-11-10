@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4ejrrahh0ojb"]
+
+[ext_resource type="Script" uid="uid://bh12c5p5038js" path="res://Source/scene_manager.gd" id="1_6ruq0"]
+
+[node name="SceneManager" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_6ruq0")
+empty_scene = "uid://ceaf0ycnqjwgg"

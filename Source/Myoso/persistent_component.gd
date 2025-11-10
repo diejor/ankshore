@@ -1,5 +1,8 @@
 extends Node
 
+# Preserve the parent node even when the SceneTree changes of
+# scene, works closely with the autoload `SceneManager` to accomplish that.
+ 
 @onready var player: CharacterBody2D = $"../.."
 
 

@@ -2,16 +2,13 @@
 
 [ext_resource type="Script" uid="uid://h58d8ih2fd1i" path="res://Source/game_instance.gd" id="1_x7qir"]
 [ext_resource type="PackedScene" uid="uid://cmf6t1ybyj5xd" path="res://Source/Networking/Network.tscn" id="2_1oygm"]
-[ext_resource type="Script" uid="uid://bh12c5p5038js" path="res://Source/scene_manager.gd" id="3_8bv3o"]
+[ext_resource type="PackedScene" uid="uid://d4ejrrahh0ojb" path="res://Source/SceneManager.tscn" id="2_hymgl"]
 
 [node name="GameInstance" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_x7qir")
 
-[node name="SceneManager" type="Node2D" parent="."]
-y_sort_enabled = true
-script = ExtResource("3_8bv3o")
-empty_scene = "uid://ceaf0ycnqjwgg"
+[node name="SceneManager" parent="." instance=ExtResource("2_hymgl")]
 
 [node name="Network" parent="." instance=ExtResource("2_1oygm")]
 unique_name_in_owner = true

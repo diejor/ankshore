@@ -1,6 +1,9 @@
 class_name ClientComponent
 extends Node
 
+# The client component works closely with the client peer instanciated at 
+#`GameInstance.client` to make this player controller have a network connection.
+
 signal spawn(player_data: Dictionary)
 
 @onready var player: CharacterBody2D = $"../.."
@@ -21,20 +24,16 @@ func _ready() -> void:
 	
 	sync.add_visibility_filter(scene_visibility_filter)
 
-func sleep():
-	player.process_mode = Node.PROCESS_MODE_DISABLED
-	player.visible = false
-
-func awake():
-	player.process_mode = Node.PROCESS_MODE_INHERIT
-	player.visible = true
-
+# This filter allows us to hide and not process players that are on different scenes.
+# As a bonus we save some bandwidth since the `MultiplayerSynchronizer` will not
+# replicate players that are not visible to each other.
 func scene_visibility_filter(peer_id: int) -> bool:
 	if GameInstance.client.uid == 1 or peer_id == 1:
 		return true
 		
-	# Not sure why we need to set to false the 0 `peer_id`, my guess is that
-	# setting it to true would mean that all peer ids are automatically true otherwise
+	# Not sure why we need to set to false when `peer_id` equals `0`, my guess is that
+	# setting it to true would mean that all peer ids have `true` visibility,
+	# therefore, the filter would not be called for specific peer ids.
 	if peer_id == 0:
 		return false
 	
@@ -45,7 +44,7 @@ func scene_visibility_filter(peer_id: int) -> bool:
 		return false
 	
 	var peer_client: ClientComponent = peer.get_node_or_null("%ClientComponent")
-	assert(peer_client, "For some reason player doesn't have a ClientComponent")
+	assert(peer_client, "For some reason peer doesn't have a ClientComponent")
 	
 	if peer_client.current_scene_uid != current_scene_uid or current_scene_uid == -1:
 		peer_client.sleep()
@@ -54,6 +53,16 @@ func scene_visibility_filter(peer_id: int) -> bool:
 		peer_client.awake()
 		return true
 
+func sleep():
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	player.visible = false
+
+func awake():
+	player.process_mode = Node.PROCESS_MODE_INHERIT
+	player.visible = true
+
+# When the client connects, we need to let the server know to spawn us, `PlayerSpawner` 
+# will replicate us back.
 func on_connected_to_server():
 	var player_data = {
 		username = GameInstance.client.username,
@@ -68,16 +77,18 @@ func on_connected_to_server():
 func on_scene_changed(current_scene: Node):
 	if is_multiplayer_authority():
 		current_scene_uid = GameInstance.get_uid_from_path(current_scene.scene_file_path)
-
+		
 
 func spawn_with_data(player_data: Dictionary):
-	# Call deferred so the signal is fired when the player is inside the SceneTree,
-	# this is kind of a work around.
+	# Call deferred so the signal is fired when the player is actually inside the SceneTree.
+	# This is kind of a work around because it's not clear that `call_deferred` is to wait
+	# for the scene to be ready.
 	scene_ready.call_deferred(player_data)
 
 func scene_ready(player_data: Dictionary) -> void:
 	spawn.emit(player_data)
 
+# Could also be handled directly inside `scene_ready` after the singal is emitted.
 func _on_spawn(player_data: Dictionary) -> void:
 	player.position = player_data.position
 	current_scene_uid = player_data.current_scene_uid
