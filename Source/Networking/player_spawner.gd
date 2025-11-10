@@ -7,9 +7,13 @@ func _ready() -> void:
 
 func spawn_player(player_data: Dictionary):
 	var player = player_scene.instantiate()
-	player.propagate_call("on_player_spawn_data", [player_data])
 	player.set_multiplayer_authority(player_data.peer_id)
 	player.name = str(player_data.peer_id)
+	
+	var client_component: ClientComponent = player.get_node_or_null("%ClientComponent")
+	if client_component:
+		client_component.spawn_with_data(player_data)
+	
 	return player
 
 @rpc("any_peer", "call_remote")

@@ -1,6 +1,8 @@
 class_name ClientComponent
 extends Node
 
+signal spawn(player_data: Dictionary)
+
 @onready var player: CharacterBody2D = $"../.."
 
 # Functionality needed to allow networking with the server and level.
@@ -68,12 +70,14 @@ func on_scene_changed(current_scene: Node):
 		current_scene_uid = GameInstance.get_uid_from_path(current_scene.scene_file_path)
 
 
-
-
-func on_player_spawn_data(player_data: Dictionary):
-	# `player` node will not be ready until node is inside the SceneTree
+func spawn_with_data(player_data: Dictionary):
+	# Call deferred so the signal is fired when the player is inside the SceneTree,
+	# this is kind of a work around.
 	scene_ready.call_deferred(player_data)
 
 func scene_ready(player_data: Dictionary) -> void:
+	spawn.emit(player_data)
+
+func _on_spawn(player_data: Dictionary) -> void:
 	player.position = player_data.position
 	current_scene_uid = player_data.current_scene_uid
