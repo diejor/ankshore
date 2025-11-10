@@ -7,7 +7,7 @@ func _ready() -> void:
 
 func spawn_player(player_data: Dictionary):
 	var player = player_scene.instantiate()
-	player.propagate_call("on_player_data", [player_data])
+	player.propagate_call("on_player_spawn_data", [player_data])
 	player.set_multiplayer_authority(player_data.peer_id)
 	player.name = str(player_data.peer_id)
 	return player

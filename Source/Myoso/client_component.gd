@@ -1,8 +1,9 @@
 class_name ClientComponent
 extends Node
 
-# Functionality needed to allow networking with the server and level.
+@onready var player: CharacterBody2D = $"../.."
 
+# Functionality needed to allow networking with the server and level.
 
 @onready var sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @export var current_scene_uid: int = -1
@@ -19,14 +20,12 @@ func _ready() -> void:
 	sync.add_visibility_filter(scene_visibility_filter)
 
 func sleep():
-	var p : Node2D = get_parent()
-	p.process_mode = Node.PROCESS_MODE_DISABLED
-	p.visible = false
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	player.visible = false
 
 func awake():
-	var p : Node2D = get_parent()
-	p.process_mode = Node.PROCESS_MODE_INHERIT
-	p.visible = true
+	player.process_mode = Node.PROCESS_MODE_INHERIT
+	player.visible = true
 
 func scene_visibility_filter(peer_id: int) -> bool:
 	if GameInstance.client.uid == 1 or peer_id == 1:
@@ -57,17 +56,24 @@ func on_connected_to_server():
 	var player_data = {
 		username = GameInstance.client.username,
 		peer_id = GameInstance.client.uid,
-		position = get_parent().position,
+		position = player.position,
 		current_scene_uid = current_scene_uid
 	}
 	
 	GameInstance.client.player_spawner.request_spawn.rpc_id(1, player_data)
-	get_parent().queue_free()
+	player.queue_free()
 
 func on_scene_changed(current_scene: Node):
 	if is_multiplayer_authority():
 		current_scene_uid = GameInstance.get_uid_from_path(current_scene.scene_file_path)
 
-func on_player_data(player_data: Dictionary):
-	get_parent().position = player_data.position
+
+
+
+func on_player_spawn_data(player_data: Dictionary):
+	# `player` node will not be ready until node is inside the SceneTree
+	scene_ready.call_deferred(player_data)
+
+func scene_ready(player_data: Dictionary) -> void:
+	player.position = player_data.position
 	current_scene_uid = player_data.current_scene_uid

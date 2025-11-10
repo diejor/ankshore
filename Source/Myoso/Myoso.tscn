@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=13 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://Source/Myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://Assets/limbusWolf.png" id="2_gjcb4"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://Source/Myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="Script" uid="uid://charwng8tw4dv" path="res://Source/Myoso/persistent_component.gd" id="5_sb6si"]
 [ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://Source/Myoso/input_component.gd" id="6_sb6si"]
+[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="9_3l6w3"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2mjiv"]
 properties/0/path = NodePath(".:current_scene_uid")
@@ -78,3 +79,5 @@ drag_right_margin = 0.1
 drag_bottom_margin = 0.1
 script = ExtResource("3_cmaps")
 metadata/_edit_lock_ = true
+
+[node name="PlayerHUD" parent="." instance=ExtResource("9_3l6w3")]
