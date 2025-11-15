@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://Source/Myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://Source/Myoso/autoload_signals.gd" id="3_fpqk8"]
 [ext_resource type="Script" uid="uid://charwng8tw4dv" path="res://Source/Myoso/persistent_component.gd" id="5_sb6si"]
-[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://Source/Myoso/input_component.gd" id="6_sb6si"]
+[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://Source/Myoso/player_input.gd" id="6_sb6si"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="9_3l6w3"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2mjiv"]
@@ -30,7 +30,6 @@ height = 16.0
 [node name="Myoso" type="CharacterBody2D" groups=["players"]]
 motion_mode = 1
 script = ExtResource("1_jpx56")
-actions = ExtResource("2_a6gmg")
 sprint_speed = 96.0
 
 [node name="Components" type="Node" parent="."]
@@ -67,7 +66,7 @@ script = ExtResource("5_sb6si")
 unique_name_in_owner = true
 process_physics_priority = -1
 script = ExtResource("6_sb6si")
-actions = ExtResource("2_a6gmg")
+_actions = ExtResource("2_a6gmg")
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)

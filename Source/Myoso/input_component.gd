@@ -1,30 +1,55 @@
+# InputState.gd
 class_name InputComponent
 extends Node
 
-# Handles input through `_unhandled_input` function. Used instead of `Input` singleton
-# to allow GUI to capture input and not leak through the character controller.
-
 signal action_changed(action: StringName, pressed: bool)
 
-@export var actions: PlayerActions
+@export var _actions: PlayerActions
+@onready var state: Dictionary[StringName, bool] = build_state_dict_from_actions()
+
+func _enter_tree() -> void:
+	if not is_multiplayer_authority():
+		process_mode = Node.PROCESS_MODE_DISABLED
+		return
 
 func _ready() -> void:
 	if not is_multiplayer_authority():
 		process_mode = Node.PROCESS_MODE_DISABLED
 		return
-	
-	assert(actions, "`InputComponent` must have an `actions` resource to update.")
-	push_warning(actions != owner.actions, "A little bit weird that `InputComponent`
-	doesn't have the same `actions` resource as the player.")
-	
-	actions.build_state_dict()
-	actions.action_changed.connect(on_action_changed)
 
-func _physics_process(_delta: float) -> void:
-	actions.update_action_states(_delta)
+func build_state_dict_from_actions() -> Dictionary[StringName, bool]:
+	var _state: Dictionary[StringName, bool]
+	for property in _actions.get_property_list():
+		if property.hint_string == &"action":
+			var action_name: StringName = property.name
+			_state[action_name] = false
+
+	assert(not _state.is_empty(), "`state` dictionary is empty when it is expected to have _actions.")
+	return _state
 
 func _unhandled_input(event: InputEvent) -> void:
-	actions.handle_input(event)
+	if event is InputEventKey and event.is_echo():
+		return
 
-func on_action_changed(action: StringName, pressed: bool):
-	action_changed.emit(action, pressed)
+	for action: StringName in state.keys():
+		if event.is_action_pressed(action):
+			if state[action] != true:
+				state[action] = true
+				action_changed.emit(action, true)
+		elif event.is_action_released(action):
+			if state[action] != false:
+				state[action] = false
+				action_changed.emit(action, false)
+
+func is_down(action: StringName) -> bool:
+	assert(InputMap.has_action(action))
+	return state.get(action, false)
+
+func get_axis(negative_action: StringName, positive_action: StringName) -> float:
+	var p_action := 1.0 if is_down(positive_action) else 0.0
+	var n_action := 1.0 if is_down(negative_action) else 0.0
+	return p_action - n_action
+
+func get_vector2(left: StringName, right: StringName, up: StringName, down: StringName) -> Vector2:
+	var v := Vector2(get_axis(left, right), get_axis(up, down))
+	return v if v.is_zero_approx() else v.normalized()
