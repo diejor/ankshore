@@ -1,11 +1,14 @@
-[gd_scene load_steps=13 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=16 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://Source/Myoso/character_body_2d.gd" id="1_jpx56"]
+[ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://Source/Myoso/myoso_actions.tres" id="2_a6gmg"]
 [ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://Assets/limbusWolf.png" id="2_gjcb4"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://Source/Myoso/tp_component.gd" id="2_ko57k"]
 [ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://Source/Myoso/client_component.gd" id="2_tlpap"]
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://Source/Networking/Client/ConnectServerUI.tscn" id="3_2mjiv"]
+[ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://Source/Myoso/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://Source/Myoso/camera_2d.gd" id="3_cmaps"]
+[ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://Source/Myoso/autoload_signals.gd" id="3_fpqk8"]
 [ext_resource type="Script" uid="uid://charwng8tw4dv" path="res://Source/Myoso/persistent_component.gd" id="5_sb6si"]
 [ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://Source/Myoso/input_component.gd" id="6_sb6si"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="9_3l6w3"]
@@ -27,9 +30,14 @@ height = 16.0
 [node name="Myoso" type="CharacterBody2D" groups=["players"]]
 motion_mode = 1
 script = ExtResource("1_jpx56")
+actions = ExtResource("2_a6gmg")
 sprint_speed = 96.0
 
 [node name="Components" type="Node" parent="."]
+script = ExtResource("3_a6gmg")
+
+[node name="AutoloadSignals" type="Node" parent="Components"]
+script = ExtResource("3_fpqk8")
 
 [node name="TPComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -57,7 +65,9 @@ script = ExtResource("5_sb6si")
 
 [node name="InputComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
+process_physics_priority = -1
 script = ExtResource("6_sb6si")
+actions = ExtResource("2_a6gmg")
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)
@@ -82,5 +92,9 @@ metadata/_edit_lock_ = true
 
 [node name="PlayerHUD" parent="." instance=ExtResource("9_3l6w3")]
 
+[connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
+[connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent/ConnectServerUI" method="on_connected_to_server"]
+[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
+[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_scene_changed"]
 [connection signal="spawn" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_spawn"]
 [connection signal="spawn" from="Components/ClientComponent" to="PlayerHUD" method="_on_spawn"]

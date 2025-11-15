@@ -6,10 +6,6 @@ extends Node
 
 signal spawn(player_data: Dictionary)
 
-@onready var player: CharacterBody2D = $"../.."
-
-# Functionality needed to allow networking with the server and level.
-
 @onready var sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @export var current_scene_uid: int = -1
 
@@ -18,9 +14,6 @@ func _ready() -> void:
 	if not GameInstance.is_online():
 		if "--local" in OS.get_cmdline_args():
 			GameInstance.client.init("localhost", "player")
-	
-	GameInstance.scene_manager.scene_changed.connect(on_scene_changed)
-	GameInstance.client.connected_to_server.connect(on_connected_to_server)
 	
 	sync.add_visibility_filter(scene_visibility_filter)
 
@@ -54,12 +47,12 @@ func scene_visibility_filter(peer_id: int) -> bool:
 		return true
 
 func sleep():
-	player.process_mode = Node.PROCESS_MODE_DISABLED
-	player.visible = false
+	owner.process_mode = Node.PROCESS_MODE_DISABLED
+	owner.visible = false
 
 func awake():
-	player.process_mode = Node.PROCESS_MODE_INHERIT
-	player.visible = true
+	owner.process_mode = Node.PROCESS_MODE_INHERIT
+	owner.visible = true
 
 # When the client connects, we need to let the server know to spawn us, `PlayerSpawner` 
 # will replicate us back.
@@ -67,17 +60,16 @@ func on_connected_to_server():
 	var player_data = {
 		username = GameInstance.client.username,
 		peer_id = GameInstance.client.uid,
-		position = player.position,
+		position = owner.position,
 		current_scene_uid = current_scene_uid
 	}
 	
 	GameInstance.client.player_spawner.request_spawn.rpc_id(1, player_data)
-	player.queue_free()
+	owner.queue_free()
 
 func on_scene_changed(current_scene: Node):
 	if is_multiplayer_authority():
 		current_scene_uid = GameInstance.get_uid_from_path(current_scene.scene_file_path)
-		
 
 func spawn_with_data(player_data: Dictionary):
 	# Call deferred so the signal is fired when the player is actually inside the SceneTree.
@@ -88,7 +80,7 @@ func spawn_with_data(player_data: Dictionary):
 func scene_ready(player_data: Dictionary) -> void:
 	spawn.emit(player_data)
 
-# Could also be handled directly inside `scene_ready` after the singal is emitted.
+# Could also be handled directly inside `scene_ready` above.
 func _on_spawn(player_data: Dictionary) -> void:
-	player.position = player_data.position
+	owner.position = player_data.position
 	current_scene_uid = player_data.current_scene_uid

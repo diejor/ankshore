@@ -11,8 +11,6 @@ func _ready() -> void:
 	# Already online, no need for ConnectUI
 	if GameInstance.is_online():
 		visible = false
-	
-	GameInstance.client.connected_to_server.connect(on_connected_to_server)
 
 func on_connected_to_server():
 	visible = false

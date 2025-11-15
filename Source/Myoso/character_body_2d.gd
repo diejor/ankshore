@@ -1,20 +1,16 @@
 extends CharacterBody2D
 
-# Use `InputComponent` to handle input inside `_unhandled_input` callback,
-# very important to not leak input to the controller when using UI elements.
-@onready var input : InputComponent = %InputComponent
+@export var actions: PlayerActions
 
 @export var walk_speed = 64.0
 @export var sprint_speed = 80.0
 
-
 func _physics_process(_delta: float) -> void:
-	if not is_multiplayer_authority():
-		return
-		
-	var input_dir = input.get_vector2("move_left", "move_right", "move_up", "move_down")
+	var desired_speed: float
+	if actions.sprinting_state:
+		desired_speed = sprint_speed 
+	else:
+		desired_speed = walk_speed
 
-	var desired_speed = sprint_speed if input.is_down("sprint") else walk_speed
-
-	velocity = desired_speed * input_dir
+	velocity = desired_speed * actions.direction_state
 	move_and_slide()
