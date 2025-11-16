@@ -39,8 +39,13 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 
 folder_colors={
 "res://Source/": "gray",
+"res://Source/Areas/": "orange",
+"res://Source/Autoloads/": "yellow",
+"res://Source/CombatStuff/": "red",
+"res://Source/CombatStuff/CharacterCombatStuff/character_Anatomy/": "teal",
+"res://Source/MenuStuff/": "purple",
 "res://Source/Myoso/": "blue",
-"res://Source/combatStuff/CharacterCombatStuff/character_Anatomy/": "teal"
+"res://Source/Networking/": "teal"
 }
 
 [global_group]

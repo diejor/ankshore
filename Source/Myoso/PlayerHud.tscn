@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://s3msqppyuw2j"]
 
 [ext_resource type="Script" uid="uid://duwtwxd0sl3ra" path="res://Source/Myoso/player_hud.gd" id="1_1om4f"]
-[ext_resource type="StyleBox" uid="uid://bvpi6xar6fmbg" path="res://Resources/player_label_style_box.tres" id="2_y0iwm"]
+[ext_resource type="StyleBox" uid="uid://bvpi6xar6fmbg" path="res://Source/Myoso/Resources/player_label_style_box.tres" id="2_y0iwm"]
 
 [node name="PlayerHUD" type="Control"]
 layout_mode = 3
