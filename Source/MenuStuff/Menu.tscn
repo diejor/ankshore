@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dfvoo60p3ut6n"]
 
-[ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://Source/button.gd" id="1_uubjt"]
+[ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://Source/MenuStuff/button.gd" id="1_uubjt"]
 [ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://Source/Areas/Winter.tscn" id="2_5yleq"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]

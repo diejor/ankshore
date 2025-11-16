@@ -19,7 +19,7 @@ config/icon="uid://ddkwfh5opq7yw"
 
 [autoload]
 
-GameInstance="*res://Source/GameInstance.tscn"
+GameInstance="*res://Source/Autoloads/GameInstance.tscn"
 
 [display]
 
@@ -38,6 +38,8 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 [file_customization]
 
 folder_colors={
+"res://Source/": "gray",
+"res://Source/Myoso/": "blue",
 "res://Source/combatStuff/CharacterCombatStuff/character_Anatomy/": "teal"
 }
 

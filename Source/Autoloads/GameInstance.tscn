@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://dk6g6hscls4u5"]
+
+[ext_resource type="Script" uid="uid://h58d8ih2fd1i" path="res://Source/Autoloads/game_instance.gd" id="1_x7qir"]
+[ext_resource type="PackedScene" uid="uid://cmf6t1ybyj5xd" path="res://Source/Networking/Network.tscn" id="2_1oygm"]
+[ext_resource type="PackedScene" uid="uid://d4ejrrahh0ojb" path="res://Source/Autoloads/SceneManager.tscn" id="2_hymgl"]
+
+[node name="GameInstance" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_x7qir")
+
+[node name="SceneManager" parent="." instance=ExtResource("2_hymgl")]
+
+[node name="Network" parent="." instance=ExtResource("2_1oygm")]
+unique_name_in_owner = true
