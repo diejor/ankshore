@@ -24,7 +24,9 @@ func init() -> Error:
 		push_warning("create_server failed: %s" % str(err))
 		return err
 	config_api()
+	process_mode = Node.PROCESS_MODE_INHERIT
 	print("Server ready on *:%d" % port)
+	
 	return OK
 
 func on_peer_connected(peer_id: int) -> void:

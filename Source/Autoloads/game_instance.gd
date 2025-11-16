@@ -54,4 +54,4 @@ func get_uid_from_node(node: Node) -> int:
 	return get_uid_from_path(node.scene_file_path)
 	
 func is_online() -> bool:
-	return get_node("%Network/%GameClient").get_multiplayer_authority() != 1
+	return client.get_multiplayer_authority() != 1 or server.process_mode == PROCESS_MODE_INHERIT
