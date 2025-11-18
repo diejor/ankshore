@@ -6,6 +6,7 @@
 
 [node name="GameServer" type="Node2D"]
 process_mode = 4
+visible = false
 y_sort_enabled = true
 script = ExtResource("1_ptb16")
 

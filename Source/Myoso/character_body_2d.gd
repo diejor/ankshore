@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
-@onready var input := %InputComponent
+@onready var input: PlayerInputComponent = %InputComponent
 
-@export var walk_speed = 64.0
-@export var sprint_speed = 80.0
+@export var walk_speed: float = 64.0
+@export var sprint_speed: float = 80.0
 
 func _physics_process(_delta: float) -> void:
 	var desired_speed: float
@@ -13,4 +13,6 @@ func _physics_process(_delta: float) -> void:
 		desired_speed = walk_speed
 
 	velocity = desired_speed * input.direction
+	
+	@warning_ignore("return_value_discarded")
 	move_and_slide()

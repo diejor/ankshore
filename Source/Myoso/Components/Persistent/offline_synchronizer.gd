@@ -3,7 +3,7 @@ extends MultiplayerSynchronizer
 
 func _ready() -> void:
 	assert(get_node(root_path) == owner, "Offline synchronizer `root_path` should 
-	be the root of the scene.")
+	be pointing to the root of the scene.")
 
 func get_properties_path() -> Array[NodePath]:
 	return replication_config.get_properties()

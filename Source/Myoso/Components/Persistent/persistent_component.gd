@@ -1,7 +1,7 @@
+## Preserve the parent node even when the SceneTree changes of
+## scene, works closely with the autoload `SceneManager` to accomplish that.
+class_name PersistentComponent
 extends Node
-
-# Preserve the parent node even when the SceneTree changes of
-# scene, works closely with the autoload `SceneManager` to accomplish that.
 
 func _ready() -> void:
 	var offline_name := owner.name
@@ -18,7 +18,7 @@ func _ready() -> void:
 		
 	if not GameInstance.is_online():
 		if GameInstance.scene_manager.has_node(NodePath(offline_name)):
-			# GameInstance has a player already
+			# GameInstance has a player already, remove offline
 			offline_node.queue_free()
 		else:
 			# GameInstance doesn't have a permanent player yet, add it

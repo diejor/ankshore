@@ -1,4 +1,3 @@
-# InputState.gd
 class_name InputComponent
 extends Node
 

@@ -14,10 +14,12 @@ func _ready() -> void:
 	for property_path: NodePath in offline_sync.get_properties_path():
 		var property_name = offline_sync.get_property_name(property_path)
 		property_map[property_name] = property_path
-		
-	for data_property: StringName in _save.properties:
-		assert(data_property in property_map, "All properties in `DataResource` 
-		should be tracked by the replication configuration of `OfflineSynchronizer`")
+	
+	if OS.is_debug_build():
+		for data_property: StringName in _save.properties:
+			assert(data_property in property_map,
+	            "All properties in `DataResource` should be tracked by the 
+				replication configuration of `OfflineSynchronizer`")
 
 func _apply_save() -> void:
 	for property_name in _save.properties:
