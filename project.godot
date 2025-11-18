@@ -20,6 +20,7 @@ config/icon="uid://ddkwfh5opq7yw"
 [autoload]
 
 GameInstance="*res://Source/Autoloads/GameInstance.tscn"
+SaveManager="*res://Source/Autoloads/save_manager.gd"
 
 [display]
 

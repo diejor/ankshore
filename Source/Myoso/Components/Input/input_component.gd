@@ -19,12 +19,11 @@ func _ready() -> void:
 
 func build_state_dict_from_actions() -> Dictionary[StringName, bool]:
 	var _state: Dictionary[StringName, bool]
-	for property in _actions.get_property_list():
-		if property.hint_string == &"action":
-			var action_name: StringName = property.name
-			_state[action_name] = false
+	
+	for action in _actions.get_actions():
+		_state[action] = false
 
-	assert(not _state.is_empty(), "`state` dictionary is empty when it is expected to have _actions.")
+	assert(not _state.is_empty(), "`state` dictionary is empty when it is expected to have actions.")
 	return _state
 
 func _unhandled_input(event: InputEvent) -> void:
