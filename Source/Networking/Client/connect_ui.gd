@@ -3,7 +3,6 @@ extends CanvasLayer
 @onready var server_ip_edit: TextEdit = %ServerIpEdit
 @onready var username_edit: TextEdit = %UsernameEdit
 
-
 func _ready() -> void:
 	if "--server" in OS.get_cmdline_args():
 		visible = false

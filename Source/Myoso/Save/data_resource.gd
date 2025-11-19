@@ -14,7 +14,7 @@ func on_data(data: Dictionary) -> void:
 	`_build_properties_array` first.")
 	
 	for property_name in properties:
-		var to_replicate = data.get(property_name)
+		var to_replicate: Variant = data.get(property_name)
 		assert(to_replicate, "Data given doesn't contain `%s`." % property_name)
 		set(property_name, to_replicate)
 

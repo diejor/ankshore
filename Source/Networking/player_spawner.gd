@@ -8,6 +8,7 @@ func _ready() -> void:
 
 func spawn_player(player_data: Dictionary) -> Node2D:
 	var player: Node2D = player_scene.instantiate()
+	@warning_ignore("unsafe_cast")
 	player.set_multiplayer_authority(player_data.peer_id as int)
 	player.name = str(player_data.peer_id)
 	

@@ -1,7 +1,7 @@
 class_name SaveComponent
 extends Node
 
-@export var _save_id: StringName
+@export var save_id: StringName
 @export var _save: DataResource
 
 @onready var offline_sync: OfflineSynchronizer = %OfflineSynchronizer

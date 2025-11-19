@@ -13,7 +13,7 @@ extends DataResource
 		state_dict.position = value
 		emit_changed()
 
-func _build_properties_array():
+func _build_properties_array() -> void:
 	assert(properties.is_empty(), "Probably this `DataResource` is shared when 
 	is expected to not be shared. ")
 	

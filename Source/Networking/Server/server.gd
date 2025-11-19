@@ -9,7 +9,7 @@ signal peer_disconnected(peer_id: int)
 var multiplayer_api := SceneMultiplayer.new()
 var multiplayer_peer := WebSocketMultiplayerPeer.new()
 
-func _ready():
+func _ready() -> void:
 	if OS.has_feature("web"):
 		return
 	if "--server" in OS.get_cmdline_args():
@@ -37,11 +37,11 @@ func on_peer_disconnected(peer_id: int) -> void:
 		if int(child.name) == peer_id:
 			child.queue_free()
 
-func config_api():
+func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
 	multiplayer_api.root_path = get_path()
 	get_tree().set_multiplayer(multiplayer_api, get_path())
 
-func _process(_dt):
+func _process(_dt: float) -> void:
 	if multiplayer_api.has_multiplayer_peer():
 		multiplayer_api.poll()

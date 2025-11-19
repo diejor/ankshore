@@ -1,8 +1,9 @@
-extends Node2D
+class_name GameInstanceType
+extends Node
 
-@onready var client: GameClient = $"/root/GameInstance/%Network/%GameClient"
-@onready var server: GameServer = $"/root/GameInstance/%Network/%GameServer"
-@onready var scene_manager: SceneManager = $SceneManager
+@onready var client: GameClient = $"/root/GameInstanceNode/%Network/%GameClient"
+@onready var server: GameServer = $"/root/GameInstanceNode/%Network/%GameServer"
+@onready var scene_manager: SceneManager = $"/root/GameInstanceNode/SceneManager"
 
 const UID_CACHE_PATH := "res://.godot/uid_cache.bin"
 
@@ -46,6 +47,7 @@ func get_uid_from_path(path: String) -> int:
 		return ResourceUID.text_to_id(uid_text)
 
 	_load_uid_cache_once()
+	@warning_ignore("unsafe_call_argument")
 	return int(_uid_by_path.get(path, ResourceUID.INVALID_ID))
 
 func get_uid_from_node(node: Node) -> int:
