@@ -14,5 +14,4 @@ func _physics_process(_delta: float) -> void:
 
 	velocity = desired_speed * input.direction
 	
-	@warning_ignore("return_value_discarded")
 	move_and_slide()

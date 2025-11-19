@@ -25,6 +25,7 @@ func init() -> Error:
 		return err
 	config_api()
 	print("Server ready on *:%d" % port)
+	visible = true
 	
 	return OK
 

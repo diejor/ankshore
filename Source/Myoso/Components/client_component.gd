@@ -14,7 +14,10 @@ func _ready() -> void:
 	# Debug code, automatically adds a player to the server
 	if not GameInstance.is_online():
 		if "--local" in OS.get_cmdline_args():
-			GameInstance.client.init("localhost", "player")
+			# Call deferred because we want to wait for the player to actually be
+			# on the scene first. Otherwise `PersistentComponent` might break if this
+			# gets called before `PersistentComponent` runs its `_ready`.
+			GameInstance.client.init.call_deferred("localhost", "player")
 	
 	sync.add_visibility_filter(scene_visibility_filter)
 

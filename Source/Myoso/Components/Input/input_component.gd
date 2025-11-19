@@ -22,7 +22,9 @@ func build_state_dict_from_actions() -> Dictionary[StringName, bool]:
 	for action in _actions.get_actions():
 		_state[action] = false
 
-	assert(not _state.is_empty(), "`state` dictionary is empty when it is expected to have actions.")
+	assert(not _state.is_empty(), "`state` dictionary is empty when it is expected 
+	to have actions. Probably because the actions properties are not marked with 
+	`action` through the `hint_string` of `@export_custom`")
 	return _state
 
 func _unhandled_input(event: InputEvent) -> void:
