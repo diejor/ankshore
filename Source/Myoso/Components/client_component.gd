@@ -6,6 +6,7 @@ extends Node
 
 signal spawn(player_data: Dictionary)
 
+@onready var owner2d: Node2D = owner
 @onready var sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @export var current_scene_uid: int = -1
 
@@ -30,8 +31,8 @@ func scene_visibility_filter(peer_id: int) -> bool:
 	if peer_id == 0:
 		return false
 	
-	var peer_path = &"Players/%d" % peer_id
-	var peer = GameInstance.client.get_node_or_null(peer_path)
+	var peer_path: NodePath = &"Players/%d" % peer_id
+	var peer: Node = GameInstance.client.get_node_or_null(peer_path)
 	if peer == null:
 		#push_warning("Peer is null in GameClient when should not.")
 		return false
@@ -46,32 +47,32 @@ func scene_visibility_filter(peer_id: int) -> bool:
 		peer_client.awake()
 		return true
 
-func sleep():
+func sleep() -> void:
 	owner.process_mode = Node.PROCESS_MODE_DISABLED
-	owner.visible = false
+	owner2d.visible = false
 
-func awake():
+func awake() -> void:
 	owner.process_mode = Node.PROCESS_MODE_INHERIT
-	owner.visible = true
+	owner2d.visible = true
 
 ## When the client connects, we need to let the server know to spawn us, `PlayerSpawner` 
 ## will replicate us back.
-func on_connected_to_server():
-	var player_data = {
+func on_connected_to_server() -> void:
+	var player_data: Dictionary = {
 		username = GameInstance.client.username,
 		peer_id = GameInstance.client.uid,
-		position = owner.position,
+		position = owner2d.position,
 		current_scene_uid = current_scene_uid
 	}
 	
 	GameInstance.client.player_spawner.request_spawn.rpc_id(1, player_data)
 	owner.queue_free()
 
-func on_scene_changed(current_scene: Node):
+func on_scene_changed(current_scene: Node) -> void:
 	if is_multiplayer_authority():
 		current_scene_uid = GameInstance.get_uid_from_path(current_scene.scene_file_path)
 
-func spawn_with_data(player_data: Dictionary):
+func spawn_with_data(player_data: Dictionary) -> void:
 	# Call deferred so the signal is fired when the player is actually inside the SceneTree.
 	# This is kind of a work around because it's not clear that `call_deferred` is to wait
 	# for the scene to be ready.
@@ -82,5 +83,5 @@ func scene_ready(player_data: Dictionary) -> void:
 
 ## Could also be handled directly inside `scene_ready` above.
 func _on_spawn(player_data: Dictionary) -> void:
-	owner.position = player_data.position
+	owner2d.position = player_data.position
 	current_scene_uid = player_data.current_scene_uid

@@ -4,7 +4,7 @@ extends Node2D
 signal connected_to_server()
 signal peer_connected(peer_id: int)
 
-@onready var player_spawner: MultiplayerSpawner = $Players/PlayerSpawner
+@onready var player_spawner: PlayerSpawner = $Players/PlayerSpawner
 
 @export var port := 21253
 @export var public_host := "ws.diejor.tech"
@@ -12,14 +12,14 @@ signal peer_connected(peer_id: int)
 var multiplayer_api := SceneMultiplayer.new()
 var multiplayer_peer := WebSocketMultiplayerPeer.new()
 
-var username
+var username: String
 var uid: int:
 	get:
 		return multiplayer_api.get_unique_id()
 	set(value):
 		push_warning("Client UID should not be set directly!")
 
-func _ready():
+func _ready() -> void:
 	if "--server" in OS.get_cmdline_args():
 		process_mode = Node.PROCESS_MODE_DISABLED
 		return
@@ -27,11 +27,11 @@ func _ready():
 	multiplayer_api.peer_connected.connect(on_peer_connected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
-func init(server_address: String, _username: String):
+func init(server_address: String, _username: String) -> Error:
 	username = _username
-	var url := build_url(server_address)
+	var url: String = build_url(server_address)
 
-	var err := multiplayer_peer.create_client(url)
+	var err: Error = multiplayer_peer.create_client(url)
 	if err != OK:
 		push_warning("Can't create client (%s) to %s" % [err, url])
 		return err
@@ -54,11 +54,11 @@ func on_connected_to_server() -> void:
 	print("Client (%d) connected to server." % multiplayer_peer.get_unique_id())
 	set_multiplayer_authority(multiplayer_peer.get_unique_id(), false)
 
-func config_api():
+func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
 	multiplayer_api.root_path = get_path()
 	get_tree().set_multiplayer(multiplayer_api, get_path())
 
-func _process(_dt):
+func _process(_dt: float) -> void:
 	if multiplayer_api.has_multiplayer_peer():
 		multiplayer_api.poll()

@@ -12,7 +12,7 @@ func _ready() -> void:
 	if GameInstance.is_online():
 		visible = false
 
-func on_connected_to_server():
+func on_connected_to_server() -> void:
 	visible = false
 
 func _on_join_button_pressed() -> void:

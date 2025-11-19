@@ -1,3 +1,4 @@
+class_name TPComponent
 extends Node
 
 signal begin_tp()

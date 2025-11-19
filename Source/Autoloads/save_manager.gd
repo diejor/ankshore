@@ -3,18 +3,16 @@ extends Node
 signal slot_saved(slot_name: String)
 signal slot_loaded(slot_name: String, success: bool)
 
-const SAVE_VERSION := 1
-const KEY_COMPONENTS := "components"
+const SAVE_VERSION: int = 1
+const KEY_COMPONENTS: String = "components"
 
-const FileSaveBackend := preload("res://Source/Myoso/Save/file_save_backend.gd")
-
-@export var default_slot := "local_player"
+@export var default_slot: String= "local_player"
 
 var backend: SaveBackend
 
 var _components: Array = []
 var _cached_slot_data: Dictionary = {}
-var _active_slot := ""
+var _active_slot: String = ""
 
 func _ready() -> void:
 	if backend == null:
@@ -36,11 +34,11 @@ func unregister_component(component: SaveComponent) -> void:
 func save_slot(slot_name: String = default_slot) -> Error:
 	if backend == null:
 		backend = FileSaveBackend.new()
-	var snapshot := _build_snapshot()
-	var result := backend.save(slot_name, snapshot)
+	var snapshot: Dictionary = _build_snapshot()
+	var result: Error = backend.save(slot_name, snapshot)
 	if result == OK:
 		_active_slot = slot_name
-		var cache = snapshot.get(KEY_COMPONENTS, {})
+		var cache: Dictionary = snapshot.get(KEY_COMPONENTS, {})
 		_cached_slot_data = cache if typeof(cache) == TYPE_DICTIONARY else {}
 		slot_saved.emit(slot_name)
 	return result
@@ -48,9 +46,9 @@ func save_slot(slot_name: String = default_slot) -> Error:
 func load_slot(slot_name: String = default_slot) -> bool:
 	if backend == null:
 		backend = FileSaveBackend.new()
-	var data := backend.load(slot_name)
-	var success := not data.is_empty()
-	var components = data.get(KEY_COMPONENTS, {})
+	var data: Dictionary = backend.load(slot_name)
+	var success: bool = not data.is_empty()
+	var components: Dictionary = data.get(KEY_COMPONENTS, {})
 	if typeof(components) != TYPE_DICTIONARY:
 		components = {}
 	_cached_slot_data = components
@@ -66,16 +64,16 @@ func get_active_slot() -> String:
 	return _active_slot
 
 func _build_snapshot() -> Dictionary:
-	var payload := {}
-	for component in _components:
+	var payload: Dictionary = {}
+	for component: Node in _components:
 		if not is_instance_valid(component):
 			continue
-		var node = component.owner
+		var node: Node = component.owner
 		if node == null or not node.is_inside_tree():
 			continue
 		if not node.is_in_group("persistent"):
 			continue
-		var id := str(component.get_save_id())
+		var id = str(component.get_save_id())
 		if id.is_empty():
 			continue
 		var serialized = component.serialize()

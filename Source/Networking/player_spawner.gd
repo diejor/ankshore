@@ -1,3 +1,4 @@
+class_name PlayerSpawner
 extends MultiplayerSpawner
 
 @export var player_scene: PackedScene
@@ -5,9 +6,9 @@ extends MultiplayerSpawner
 func _ready() -> void:
 	spawn_function = spawn_player
 
-func spawn_player(player_data: Dictionary):
-	var player = player_scene.instantiate()
-	player.set_multiplayer_authority(player_data.peer_id)
+func spawn_player(player_data: Dictionary) -> Node2D:
+	var player: Node2D = player_scene.instantiate()
+	player.set_multiplayer_authority(player_data.peer_id as int)
 	player.name = str(player_data.peer_id)
 	
 	var client_component: ClientComponent = player.get_node_or_null("%ClientComponent")
@@ -17,5 +18,5 @@ func spawn_player(player_data: Dictionary):
 	return player
 
 @rpc("any_peer", "call_remote")
-func request_spawn(data):
+func request_spawn(data: Dictionary) -> void:
 	spawn(data)

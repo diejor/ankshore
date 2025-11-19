@@ -5,7 +5,7 @@ extends Node
 
 func _ready() -> void:
 	var offline_name := owner.name
-	var offline_node = owner.get_node_or_null("%"+offline_name)
+	var offline_node := owner.get_node_or_null("%"+offline_name)
 	if offline_node == null and not GameInstance.is_online():
 		push_warning("The player doesn't have a `Unique Name`. 
 		Right click the player node and enable `Access as Unique Name`")
