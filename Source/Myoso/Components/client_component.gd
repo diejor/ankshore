@@ -6,6 +6,7 @@ extends Node
 
 signal spawn(player_data: Dictionary)
 
+@onready var player_spawner: PlayerSpawner = owner.get_parent().get_node("%PlayerSpawner")
 @onready var owner2d: Node2D = owner
 @onready var sync: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @export var current_scene_uid: int = -1
@@ -17,15 +18,15 @@ func _ready() -> void:
 			# Call deferred because we want to wait for the player to actually be
 			# on the scene first. Otherwise `PersistentComponent` might break if this
 			# gets called before `PersistentComponent` runs its `_ready`.
-			GameInstance.client.init.call_deferred("localhost", "player")
+			Client.init.call_deferred("localhost", "player")
 	
-	sync.add_visibility_filter(scene_visibility_filter)
+	#sync.add_visibility_filter(scene_visibility_filter)
 
 ## This filter allows us to hide and not process players that are on different scenes.
 ## As a bonus we save some bandwidth since the `MultiplayerSynchronizer` will not
 ## replicate players that are not visible to each other.
 func scene_visibility_filter(peer_id: int) -> bool:
-	if GameInstance.client.uid == 1 or peer_id == 1:
+	if Client.uid == 1 or peer_id == 1:
 		return true
 		
 	# Not sure why we need to set to false when `peer_id` equals `0`, my guess is that
@@ -62,13 +63,13 @@ func awake() -> void:
 ## will replicate us back.
 func on_connected_to_server() -> void:
 	var player_data: Dictionary = {
-		username = GameInstance.client.username,
-		peer_id = GameInstance.client.uid,
+		username = Client.username,
+		peer_id = Client.uid,
 		position = owner2d.position,
 		current_scene_uid = current_scene_uid
 	}
 	
-	GameInstance.client.player_spawner.request_spawn.rpc_id(1, player_data)
+	player_spawner.request_spawn.rpc_id(1, player_data)
 	owner.queue_free()
 
 func on_scene_changed(current_scene: Node) -> void:

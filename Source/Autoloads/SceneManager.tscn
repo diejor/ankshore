@@ -6,3 +6,4 @@
 y_sort_enabled = true
 script = ExtResource("1_6ruq0")
 empty_scene = "uid://ceaf0ycnqjwgg"
+winter_scene = "uid://xkil2cmplfcd"

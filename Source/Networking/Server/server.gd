@@ -1,5 +1,5 @@
 class_name GameServer
-extends Node2D
+extends Node
 
 signal peer_connected(peer_id: int)
 signal peer_disconnected(peer_id: int)
@@ -25,7 +25,6 @@ func init() -> Error:
 		return err
 	config_api()
 	print("Server ready on *:%d" % port)
-	visible = true
 	
 	return OK
 
@@ -40,8 +39,9 @@ func on_peer_disconnected(peer_id: int) -> void:
 
 func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
-	multiplayer_api.root_path = get_path()
-	get_tree().set_multiplayer(multiplayer_api, get_path())
+	#multiplayer_api.root_path = get_path()
+	#get_tree().set_multiplayer(multiplayer_api, get_path())
+	get_tree().set_multiplayer(multiplayer_api)
 
 func _process(_dt: float) -> void:
 	if multiplayer_api.has_multiplayer_peer():

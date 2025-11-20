@@ -123,7 +123,5 @@ metadata/_edit_lock_ = true
 
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent/ConnectServerUI" method="on_connected_to_server"]
-[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
-[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_scene_changed"]
 [connection signal="spawn" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_spawn"]
 [connection signal="spawn" from="Components/ClientComponent" to="PlayerHUD" method="_on_spawn"]

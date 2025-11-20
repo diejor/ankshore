@@ -1,17 +1,14 @@
-[gd_scene load_steps=4 format=4 uid="uid://xkil2cmplfcd"]
+[gd_scene load_steps=5 format=4 uid="uid://xkil2cmplfcd"]
 
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://Source/Myoso/Myoso.tscn" id="1_kwkoe"]
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://Source/Areas/AreaTP.tscn" id="3_4lfof"]
+[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://Source/Networking/PlayerSpawner.tscn" id="4_kwkoe"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://Source/Areas/Resources/winter_tileset.tres" id="4_xy03w"]
 
 [node name="Winter" type="Node2D"]
 process_priority = -1
 y_sort_enabled = true
 metadata/_edit_lock_ = true
-
-[node name="Myoso" parent="." instance=ExtResource("1_kwkoe")]
-unique_name_in_owner = true
-position = Vector2(71, 16)
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
 z_index = -1
@@ -30,3 +27,10 @@ unique_name_in_owner = true
 position = Vector2(151, 16)
 scene_path = "uid://dta1ona6odgmr"
 target_tp_id = "AreaTP1"
+
+[node name="PlayerSpawner" parent="." instance=ExtResource("4_kwkoe")]
+unique_name_in_owner = true
+_spawnable_scenes = PackedStringArray("uid://bxpx2n4hugojx")
+
+[node name="Myoso" parent="." instance=ExtResource("1_kwkoe")]
+unique_name_in_owner = true

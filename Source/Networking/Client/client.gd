@@ -1,10 +1,8 @@
 class_name GameClient
-extends Node2D
+extends Node
 
 signal connected_to_server()
 signal peer_connected(peer_id: int)
-
-@onready var player_spawner: PlayerSpawner = $Players/PlayerSpawner
 
 @export var port := 21253
 @export var public_host := "ws.diejor.tech"
@@ -50,14 +48,15 @@ func on_peer_connected(peer_id: int) -> void:
 	peer_connected.emit(peer_id)
 
 func on_connected_to_server() -> void:
-	connected_to_server.emit()
 	print("Client (%d) connected to server." % multiplayer_peer.get_unique_id())
 	set_multiplayer_authority(multiplayer_peer.get_unique_id(), false)
+	connected_to_server.emit()
 
 func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
-	multiplayer_api.root_path = get_path()
-	get_tree().set_multiplayer(multiplayer_api, get_path())
+	#multiplayer_api.root_path = get_path()
+	#get_tree().set_multiplayer(multiplayer_api, get_path())
+	get_tree().set_multiplayer(multiplayer_api)
 
 func _process(_dt: float) -> void:
 	if multiplayer_api.has_multiplayer_peer():

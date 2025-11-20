@@ -1,10 +1,6 @@
 class_name GameInstanceType
 extends Node
 
-@onready var client: GameClient = $"/root/GameInstanceNode/%Network/%GameClient"
-@onready var server: GameServer = $"/root/GameInstanceNode/%Network/%GameServer"
-@onready var scene_manager: SceneManager = $"/root/GameInstanceNode/SceneManager"
-
 const UID_CACHE_PATH := "res://.godot/uid_cache.bin"
 
 var _uid_by_path: Dictionary = {}
@@ -56,6 +52,6 @@ func get_uid_from_node(node: Node) -> int:
 	return get_uid_from_path(node.scene_file_path)
 	
 func is_online() -> bool:
-	var is_client: bool = client.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
-	var is_server: bool = server.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
+	var is_client: bool = Client.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
+	var is_server: bool = Server.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
 	return is_client or is_server

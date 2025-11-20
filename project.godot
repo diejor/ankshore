@@ -19,7 +19,8 @@ config/icon="uid://ddkwfh5opq7yw"
 
 [autoload]
 
-GameInstanceNode="*res://Source/Autoloads/GameInstance.tscn"
+Client="*res://Source/Networking/Client/client.gd"
+Server="*res://Source/Networking/Server/server.gd"
 GameInstance="*res://Source/Autoloads/game_instance.gd"
 
 [debug]

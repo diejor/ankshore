@@ -17,4 +17,4 @@ func on_connected_to_server() -> void:
 func _on_join_button_pressed() -> void:
 	var server_address := server_ip_edit.text
 	var username := username_edit.text
-	GameInstance.client.init(server_address, username)
+	Client.init(server_address, username)
