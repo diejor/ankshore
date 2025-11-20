@@ -26,6 +26,16 @@ func _ready() -> void:
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
 func init(server_address: String, _username: String) -> Error:
+	# Fixes a weird bug where `MultiplayerSynchronizers` think they are connected
+	# to the server when they are offline.
+	for synchronizer in get_tree().get_nodes_in_group("synchronizers"):
+		synchronizer.queue_free()
+	while not get_tree().get_nodes_in_group("synchronizers").is_empty():
+		await get_tree().create_timer(0.01).timeout
+	
+	return create_connection(server_address, _username)
+
+func create_connection(server_address: String, _username: String) -> Error:
 	username = _username
 	var url: String = build_url(server_address)
 
@@ -36,6 +46,7 @@ func init(server_address: String, _username: String) -> Error:
 
 	config_api()
 	print("Client connecting to ", url)
+	
 	return OK
 
 func build_url(server_address: String) -> String:

@@ -33,10 +33,10 @@ metadata/_custom_type_script = "uid://okxkdfw4nea5"
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jki01"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
-properties/0/replication_mode = 1
+properties/0/replication_mode = 2
 properties/1/path = NodePath("Components/ClientComponent:current_scene_uid")
 properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/1/replication_mode = 2
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wo7us"]
 radius = 2.0
@@ -63,18 +63,36 @@ script = ExtResource("2_ko57k")
 unique_name_in_owner = true
 script = ExtResource("2_tlpap")
 
+[node name="ConnectServerUI" parent="Components/ClientComponent" instance=ExtResource("3_2mjiv")]
+unique_name_in_owner = true
+
 [node name="ServerSynchornizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent" groups=["synchronizers"]]
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_2mjiv")
+visibility_update_mode = 2
+public_visibility = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent" groups=["synchronizers"]]
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_cmaps")
+visibility_update_mode = 2
+public_visibility = false
 
-[node name="ConnectServerUI" parent="Components/ClientComponent" instance=ExtResource("3_2mjiv")]
+[node name="SaveComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
+script = ExtResource("10_xdvvs")
+save = SubResource("Resource_tkyel")
+
+[node name="OfflineSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent" groups=["synchronizers"]]
+unique_name_in_owner = true
+root_path = NodePath("../../..")
+replication_config = SubResource("SceneReplicationConfig_jki01")
+visibility_update_mode = 2
+public_visibility = false
+script = ExtResource("12_tkyel")
+metadata/_custom_type_script = "uid://dauxhgwga2flr"
 
 [node name="PersistentComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -85,18 +103,6 @@ unique_name_in_owner = true
 process_physics_priority = -1
 script = ExtResource("6_sb6si")
 _actions = ExtResource("2_a6gmg")
-
-[node name="SaveComponent" type="Node" parent="Components"]
-unique_name_in_owner = true
-script = ExtResource("10_xdvvs")
-save = SubResource("Resource_tkyel")
-
-[node name="OfflineSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent"]
-unique_name_in_owner = true
-root_path = NodePath("../../..")
-replication_config = SubResource("SceneReplicationConfig_jki01")
-script = ExtResource("12_tkyel")
-metadata/_custom_type_script = "uid://dauxhgwga2flr"
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)
@@ -123,5 +129,7 @@ metadata/_edit_lock_ = true
 
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent/ConnectServerUI" method="on_connected_to_server"]
+[connection signal="peer_disconnected" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_peer_disconnected"]
+[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_scene_changed"]
 [connection signal="spawn" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_spawn"]
 [connection signal="spawn" from="Components/ClientComponent" to="PlayerHUD" method="_on_spawn"]

@@ -62,6 +62,7 @@ folder_colors={
 
 players="All the players in the game."
 clients="All the visible clients to this running instance."
+synchronizers=""
 
 [input]
 

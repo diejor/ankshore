@@ -33,9 +33,6 @@ func on_peer_connected(peer_id: int) -> void:
 
 func on_peer_disconnected(peer_id: int) -> void:
 	peer_disconnected.emit(peer_id)
-	for child in $Players.get_children():
-		if int(child.name) == peer_id:
-			child.queue_free()
 
 func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
