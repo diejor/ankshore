@@ -18,22 +18,22 @@ var uid: int:
 		push_warning("Client UID should not be set directly!")
 
 func _ready() -> void:
-	if "--server" in OS.get_cmdline_args():
-		process_mode = Node.PROCESS_MODE_DISABLED
-		return
-
 	multiplayer_api.peer_connected.connect(on_peer_connected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
 func init(server_address: String, _username: String) -> Error:
-	# Fixes a weird bug where `MultiplayerSynchronizers` think they are connected
-	# to the server when they are offline.
-	for synchronizer in get_tree().get_nodes_in_group("synchronizers"):
-		synchronizer.queue_free()
-	while not get_tree().get_nodes_in_group("synchronizers").is_empty():
-		await get_tree().create_timer(0.01).timeout
-	
-	return create_connection(server_address, _username)
+	var connection_code: Error = create_connection(server_address, _username)
+	if connection_code == OK:
+		# Fixes a weird bug where `MultiplayerSynchronizers` think they are connected
+		# to the server when they are offline.
+		for synchronizer in get_tree().get_nodes_in_group("synchronizers"):
+			synchronizer.queue_free()
+		while not get_tree().get_nodes_in_group("synchronizers").is_empty():
+			await get_tree().create_timer(0.01).timeout
+		
+		config_api()
+		
+	return connection_code
 
 func create_connection(server_address: String, _username: String) -> Error:
 	username = _username
@@ -43,8 +43,7 @@ func create_connection(server_address: String, _username: String) -> Error:
 	if err != OK:
 		push_warning("Can't create client (%s) to %s" % [err, url])
 		return err
-
-	config_api()
+	
 	print("Client connecting to ", url)
 	
 	return OK
@@ -65,9 +64,8 @@ func on_connected_to_server() -> void:
 
 func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
-	#multiplayer_api.root_path = get_path()
-	#get_tree().set_multiplayer(multiplayer_api, get_path())
-	get_tree().set_multiplayer(multiplayer_api)
+	multiplayer_api.root_path = SceneManager.get_path()
+	get_tree().set_multiplayer(multiplayer_api, SceneManager.get_path())
 
 func _process(_dt: float) -> void:
 	if multiplayer_api.has_multiplayer_peer():

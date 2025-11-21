@@ -70,15 +70,11 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_2mjiv")
-visibility_update_mode = 2
-public_visibility = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent" groups=["synchronizers"]]
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_cmaps")
-visibility_update_mode = 2
-public_visibility = false
 
 [node name="SaveComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -89,8 +85,6 @@ save = SubResource("Resource_tkyel")
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_jki01")
-visibility_update_mode = 2
-public_visibility = false
 script = ExtResource("12_tkyel")
 metadata/_custom_type_script = "uid://dauxhgwga2flr"
 
@@ -128,8 +122,9 @@ metadata/_edit_lock_ = true
 [node name="PlayerHUD" parent="." instance=ExtResource("9_3l6w3")]
 
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
-[connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent/ConnectServerUI" method="on_connected_to_server"]
 [connection signal="peer_disconnected" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_peer_disconnected"]
+[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="_on_autoload_signals_scene_changed"]
+[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_scene_changed"]
 [connection signal="spawn" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_spawn"]
 [connection signal="spawn" from="Components/ClientComponent" to="PlayerHUD" method="_on_spawn"]

@@ -45,9 +45,9 @@ func on_peer_disconnected(peer_id: int) -> void:
 	if owner.name == str(peer_id):
 		owner.queue_free()
 
-func on_scene_changed() -> void:
+func on_scene_changed(current_scene: Node) -> void:
 	if is_multiplayer_authority():
-		current_scene_uid = GameInstance.get_uid_from_path(get_tree().current_scene.scene_file_path)
+		current_scene_uid = GameInstance.get_uid_from_path(current_scene.scene_file_path)
 
 func spawn_with_data(player_data: Dictionary) -> void:
 	# Call deferred so the signal is fired when the player is actually inside the SceneTree.

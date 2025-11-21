@@ -16,10 +16,10 @@ func _ready() -> void:
 		offline_node.queue_free()
 		return
 		
-	#if not GameInstance.is_online():
-		#if GameInstance.scene_manager.has_node(NodePath(offline_name)):
-			## GameInstance has a player already, remove offline
-			#offline_node.queue_free()
-		#else:
-			## GameInstance doesn't have a permanent player yet, add it
-			#offline_node.reparent.call_deferred(GameInstance.scene_manager)
+	if not GameInstance.is_online():
+		if SceneManager.has_node(NodePath(offline_name)):
+			# GameInstance has a player already, remove offline
+			offline_node.queue_free()
+		else:
+			# GameInstance doesn't have a permanent player yet, add it
+			offline_node.reparent.call_deferred(SceneManager)

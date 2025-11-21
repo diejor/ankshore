@@ -6,10 +6,15 @@ signal peer_disconnected(peer_id: int)
 
 @export var port := 21253
 
+@onready var lobbies: Node = lobbies_scene.instantiate()
+
 var multiplayer_api := SceneMultiplayer.new()
 var multiplayer_peer := WebSocketMultiplayerPeer.new()
 
+const lobbies_scene: PackedScene = preload("res://Source/Networking/Server/Lobbies.tscn")
+
 func _ready() -> void:
+	add_child(lobbies)
 	if OS.has_feature("web"):
 		return
 	if "--server" in OS.get_cmdline_args():
@@ -36,9 +41,9 @@ func on_peer_disconnected(peer_id: int) -> void:
 
 func config_api() -> void:
 	multiplayer_api.multiplayer_peer = multiplayer_peer
-	#multiplayer_api.root_path = get_path()
-	#get_tree().set_multiplayer(multiplayer_api, get_path())
-	get_tree().set_multiplayer(multiplayer_api)
+	multiplayer_api.root_path = lobbies.get_path()
+	get_tree().set_multiplayer(multiplayer_api, lobbies.get_path())
+	#get_tree().set_multiplayer(multiplayer_api)
 
 func _process(_dt: float) -> void:
 	if multiplayer_api.has_multiplayer_peer():

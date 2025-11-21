@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://85gtbquxud7a"]
+
+[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://Source/Networking/PlayerSpawner.tscn" id="1_dnv0q"]
+
+[node name="AreaTest1" type="Node"]
+
+[node name="PlayerSpawner" parent="." instance=ExtResource("1_dnv0q")]
+unique_name_in_owner = true

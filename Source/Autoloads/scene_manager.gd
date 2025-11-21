@@ -1,18 +1,16 @@
-class_name SceneManager
+class_name SceneManagerClass
 extends Node2D
 
 signal scene_changed(current_scene: Node)
 
-@onready var current_scene_path: NodePath
-@export_file var empty_scene: String
-@export_file var winter_scene: String
-
+var current_scene_path: NodePath
 var current_scene: Node
 
 func _ready() -> void:
+	y_sort_enabled = true
 	reparent_current_scene()
 	if "--server" in OS.get_cmdline_args():
-		get_tree().change_scene_to_file.call_deferred(winter_scene)
+		pass
 	
 	get_tree().scene_changed.connect(on_scene_changed)
 

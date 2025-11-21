@@ -33,4 +33,3 @@ target_tp_id = "AreaTP1"
 
 [node name="PlayerSpawner" parent="." instance=ExtResource("4_kwkoe")]
 unique_name_in_owner = true
-_spawnable_scenes = PackedStringArray("uid://bxpx2n4hugojx")
