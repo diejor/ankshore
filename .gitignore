@@ -18,3 +18,7 @@ mono_crash.*.json
 
 export
 exports
+
+# Ignore saves
+*.tdict
+*.dict
