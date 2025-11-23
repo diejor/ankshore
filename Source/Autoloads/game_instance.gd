@@ -52,9 +52,10 @@ func get_uid_from_node(node: Node) -> int:
 	return get_uid_from_path(node.scene_file_path)
 	
 func is_online() -> bool:
-	var _is_client: bool = Client.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
-	var _is_server: bool = Server.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
-	return _is_client or _is_server
+	return is_server() or is_client()
 
 func is_server() -> bool:
 	return Server.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer
+
+func is_client() -> bool:
+	return Client.multiplayer_api.multiplayer_peer is not OfflineMultiplayerPeer

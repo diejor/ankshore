@@ -1,5 +1,5 @@
 extends Node
 
 func _ready() -> void:
-		assert(owner, "Component owner is non-existant. Probably because it was 
-	added at runitme.")
+		assert(owner, "Component owner doesn't exists. Probably because this node 
+			was added at runitme.")

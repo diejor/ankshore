@@ -1,4 +1,0 @@
-[gd_scene format=3 uid="uid://dk6g6hscls4u5"]
-
-[node name="GameInstance" type="Node2D"]
-y_sort_enabled = true

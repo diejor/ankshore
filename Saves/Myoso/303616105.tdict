@@ -1,0 +1,16 @@
+{
+  "args": [
+    "sn:303616105/position",
+    {
+      "args": [
+        76.1345291137695,
+        -63.3345565795898
+      ],
+      "type": "Vector2"
+    },
+    "sn:ClientComponent/current_scene_uid",
+    "i:1635493982676199203"
+  ],
+  "key_type": "StringName",
+  "type": "Dictionary"
+}
