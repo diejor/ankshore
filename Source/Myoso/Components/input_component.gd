@@ -2,6 +2,7 @@ class_name InputComponent
 extends Node
 
 signal action_changed(action: StringName, pressed: bool)
+@onready var autoload_signals: AutoloadSignals = %AutoloadSignals
 
 @export var _actions: PlayerActions
 @onready var state: Dictionary[StringName, bool] = build_state_dict_from_actions()

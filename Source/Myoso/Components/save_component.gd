@@ -16,6 +16,21 @@ var save_config: SceneReplicationConfig
 var source_config: SceneReplicationConfig
 var real_root_path: NodePath
 
+func _ensure_source_config_initialized() -> void:
+	if source_config == null:
+		source_config = replication_config
+	if real_root_path == NodePath(""):
+		real_root_path = root_path
+
+
+func _get_save_root_node() -> Node:
+	if owner != null:
+		return owner
+	if real_root_path != NodePath(""):
+		return get_node_or_null(real_root_path)
+	return null
+
+
 func _ready() -> void:
 	assert(state_container, "Please specify the `DataResource` that will keep track of the save.")
 	
@@ -24,8 +39,7 @@ func _ready() -> void:
 		inspector, otherwise saves will be shared.")
 
 	assert(replication_config, "SaveComponent requires an initial `replication_config` with real properties.")
-	source_config = replication_config
-	real_root_path = root_path
+	_ensure_source_config_initialized()
 	
 	if OS.has_feature("standalone") or "--server" in OS.get_cmdline_args():
 		push_warning("Replacing `res://` with `user://` because running as exported.")
@@ -45,6 +59,7 @@ func _ready() -> void:
 func _sync_from_source_config() -> void:
 	property_to_path.clear()
 
+	_ensure_source_config_initialized()
 	assert(source_config, "SaveComponent requires `source_config`.")
 	assert(real_root_path != NodePath(""), "SaveComponent `real_root_path` must be set before `_ready`.")
 	var root_node: Node = get_node(real_root_path)
@@ -87,7 +102,10 @@ func _make_virtual_property_name(root_node: Node, property_path: NodePath) -> St
 	else:
 		leaf = str(prop_path)
 
-	return StringName(str(node.name, "/", leaf))
+	var save_root: Node = _get_save_root_node()
+	var node_label: String = "." if save_root != null and node == save_root else str(node.name)
+
+	return StringName(str(node_label, "/", leaf))
 
 
 func _set_path_value(property_path: NodePath, value: Variant) -> void:
@@ -112,6 +130,17 @@ func _get_path_value(property_path: NodePath) -> Variant:
 	var node: Node = node_res[0]
 	var prop_path: NodePath = node_res[2]
 	return node.get_indexed(prop_path)
+
+
+func _ensure_property_mapping() -> void:
+	_ensure_source_config_initialized()
+
+	if property_to_path.is_empty():
+		_sync_from_source_config()
+		notify_property_list_changed()
+
+	if save_config == null and not property_to_path.is_empty():
+		_build_save_replication_config()
 
 
 func _build_save_replication_config() -> void:
@@ -200,23 +229,71 @@ func only_server_filter(peer_id: int) -> bool:
 	return peer_id == 1
 
 
+func _normalize_root_property_name(property_name: StringName) -> StringName:
+	var save_root: Node = _get_save_root_node()
+	if save_root == null:
+		return property_name
+
+	var property_str := str(property_name)
+	var legacy_prefix := str(save_root.name, "/")
+	if not property_str.begins_with(legacy_prefix):
+		return property_name
+
+	var suffix := property_str.substr(legacy_prefix.length())
+	return StringName(str("./", suffix))
+
+
+func _normalize_loaded_root_keys() -> void:
+	var dict_res := state_container as DictionaryResource
+	if dict_res == null:
+		return
+
+	var keys := dict_res.data.keys()
+	var ordered: Array = []
+
+	for key: StringName in keys:
+		if _normalize_root_property_name(key) == key:
+			ordered.append(key)
+
+	for key: StringName in keys:
+		if _normalize_root_property_name(key) != key:
+			ordered.append(key)
+
+	var normalized: Dictionary[StringName, Variant] = {}
+	var changed := false
+
+	for key: StringName in ordered:
+		var normalized_key := _normalize_root_property_name(key)
+		if normalized.has(normalized_key):
+			continue
+		normalized[normalized_key] = dict_res.data[key]
+		changed = changed or normalized_key != key
+
+	if changed:
+		dict_res.data = normalized
+
+
 func apply_save() -> void:
 	assert(state_container, "SaveComponent.apply_save() requires a valid DataResource.")
 
+	_ensure_property_mapping()
+
 	for property_name in state_container:
-		assert(has_state_property(property_name), 
+		var resolved_name := _normalize_root_property_name(property_name)
+		assert(has_state_property(resolved_name), 
 			"Trying to save with property `%s` that is not tracked by the 
 			`SaveComponent`." % property_name)
 
-		var path: NodePath = property_to_path[property_name]
+		var path: NodePath = property_to_path[resolved_name]
 		var value: Variant = state_container.get_value(property_name)
 		assert(value != null, "Trying to `apply_save` but the save doesn't have property `%s`
 			that is tracked by the `SaveComponent`." % property_name)
 		_set_path_value(path, value)
 
 func load_state() -> Error:
+	_ensure_property_mapping()
 	var load_error: Error = state_container.load_state(save_slot)
-	(%ClientComponent as ClientComponent).spawn_client()
+	_normalize_loaded_root_keys()
 	apply_save()
 	return load_error
 	
