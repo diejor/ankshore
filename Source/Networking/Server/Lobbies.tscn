@@ -8,5 +8,7 @@ process_mode = 4
 visible = false
 
 [node name="Winter" parent="." instance=ExtResource("1_dtkm7")]
+unique_name_in_owner = true
 
 [node name="AreaTest1" parent="." instance=ExtResource("2_jocrf")]
+unique_name_in_owner = true

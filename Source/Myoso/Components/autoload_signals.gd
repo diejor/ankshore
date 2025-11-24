@@ -3,7 +3,7 @@ extends Node
 
 signal connected_to_server()
 signal peer_disconnected(peer_id: int)
-signal scene_changed(current_scene: Node)
+signal scene_changed(current_scene: Node, old_scene: Node)
 
 func _ready() -> void:
 	Client.connected_to_server.connect(on_connected_to_server)
@@ -16,5 +16,5 @@ func on_connected_to_server() -> void:
 func on_peer_disconnected(peer_id: int) -> void:
 	peer_disconnected.emit(peer_id)
 
-func on_scene_changed(current_scene: Node) -> void:
-	scene_changed.emit(current_scene)
+func on_scene_changed(current_scene: Node, old_scene: Node) -> void:
+	scene_changed.emit(current_scene, old_scene)

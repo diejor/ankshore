@@ -204,7 +204,7 @@ func _get(property: StringName) -> Variant:
 func _set(property: StringName, value: Variant) -> bool:
 	if not property_to_path.has(property):
 		return false
-
+		
 	state_container.set_value(property, value)
 	state_changed.emit()
 	return true
@@ -271,6 +271,50 @@ func _normalize_loaded_root_keys() -> void:
 
 	if changed:
 		dict_res.data = normalized
+
+
+func _collect_state_snapshot() -> Dictionary[StringName, Variant]:
+	_ensure_property_mapping()
+	var snapshot: Dictionary[StringName, Variant] = {}
+
+	for property_name: StringName in property_to_path.keys():
+		var path: NodePath = property_to_path[property_name]
+		snapshot[property_name] = _get_path_value(path)
+
+	return snapshot
+
+
+func _apply_state_snapshot(snapshot: Dictionary) -> void:
+	_ensure_property_mapping()
+	var changed := false
+
+	for property_name: StringName in snapshot.keys():
+		var normalized_name := StringName(property_name)
+		if not has_state_property(normalized_name):
+			continue
+		state_container.set_value(normalized_name, snapshot[property_name])
+		changed = true
+
+	if changed:
+		state_changed.emit()
+
+
+func force_state_sync() -> void:
+	var snapshot := _collect_state_snapshot()
+	if snapshot.is_empty():
+		return
+
+	if not multiplayer.has_multiplayer_peer() or multiplayer.is_server():
+		_apply_state_snapshot(snapshot)
+	else:
+		_force_state_sync.rpc_id(1, snapshot)
+
+
+@rpc("any_peer", "call_remote")
+func _force_state_sync(snapshot: Dictionary) -> void:
+	if not multiplayer.is_server():
+		return
+	_apply_state_snapshot(snapshot)
 
 
 func apply_save() -> void:
