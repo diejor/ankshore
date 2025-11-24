@@ -2,19 +2,22 @@ extends CanvasLayer
 
 @onready var server_ip_edit: TextEdit = %ServerIpEdit
 @onready var username_edit: TextEdit = %UsernameEdit
+var _hide_on_connect := false
 
 func _ready() -> void:
 	if "--server" in OS.get_cmdline_args():
 		visible = false
-
-	# Already online, no need for ConnectUI
-	if GameInstance.is_online():
-		visible = false
+	Client.connected_to_server.connect(on_connected_to_server)
 
 func on_connected_to_server() -> void:
-	visible = false
+	if _hide_on_connect:
+		visible = false
 
 func _on_join_button_pressed() -> void:
 	var server_address := server_ip_edit.text
 	var username := username_edit.text
-	Client.init(server_address, username)
+	_hide_on_connect = true
+	var err: Error = GameInstance.connect_client(server_address, username)
+	if err != OK:
+		push_warning("Connection failed: %s" % error_string(err))
+		_hide_on_connect = false

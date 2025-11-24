@@ -3,23 +3,18 @@
 class_name PersistentComponent
 extends Node
 
+@onready var autoload_signals: AutoloadSignals = %AutoloadSignals
+
+@export var is_active: IsActive
+
 func _ready() -> void:
 	var offline_name := owner.name
-	var offline_node := owner.get_node_or_null("%"+offline_name)
-	if offline_node == null and not GameInstance.is_online():
-		push_warning("The player doesn't have a `Unique Name`. 
-		Right click the player node and enable `Access as Unique Name`")
+	var offline_node: Node = owner.get_node_or_null("%"+offline_name)
+	if not is_active.active:
+		is_active.active = true
+		await autoload_signals.scene_changed
+		Client.connected_to_server.emit()
 		return
 	
-	if offline_node and GameInstance.is_online():
-		# Offline players are removed from the level.
+	if offline_node != null:
 		offline_node.queue_free()
-		return
-		
-	if not GameInstance.is_online():
-		if SceneManager.has_node(NodePath(offline_name)):
-			# GameInstance has a player already, remove offline
-			offline_node.queue_free()
-		else:
-			# GameInstance doesn't have a permanent player yet, add it
-			offline_node.reparent.call_deferred(SceneManager)

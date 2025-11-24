@@ -1,3 +1,4 @@
+class_name AutoloadSignals
 extends Node
 
 signal connected_to_server()

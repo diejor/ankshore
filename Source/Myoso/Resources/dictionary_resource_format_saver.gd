@@ -31,6 +31,7 @@ func _save(resource: Resource, path: String, _flags: int) -> Error:
 		return ERR_UNAVAILABLE
 
 	var ext := path.get_extension().to_lower()
+		
 	if ext == TEXT_EXT:
 		return _save_as_json(dict_res, path)
 	elif ext == BIN_EXT:

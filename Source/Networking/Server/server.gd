@@ -22,7 +22,6 @@ func init() -> Error:
 	assert(not OS.has_feature("web"),
 		"Server.init() cannot run on web builds: %s" % error_string(ERR_UNAVAILABLE))
 
-	multiplayer_peer = WebSocketMultiplayerPeer.new()
 	var err: Error = multiplayer_peer.create_server(port)
 	if err != OK:
 		push_warning("create_server failed: %s" % error_string(err))
@@ -35,7 +34,6 @@ func init() -> Error:
 
 func on_peer_connected(peer_id: int) -> void:
 	peer_connected.emit(peer_id)
-	say_hi.rpc_id(peer_id)
 
 func on_peer_disconnected(peer_id: int) -> void:
 	peer_disconnected.emit(peer_id)

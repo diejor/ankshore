@@ -29,6 +29,7 @@ theme_override_constants/separation = 32
 alignment = 2
 
 [node name="Handle" type="Control" parent="VBoxContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6

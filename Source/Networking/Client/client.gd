@@ -22,7 +22,7 @@ func _ready() -> void:
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
 func init(server_address: String, _username: String) -> Error:
-	_reset_peer_state()
+	#_reset_peer_state()
 	var connection_code: Error = create_connection(server_address, _username)
 	if connection_code == OK:
 		_clear_synchronizers()

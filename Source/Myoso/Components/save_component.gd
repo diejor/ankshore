@@ -4,8 +4,9 @@ extends MultiplayerSynchronizer
 signal state_changed
 
 @export_dir var save_dir: String
-@onready var save_file_name: String = owner.name
-@onready var save_slot: String = save_dir.path_join(save_file_name)
+@onready var save_slot: String:
+	get:
+		return save_dir.path_join(owner.name)
 
 @export var state_container: DataResource
 
@@ -14,7 +15,6 @@ var property_to_path: Dictionary[StringName, NodePath]
 var save_config: SceneReplicationConfig
 var source_config: SceneReplicationConfig
 var real_root_path: NodePath
-
 
 func _ready() -> void:
 	assert(state_container, "Please specify the `DataResource` that will keep track of the save.")
@@ -27,9 +27,12 @@ func _ready() -> void:
 	source_config = replication_config
 	real_root_path = root_path
 	
-	if OS.has_feature("standalone"):
+	if OS.has_feature("standalone") or "--server" in OS.get_cmdline_args():
 		push_warning("Replacing `res://` with `user://` because running as exported.")
 		save_dir.replace("res://", "user://")
+	
+	if not DirAccess.dir_exists_absolute(save_dir):
+		DirAccess.make_dir_recursive_absolute(save_dir)
 
 	_sync_from_source_config()
 	notify_property_list_changed()
@@ -143,8 +146,8 @@ func _build_save_replication_config() -> void:
 
 
 func _get_property_list() -> Array[Dictionary]:
-	assert(not property_to_path.is_empty(),
-		"SaveComponent `property_to_path` is empty. Did `_sync_from_source_config()` run?")
+	#assert(not property_to_path.is_empty(),
+		#"SaveComponent `property_to_path` is empty. Did `_sync_from_source_config()` run?")
 
 	var properties: Array[Dictionary] = []
 
@@ -202,7 +205,7 @@ func apply_save() -> void:
 
 	for property_name in state_container:
 		assert(has_state_property(property_name), 
-			"Trying to `apply_save` with property `%s` that is not tracked by the 
+			"Trying to save with property `%s` that is not tracked by the 
 			`SaveComponent`." % property_name)
 
 		var path: NodePath = property_to_path[property_name]
@@ -211,8 +214,17 @@ func apply_save() -> void:
 			that is tracked by the `SaveComponent`." % property_name)
 		_set_path_value(path, value)
 
-
-func on_state_changed() -> void:
+func load_state() -> Error:
+	var load_error: Error = state_container.load_state(save_slot)
+	(%ClientComponent as ClientComponent).spawn_client()
+	apply_save()
+	return load_error
+	
+func save_state() -> Error:
 	var save_error: Error = state_container.save_state(save_slot)
 	assert(save_error == OK, 
 			"Something went wrong while saving: %s" % error_string(save_error))
+	return save_error
+
+func on_state_changed() -> void:
+	save_state()

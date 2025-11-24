@@ -5,17 +5,19 @@ extends MultiplayerSpawner
 
 func _ready() -> void:
 	spawn_function = spawn_player
+	
 
 func spawn_player(player_data: Dictionary) -> Node2D:
 	var player: Node2D = player_scene.instantiate()
 	
 	@warning_ignore("unsafe_cast")
 	player.set_multiplayer_authority(player_data.peer_id as int)
-	player.name = str(player_data.peer_id)
+	player.name = str(player_data.username)
 	
-	var client_component: ClientComponent = player.get_node_or_null("%ClientComponent")
-	assert(client_component, "Spawning remotely requires a `ClientComponent`.")
-	client_component.spawn_with_data(player_data)
+	if get_multiplayer_authority() == 1:
+		var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
+		assert(save_component != null, "Player must have a `SaveComponent`.")
+		var _load_save_error: Error = save_component.load_state()
 	
 	return player
 

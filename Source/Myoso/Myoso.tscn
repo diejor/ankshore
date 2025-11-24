@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=20 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://Source/Myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://Source/Myoso/Resources/myoso_actions.tres" id="2_a6gmg"]
@@ -13,6 +13,7 @@
 [ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://Source/Myoso/Components/player_input.gd" id="6_sb6si"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://Source/Myoso/Resources/dictionary_resource.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://Source/Myoso/PlayerHud.tscn" id="9_3l6w3"]
+[ext_resource type="Resource" uid="uid://beue3dvjeb3if" path="res://Source/Myoso/Components/is_active.tres" id="10_tkyel"]
 [ext_resource type="Script" uid="uid://c72wanrudisxw" path="res://Source/Myoso/Components/save_component.gd" id="10_xdvvs"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
@@ -30,6 +31,9 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath("../ClientComponent:current_scene_uid")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath("../../PlayerHUD/VBoxContainer/Handle2/PanelContainer/UsernameLabel:text")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [sub_resource type="Resource" id="Resource_xdvvs"]
 resource_local_to_scene = true
@@ -50,6 +54,7 @@ sprint_speed = 96.0
 script = ExtResource("3_a6gmg")
 
 [node name="AutoloadSignals" type="Node" parent="Components"]
+unique_name_in_owner = true
 script = ExtResource("3_fpqk8")
 
 [node name="TPComponent" type="Node" parent="Components"]
@@ -84,6 +89,7 @@ state_container = SubResource("Resource_xdvvs")
 [node name="PersistentComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
 script = ExtResource("5_sb6si")
+is_active = ExtResource("10_tkyel")
 
 [node name="InputComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -119,6 +125,7 @@ metadata/_edit_lock_ = true
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="_on_autoload_signals_scene_changed"]
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_scene_changed"]
-[connection signal="spawn" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_spawn"]
 [connection signal="spawn" from="Components/ClientComponent" to="PlayerHUD" method="_on_spawn"]
 [connection signal="state_changed" from="Components/SaveComponent" to="Components/SaveComponent" method="on_state_changed"]
+
+[editable path="PlayerHUD"]

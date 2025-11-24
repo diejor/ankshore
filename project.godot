@@ -19,8 +19,8 @@ config/icon="uid://ddkwfh5opq7yw"
 
 [autoload]
 
-Client="*res://Source/Networking/Client/client.gd"
 Server="*res://Source/Networking/Server/server.gd"
+Client="*res://Source/Networking/Client/client.gd"
 GameInstance="*res://Source/Autoloads/game_instance.gd"
 SceneManager="*res://Source/Autoloads/scene_manager.gd"
 
