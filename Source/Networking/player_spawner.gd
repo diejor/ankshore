@@ -12,7 +12,6 @@ func spawn_player(player_data: Dictionary) -> Node2D:
 
 	@warning_ignore("unsafe_cast")
 	player.set_multiplayer_authority(player_data.peer_id as int)
-	player.set_multiplayer_authority(1, false)
 	player.name = str(player_data.username)
 	
 	if get_multiplayer_authority() == 1:

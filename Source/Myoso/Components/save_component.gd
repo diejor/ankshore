@@ -4,9 +4,16 @@ extends MultiplayerSynchronizer
 signal state_changed
 
 @export_dir var save_dir: String
-@onready var save_slot: String:
+@export_dir var save_extension: String
+@onready var save_path: String:
 	get:
-		return save_dir.path_join(owner.name)
+		assert(save_extension.begins_with("."),
+			"Save extension should begin with a dot.")
+			
+		save_path = save_dir.path_join(owner.name + save_extension)
+		assert(save_path.is_absolute_path(), 
+			"Invalid save to a not valid file path. " + save_path)
+		return save_path
 
 @export var state_container: DataResource
 
@@ -32,17 +39,21 @@ func _get_save_root_node() -> Node:
 
 
 func _ready() -> void:
-	assert(state_container, "Please specify the `DataResource` that will keep track of the save.")
+	assert(state_container, 
+		"Please specify the `DataResource` that will keep track of the save.")
 	
 	assert(state_container.resource_local_to_scene, 
-		"Make the exported `DataResource` container `local_to_scene = true` through the 
-		inspector, otherwise saves will be shared.")
+		"Make the exported `DataResource` container `local_to_scene = true` 
+		through the inspector, otherwise saves will be shared.")
 
-	assert(replication_config, "SaveComponent requires an initial `replication_config` with real properties.")
+	assert(replication_config, 
+		"SaveComponent requires an initial `replication_config` 
+		with real properties.")
 	_ensure_source_config_initialized()
 	
 	if OS.has_feature("standalone") or "--server" in OS.get_cmdline_args():
-		push_warning("Replacing `res://` with `user://` because running as exported.")
+		push_warning("Replacing `res://` with `user://` because running 
+			as exported.")
 		save_dir.replace("res://", "user://")
 	
 	if not DirAccess.dir_exists_absolute(save_dir):
@@ -61,26 +72,32 @@ func _sync_from_source_config() -> void:
 
 	_ensure_source_config_initialized()
 	assert(source_config, "SaveComponent requires `source_config`.")
-	assert(real_root_path != NodePath(""), "SaveComponent `real_root_path` must be set before `_ready`.")
+	assert(real_root_path != NodePath(""), 
+	"SaveComponent `real_root_path` must be set before `_ready`.")
 	var root_node: Node = get_node(real_root_path)
 
 	var paths: Array = source_config.get_properties()
 	for path: NodePath in paths:
 		var node_res: Array = root_node.get_node_and_resource(path)
 		assert(node_res[0],
-			"Trying to synchronize '" + str(path) + "' which is not a valid property path. Check `replication_config`.")
+			"Trying to synchronize '" + str(path) + 
+			"' which is not a valid property path. Check `replication_config`.")
 
 		var prop_path: NodePath = node_res[2]
 		if prop_path.get_subname_count() == 0:
 			continue
 
-		var property_name: StringName = _make_virtual_property_name(root_node, path)
+		var property_name: StringName = _make_virtual_property_name(
+			root_node, path)
 
 		assert(property_name != StringName(""),
-			"Replicated property from '" + str(path) + "' generated empty virtual name.")
+			"Replicated property from '" + str(path) + "' generated empty 
+			virtual name.")
 
 		assert(not property_to_path.has(property_name),
-			"Virtual property name '" + str(property_name) + "' from path '" + str(path) + "' is duplicated. Check `replication_config`.")
+			"Virtual property name '" + str(property_name) + 
+			"' from path '" + str(path) + "' is duplicated. 
+			Check `replication_config`.")
 
 		property_to_path[property_name] = path
 
@@ -88,10 +105,13 @@ func _sync_from_source_config() -> void:
 			state_container.set_value(property_name, _get_path_value(path))
 
 
-func _make_virtual_property_name(root_node: Node, property_path: NodePath) -> StringName:
+func _make_virtual_property_name(
+		root_node: Node, 
+		property_path: NodePath) -> StringName:
 	var node_res: Array = root_node.get_node_and_resource(property_path)
 	assert(node_res[0],
-		"Trying to synchronize '" + str(property_path) + "' which is not a valid property path. Check `replication_config`.")
+		"Trying to synchronize '" + str(property_path) + 
+		"' which is not a valid property path. Check `replication_config`.")
 
 	var node: Node = node_res[0]
 	var prop_path: NodePath = node_res[2]
@@ -113,7 +133,8 @@ func _set_path_value(property_path: NodePath, value: Variant) -> void:
 
 	var node_res: Array = root_node.get_node_and_resource(property_path)
 	assert(node_res[0],
-		"Trying to write '" + str(property_path) + "' which is not a valid property path. Check `replication_config`.")
+		"Trying to write '" + str(property_path) + 
+		"' which is not a valid property path. Check `replication_config`.")
 
 	var node: Node = node_res[0]
 	var prop_path: NodePath = node_res[2]
@@ -125,7 +146,8 @@ func _get_path_value(property_path: NodePath) -> Variant:
 
 	var node_res: Array = root_node.get_node_and_resource(property_path)
 	assert(node_res[0],
-		"Trying to read '" + str(property_path) + "' which is not a valid property path. Check `replication_config`.")
+		"Trying to read '" + str(property_path) + 
+		"' which is not a valid property path. Check `replication_config`.")
 
 	var node: Node = node_res[0]
 	var prop_path: NodePath = node_res[2]
@@ -144,7 +166,9 @@ func _ensure_property_mapping() -> void:
 
 
 func _build_save_replication_config() -> void:
-	assert(source_config, "SaveComponent expects `source_config` to be set before building save config.")
+	assert(source_config, 
+		"SaveComponent expects `source_config` to be set before 
+		building save config.")
 
 	if not save_config:
 		save_config = SceneReplicationConfig.new()
@@ -175,9 +199,6 @@ func _build_save_replication_config() -> void:
 
 
 func _get_property_list() -> Array[Dictionary]:
-	#assert(not property_to_path.is_empty(),
-		#"SaveComponent `property_to_path` is empty. Did `_sync_from_source_config()` run?")
-
 	var properties: Array[Dictionary] = []
 
 	for property_name: StringName in property_to_path.keys():
@@ -221,7 +242,7 @@ func refresh_property_list_from_source() -> void:
 
 
 func _configure_visibility() -> void:
-	add_visibility_filter(only_server_filter)
+	#add_visibility_filter(only_server_filter)
 	update_visibility()
 
 
@@ -271,54 +292,31 @@ func _normalize_loaded_root_keys() -> void:
 
 	if changed:
 		dict_res.data = normalized
-
-
-func _collect_state_snapshot() -> Dictionary[StringName, Variant]:
-	_ensure_property_mapping()
-	var snapshot: Dictionary[StringName, Variant] = {}
-
-	for property_name: StringName in property_to_path.keys():
-		var path: NodePath = property_to_path[property_name]
-		snapshot[property_name] = _get_path_value(path)
-
-	return snapshot
-
-
-func _apply_state_snapshot(snapshot: Dictionary) -> void:
-	_ensure_property_mapping()
-	var changed := false
-
-	for property_name: StringName in snapshot.keys():
-		var normalized_name := StringName(property_name)
-		if not has_state_property(normalized_name):
-			continue
-		state_container.set_value(normalized_name, snapshot[property_name])
-		changed = true
-
-	if changed:
-		state_changed.emit()
-
+		
 
 func force_state_sync() -> void:
-	var snapshot := _collect_state_snapshot()
-	if snapshot.is_empty():
-		return
-
-	if not multiplayer.has_multiplayer_peer() or multiplayer.is_server():
-		_apply_state_snapshot(snapshot)
-	else:
-		_force_state_sync.rpc_id(1, snapshot)
+	_update_state()
+	_force_state_sync.rpc_id(1, state_container.to_bytes())
 
 
 @rpc("any_peer", "call_remote")
-func _force_state_sync(snapshot: Dictionary) -> void:
-	if not multiplayer.is_server():
-		return
-	_apply_state_snapshot(snapshot)
+func _force_state_sync(state_bytes: PackedByteArray) -> void:
+	state_container.from_bytes(state_bytes)
+	_apply_state()
 
+func _update_state() -> void:
+	_ensure_property_mapping()
 
-func apply_save() -> void:
-	assert(state_container, "SaveComponent.apply_save() requires a valid DataResource.")
+	for property_name: StringName in property_to_path.keys():
+		var path: NodePath = property_to_path[property_name]
+		var value: Variant = _get_path_value(path)
+		state_container.set_value(property_name, value)
+	
+	state_changed.emit()
+
+func _apply_state() -> void:
+	assert(state_container, 
+		"SaveComponent.apply_save() requires a valid DataResource.")
 
 	_ensure_property_mapping()
 
@@ -330,19 +328,20 @@ func apply_save() -> void:
 
 		var path: NodePath = property_to_path[resolved_name]
 		var value: Variant = state_container.get_value(property_name)
-		assert(value != null, "Trying to `apply_save` but the save doesn't have property `%s`
+		assert(value != null, 
+			"Trying to `apply_save` but the save doesn't have property `%s`
 			that is tracked by the `SaveComponent`." % property_name)
 		_set_path_value(path, value)
 
 func load_state() -> Error:
 	_ensure_property_mapping()
-	var load_error: Error = state_container.load_state(save_slot)
+	var load_error: Error = state_container.load_state(save_path)
 	_normalize_loaded_root_keys()
-	apply_save()
+	_apply_state()
 	return load_error
 	
 func save_state() -> Error:
-	var save_error: Error = state_container.save_state(save_slot)
+	var save_error: Error = state_container.save_state(save_path)
 	assert(save_error == OK, 
 			"Something went wrong while saving: %s" % error_string(save_error))
 	return save_error

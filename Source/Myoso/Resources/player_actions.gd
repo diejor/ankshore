@@ -1,5 +1,5 @@
 class_name PlayerActions
-extends Resource
+extends ActionsResource
 
 @export_custom(PROPERTY_HINT_INPUT_NAME, &"action") var move_left: StringName
 @export_custom(PROPERTY_HINT_INPUT_NAME, &"action") var move_right: StringName

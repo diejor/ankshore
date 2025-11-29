@@ -21,5 +21,6 @@ func on_connected_to_server() -> void:
 		peer_id = Client.uid
 	}
 	
-	player_spawner.request_spawn_player.rpc_id(1, player_data)
 	owner.queue_free()
+	player_spawner.request_spawn_player.rpc_id(1, player_data)
+	

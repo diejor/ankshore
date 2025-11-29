@@ -7,8 +7,8 @@ extends Resource
 @abstract func get_value(property: StringName, default: Variant = null) -> Variant
 @abstract func has_value(property: StringName) -> bool
 
-## Returns a snapshot of the full state for saving.
-@abstract func get_state() -> DataResource
+@abstract func from_bytes(bytes: PackedByteArray) -> void
+@abstract func to_bytes() -> PackedByteArray
 
 ## Saves this DictionaryResource using ResourceSaver.
 ## The save_slot path should include the extension (.tdict or .dict).
