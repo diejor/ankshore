@@ -1,8 +1,8 @@
 @tool
-## ResourceFormatLoader for DictionaryResource.
-## - .tdict: loads JSON into DictionaryResource.
-## - .dict:  loads store_var() binary into DictionaryResource.
-class_name DictionaryResourceFormatLoader
+## ResourceFormatLoader for DictionarySave.
+## - .tdict: loads JSON into DictionarySave.
+## - .dict:  loads store_var() binary into DictionarySave.
+class_name DictionarySaveFormatLoader
 extends ResourceFormatLoader
 
 const TEXT_EXT := "tdict"
@@ -15,14 +15,14 @@ func _get_recognized_extensions() -> PackedStringArray:
 
 func _handles_type(type: StringName) -> bool:
 	return (type == &"Resource"
-		or type == &"DataResource"
-		or type == &"DictionaryResource")
+		or type == &"SaveContainer"
+		or type == &"DictionarySave")
 
 
 func _get_resource_type(path: String) -> String:
 	var ext := path.get_extension().to_lower()
 	if ext == TEXT_EXT or ext == BIN_EXT:
-		return "DictionaryResource"
+		return "DictionarySave"
 	return ""
 
 
@@ -54,7 +54,7 @@ func _load(path: String, _original_path: String, _use_sub_threads: bool, _cache_
 	if file == null:
 		return FileAccess.get_open_error()
 
-	var dict_res := DictionaryResource.new()
+	var dict_res := DictionarySave.new()
 
 	match ext:
 		TEXT_EXT:
@@ -63,7 +63,7 @@ func _load(path: String, _original_path: String, _use_sub_threads: bool, _cache_
 			var json := JSON.new()
 			var err := json.parse(text)
 			assert(err == OK, 
-				"JSON parse failed for `DictionaryResource` `\"*.tdict\"`. 
+				"JSON parse failed for `DictionarySave` `\"*.tdict\"`. 
 				Error: %s" % error_string(err)) 
 
 			dict_res.data = JSON.to_native(json.data, false)
@@ -75,7 +75,7 @@ func _load(path: String, _original_path: String, _use_sub_threads: bool, _cache_
 			var decoded: Variant = file.get_var()
 			assert(typeof(decoded) == TYPE_DICTIONARY, 
 				"Binary `\"*.dict\"` did not contain a Dictionary for 
-				DictionaryResource.")
+				DictionarySave.")
 			if typeof(decoded) != TYPE_DICTIONARY:
 				return ERR_FILE_CORRUPT
 

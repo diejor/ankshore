@@ -1,9 +1,14 @@
 extends CharacterBody2D
 
+signal spawn
+
 @onready var input: PlayerInputComponent = %InputComponent
 
 @export var walk_speed := 64.0
 @export var sprint_speed := 80.0
+
+func _ready() -> void:
+	pass
 
 func _physics_process(_delta: float) -> void:
 	var desired_speed: float
@@ -15,3 +20,7 @@ func _physics_process(_delta: float) -> void:
 	velocity = desired_speed * input.direction
 	
 	move_and_slide()
+
+
+func on_spawn() -> void:
+	spawn.emit()

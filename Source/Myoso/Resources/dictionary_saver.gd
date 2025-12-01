@@ -1,8 +1,8 @@
 @tool
-## ResourceFormatSaver for DictionaryResource.
+## ResourceFormatSaver for DictionarySave.
 ## - .tdict: JSON text with String keys.
 ## - .dict:  binary store_var() of the dictionary.
-class_name DictionaryResourceFormatSaver
+class_name DictionarySaveFormatSaver
 extends ResourceFormatSaver
 
 const TEXT_EXT := "tdict"
@@ -10,24 +10,24 @@ const BIN_EXT  := "dict"
 
 
 func _recognize(resource: Resource) -> bool:
-	return resource is DictionaryResource
+	return resource is DictionarySave
 
 
 func _get_recognized_extensions(resource: Resource) -> PackedStringArray:
-	assert(resource is DictionaryResource)
+	assert(resource is DictionarySave)
 	return PackedStringArray([TEXT_EXT, BIN_EXT])
 
 
 func _recognize_path(resource: Resource, path: String) -> bool:
-	assert(resource is DictionaryResource)
+	assert(resource is DictionarySave)
 	var ext := path.get_extension().to_lower()
 	return ext == TEXT_EXT or ext == BIN_EXT
 
 
 func _save(resource: Resource, path: String, _flags: int) -> Error:
-	var dict_res := resource as DictionaryResource
+	var dict_res := resource as DictionarySave
 	assert(dict_res != null, 
-		"`DictionarySaver` can only save `DictionaryResource`.")
+		"`DictionarySaver` can only save `DictionarySave`.")
 	if dict_res == null:
 		return ERR_UNAVAILABLE
 
@@ -40,13 +40,14 @@ func _save(resource: Resource, path: String, _flags: int) -> Error:
 			return _save_as_binary(dict_res, path)
 		_:
 			assert(false, 
-				"Unsupported extension for DictionaryResource: %s" % ext)
+				"Unsupported extension for DictionarySave: %s" % ext)
 			return ERR_FILE_UNRECOGNIZED
 
 
-func _save_as_json(dict_res: DictionaryResource, path: String) -> Error:
+func _save_as_json(dict_res: DictionarySave, path: String) -> Error:
 	var file := FileAccess.open(path, FileAccess.WRITE)
-	assert(file != null, "Failed to open file for JSON save in DictionaryResourceFormatSaver.")
+	assert(file != null, 
+		"Failed to open file for JSON save at path `%s`." % path)
 	if file == null:
 		return FileAccess.get_open_error()
 
@@ -58,9 +59,9 @@ func _save_as_json(dict_res: DictionaryResource, path: String) -> Error:
 	return OK
 
 
-func _save_as_binary(dict_res: DictionaryResource, path: String) -> Error:
+func _save_as_binary(dict_res: DictionarySave, path: String) -> Error:
 	var file := FileAccess.open(path, FileAccess.WRITE)
-	assert(file != null, "Failed to open file for binary save in DictionaryResourceFormatSaver.")
+	assert(file != null, "Failed to open file for binary save in DictionarySaveFormatSaver.")
 	if file == null:
 		return FileAccess.get_open_error()
 

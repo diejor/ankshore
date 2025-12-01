@@ -1,6 +1,8 @@
-[gd_scene load_steps=5 format=4 uid="uid://xkil2cmplfcd"]
+[gd_scene load_steps=7 format=4 uid="uid://xkil2cmplfcd"]
 
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://Source/Myoso/Myoso.tscn" id="1_kwkoe"]
+[ext_resource type="Script" uid="uid://c38wy2w7dt80k" path="res://Source/Areas/winter.gd" id="1_lqf3f"]
+[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://Source/Myoso/Components/AutoloadSignals.tscn" id="2_xy03w"]
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://Source/Areas/AreaTP.tscn" id="3_4lfof"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://Source/Networking/PlayerSpawner.tscn" id="4_kwkoe"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://Source/Areas/Resources/winter_tileset.tres" id="4_xy03w"]
@@ -8,7 +10,10 @@
 [node name="Winter" type="Node2D"]
 process_priority = -1
 y_sort_enabled = true
+script = ExtResource("1_lqf3f")
 metadata/_edit_lock_ = true
+
+[node name="AutoloadSignals" parent="." instance=ExtResource("2_xy03w")]
 
 [node name="Myoso" parent="." instance=ExtResource("1_kwkoe")]
 unique_name_in_owner = true
@@ -29,7 +34,10 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 position = Vector2(151, 16)
 scene_path = "uid://dta1ona6odgmr"
+scene_name = "AreaTest1"
 target_tp_id = "AreaTP1"
 
 [node name="PlayerSpawner" parent="." instance=ExtResource("4_kwkoe")]
 unique_name_in_owner = true
+
+[connection signal="connected_to_server" from="AutoloadSignals" to="." method="on_connected_to_server"]

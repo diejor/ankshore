@@ -9,13 +9,9 @@ var tp_destination: String
 @export var current_scene_name: String = ""
 @export var name_to_scene: Dictionary[StringName, String]
 
-func _enter_tree() -> void:
-	var is_incorrect_scene_name: bool = current_scene_name != SceneManager.current_scene.name
-	if not current_scene_name.is_empty() and is_incorrect_scene_name:
-		get_tree().change_scene_to_file(name_to_scene[current_scene_name])
-	elif is_incorrect_scene_name:
+func _ready() -> void:
+	if current_scene_name.is_empty():
 		current_scene_name = SceneManager.current_scene.name
-
 
 func begin_teleport(_tp_destination: String) -> void:
 	assert(not _tp_destination.is_empty(), "Teleporting to an unnamed `TPArea` is not valid.")
@@ -59,3 +55,11 @@ func request_teleport(player_data: Dictionary) -> void:
 	owner.queue_free()
 	@warning_ignore("unsafe_cast")
 	lobby_spawner.request_spawn_player(player_data)
+
+
+func on_spawn() -> void:
+	var camera: Camera2D = owner.get_node("%Camera2D")
+	camera.reset_smoothing()
+	var is_incorrect_scene_name: bool = current_scene_name != SceneManager.current_scene.name
+	if not current_scene_name.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
+		get_tree().change_scene_to_file(name_to_scene[current_scene_name])

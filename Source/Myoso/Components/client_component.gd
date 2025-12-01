@@ -1,15 +1,30 @@
 class_name ClientComponent
 extends Node
 
-## The client component works closely with the client peer instanciated at 
-## `GameInstance.client` to make this player controller have a network connection.
+
+@onready var autoload_signals: AutoloadSignals = %AutoloadSignals
 
 @onready var player_spawner: PlayerSpawner = owner.get_parent().get_node("%PlayerSpawner")
+@export var is_active: IsActive
 
 func _ready() -> void:
 	if not GameInstance.is_client():
 		push_warning("ClientComponent running without an active client; network features are offline.")
 
+	# Remove offline players and replace them with a player scene.
+	assert(not is_active.resource_local_to_scene, 
+		"In order to detect active players, `%s` resource must not be local
+		to scene." % is_active)
+	var offline_name := owner.name
+	var offline_node: Node = owner.get_node_or_null("%"+offline_name)
+	if not is_active.active:
+		is_active.active = true
+		await autoload_signals.scene_changed
+		Client.connected_to_server.emit()
+		return
+	
+	if offline_node != null:
+		offline_node.queue_free()
 
 ## When the client connects, we need to let the server know to spawn us, `PlayerSpawner` 
 ## will replicate us back.

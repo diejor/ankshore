@@ -17,7 +17,10 @@ func spawn_player(player_data: Dictionary) -> Node2D:
 	if get_multiplayer_authority() == 1:
 		var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
 		assert(save_component != null, "Player must have a `SaveComponent`.")
-		var _load_save_error: Error = save_component.load_state()
+		var load_error: Error = save_component.load_state()
+		assert(load_error == OK or load_error == ERR_FILE_NOT_FOUND, 
+			"Something failed while trying to load player. 
+			Error: %s." % error_string(load_error))
 	
 	return player
 

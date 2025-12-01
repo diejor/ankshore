@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dfvoo60p3ut6n"]
+[gd_scene load_steps=5 format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://Source/MenuStuff/button.gd" id="1_uubjt"]
 [ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://Source/Areas/Winter.tscn" id="2_5yleq"]
+[ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://Source/Myoso/Components/autoload_signals.gd" id="3_i7gu7"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 
@@ -12,6 +13,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="AutoloadSignals" type="Node" parent="."]
+script = ExtResource("3_i7gu7")
+metadata/_custom_type_script = "uid://b45nyqhksohxg"
 
 [node name="Button" type="Button" parent="."]
 layout_mode = 0
@@ -44,4 +49,5 @@ text = "ANKSHORE!!!!!!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[connection signal="connected_to_server" from="AutoloadSignals" to="Button" method="on_connected_to_server"]
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

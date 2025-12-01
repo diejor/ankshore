@@ -19,9 +19,10 @@ config/icon="uid://ddkwfh5opq7yw"
 
 [autoload]
 
+GameInstance="*res://Source/Autoloads/game_instance.gd"
+Network="*res://Source/Networking/Network.tscn"
 Server="*res://Source/Networking/Server/server.gd"
 Client="*res://Source/Networking/Client/client.gd"
-GameInstance="*res://Source/Autoloads/game_instance.gd"
 SceneManager="*res://Source/Autoloads/scene_manager.gd"
 
 [debug]
@@ -58,12 +59,6 @@ folder_colors={
 "res://Source/Myoso/": "blue",
 "res://Source/Networking/": "teal"
 }
-
-[global_group]
-
-players="All the players in the game."
-clients="All the visible clients to this running instance."
-synchronizers=""
 
 [input]
 
