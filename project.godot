@@ -19,11 +19,11 @@ config/icon="uid://ddkwfh5opq7yw"
 
 [autoload]
 
-GameInstance="*res://Source/Autoloads/game_instance.gd"
-Network="*res://Source/Networking/Network.tscn"
-Server="*res://Source/Networking/Server/server.gd"
-Client="*res://Source/Networking/Client/client.gd"
-SceneManager="*res://Source/Autoloads/scene_manager.gd"
+GameInstance="*res://source/autoloads/game_instance.gd"
+Network="*res://source/networking/Network.tscn"
+Server="*res://source/networking/server/server.gd"
+Client="*res://source/networking/client/client.gd"
+SceneManager="*res://source/autoloads/scene_manager.gd"
 
 [debug]
 
@@ -50,14 +50,15 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 [file_customization]
 
 folder_colors={
-"res://Source/": "gray",
-"res://Source/Areas/": "orange",
-"res://Source/Autoloads/": "yellow",
-"res://Source/CombatStuff/": "red",
-"res://Source/CombatStuff/CharacterCombatStuff/character_Anatomy/": "teal",
-"res://Source/MenuStuff/": "purple",
-"res://Source/Myoso/": "blue",
-"res://Source/Networking/": "teal"
+"res://source/": "gray",
+"res://source/autoloads/": "yellow",
+"res://source/combat/": "red",
+"res://source/combat/CharacterCombatStuff/character_Anatomy/": "teal",
+"res://source/networking/": "teal",
+"res://source/scenes/": "pink",
+"res://source/scenes/areas/": "orange",
+"res://source/scenes/menus/": "purple",
+"res://source/scenes/myoso/": "blue"
 }
 
 [input]

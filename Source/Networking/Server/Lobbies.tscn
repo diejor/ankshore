@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://qlqsk51s66cw"]
 
-[ext_resource type="PackedScene" uid="uid://bqm4gt3kspfkr" path="res://Source/Networking/Server/Lobbies/Winter.tscn" id="1_dtkm7"]
-[ext_resource type="PackedScene" uid="uid://85gtbquxud7a" path="res://Source/Networking/Server/Lobbies/AreaTest1.tscn" id="2_jocrf"]
+[ext_resource type="PackedScene" uid="uid://bqm4gt3kspfkr" path="res://source/networking/server/lobbies/Winter.tscn" id="1_dtkm7"]
+[ext_resource type="PackedScene" uid="uid://85gtbquxud7a" path="res://source/networking/server/lobbies/AreaTest1.tscn" id="2_jocrf"]
 
 [node name="Lobbies" type="Node2D"]
 process_mode = 4

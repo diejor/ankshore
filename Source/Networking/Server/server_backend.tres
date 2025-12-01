@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="WebRTCLoopbackServerBackend" load_steps=2 format=3 uid="uid://bwvqf0hikm7d3"]
 
-[ext_resource type="Script" uid="uid://b4x6usceefd6p" path="res://Source/Networking/Server/webrtc_loopback_backend.gd" id="1_q2u8w"]
+[ext_resource type="Script" uid="uid://b4x6usceefd6p" path="res://source/networking/server/webrtc_loopback_backend.gd" id="1_q2u8w"]
 
 [resource]
 script = ExtResource("1_q2u8w")
