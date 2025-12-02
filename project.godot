@@ -53,7 +53,7 @@ folder_colors={
 "res://source/": "gray",
 "res://source/autoloads/": "yellow",
 "res://source/combat/": "red",
-"res://source/combat/character/character_Anatomy/": "teal",
+"res://source/combat/character/anatomy/": "teal",
 "res://source/networking/": "teal",
 "res://source/scenes/": "pink",
 "res://source/scenes/areas/": "orange",
