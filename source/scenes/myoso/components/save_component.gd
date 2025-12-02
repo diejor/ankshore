@@ -2,6 +2,7 @@ class_name SaveComponent
 extends Node
 
 signal state_changed
+signal instanciate
 signal spawn
 
 @export_dir var save_dir: String
@@ -13,9 +14,6 @@ signal spawn
 @onready var save_synchronizer: SaveSynchronizer:
 	get:
 		return %SaveSynchronizer
-@onready var base_sync: MultiplayerSynchronizer:
-	get:
-		return %MultiplayerSynchronizer
 
 @onready var save_path: String:
 	get:
@@ -25,13 +23,10 @@ signal spawn
 		assert(save_path.is_absolute_path(), "Invalid save to a not valid file path. " + save_path)
 		return save_path
 
-func _enter_tree() -> void:
-	save_synchronizer.setup_from(base_sync, save_container)
-
 func _ready() -> void:
 	assert(save_container, "SaveComponent requires a SaveContainer.")
 	assert(save_synchronizer, "SaveComponent needs a SaveSynchronizer reference.")
-	assert(base_sync, "SaveComponent expects a unique node %MultiplayerSynchronizer in the scene.")
+	
 
 	# Make sure both point to the same container
 	assert(save_synchronizer.save_container == save_container,
@@ -50,10 +45,17 @@ func _prepare_save_dir() -> void:
 func load_state() -> Error:
 	var load_error: Error = save_container.load_state(save_path)
 	if load_error == Error.OK:
-		var push_with_signal := func() -> void:
-			save_synchronizer.push_to_scene()
-			spawn.emit()
-		push_with_signal.call_deferred()
+		var instanciate_error: Error = save_synchronizer.push_to_scene()
+		match instanciate_error:
+			ERR_UNCONFIGURED:
+				push_error(
+					"Removing unconfigured file at `%s`." % save_path)
+				DirAccess.remove_absolute(save_path)
+			OK:
+				instanciate.emit()
+				spawn.emit.call_deferred()
+			_:
+				return instanciate_error
 	return load_error
 
 func save_state() -> Error:

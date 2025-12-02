@@ -6,12 +6,15 @@ extends Node
 
 var tp_destination: String
 
-@export var current_scene_name: String = ""
-@export var name_to_scene: Dictionary[StringName, String]
+@export var current_scene: String = ""
+
+var current_scene_name: String:
+	get:
+		return get_scene_name(current_scene)
 
 func _ready() -> void:
-	if current_scene_name.is_empty():
-		current_scene_name = SceneManager.current_scene.name
+	if current_scene.is_empty():
+		current_scene = SceneManager.current_scene.scene_file_path
 
 func begin_teleport(_tp_destination: String) -> void:
 	assert(not _tp_destination.is_empty(), "Teleporting to an unnamed `TPArea` is not valid.")
@@ -26,12 +29,12 @@ func begin_teleport(_tp_destination: String) -> void:
 ## If `on_scene_changed` was called it probably means the player is trying to 
 ## teleport. A player will actually teleport to a `TPArea` if they called 
 ## `begin_teleport` before switching the scene.
-func on_scene_changed(current_scene: Node, _old_scene: Node) -> void:
-	current_scene_name = current_scene.name
+func on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
+	current_scene = _current_scene.scene_file_path
 	
 	if not tp_destination.is_empty():
 		var tp_path: String = "%" + tp_destination + "/Marker2D"
-		var tp_node: Marker2D = current_scene.get_node_or_null(tp_path)
+		var tp_node: Marker2D = _current_scene.get_node_or_null(tp_path)
 		owner2d.global_position = tp_node.global_position
 		var camera: Camera2D = owner.get_node("Camera2D")
 		camera.reset_smoothing()
@@ -60,6 +63,12 @@ func request_teleport(player_data: Dictionary) -> void:
 func on_spawn() -> void:
 	var camera: Camera2D = owner.get_node("%Camera2D")
 	camera.reset_smoothing()
-	var is_incorrect_scene_name: bool = current_scene_name != SceneManager.current_scene.name
-	if not current_scene_name.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
-		get_tree().change_scene_to_file(name_to_scene[current_scene_name])
+	var is_incorrect_scene_name: bool = current_scene != SceneManager.current_scene.scene_file_path
+	if not current_scene.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
+		get_tree().change_scene_to_file(current_scene)
+
+func get_scene_name(path_or_uid: String) -> String:
+	var path: String = ResourceUID.ensure_path(path_or_uid)
+	var scene: PackedScene = load(path)
+	var scene_state: SceneState = scene.get_state()
+	return scene_state.get_node_name(0)

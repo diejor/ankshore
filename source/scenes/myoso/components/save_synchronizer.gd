@@ -3,19 +3,28 @@ extends MultiplayerSynchronizer
 
 signal state_changed
 
-var save_container: SaveContainer
+@onready var base_sync: MultiplayerSynchronizer: 
+	get: return %MultiplayerSynchronizer
+@onready var save_container: SaveContainer:
+	get: return (%SaveComponent as SaveComponent).save_container
+@onready var _source_config: SceneReplicationConfig:
+	get: return base_sync.replication_config
 
 var _property_paths: Dictionary[StringName, NodePath] = {}
-var _source_config: SceneReplicationConfig
 
-func setup_from(source_sync: MultiplayerSynchronizer, container: SaveContainer) -> void:
-	_source_config = source_sync.replication_config
-	save_container = container
+var _initialized: bool = false
 
 func _ready() -> void:
+	setup()
+
+func setup() -> void:
+	if _initialized:
+		return
+	_initialized = true
 	assert(save_container, "Please specify the SaveContainer that will keep track of the save.")
 	assert(save_container.resource_local_to_scene,
 		"Make the exported SaveContainer local_to_scene = true, otherwise saves will be shared.")
+	assert(base_sync, "SaveComponent expects a unique node %MultiplayerSynchronizer in the scene.")
 
 	# If no source config yet, we can't virtualize.
 	assert(_source_config != null,
@@ -26,6 +35,8 @@ func _ready() -> void:
 	
 	add_visibility_filter(func (peer_id: int) -> bool: return peer_id == 1)
 	update_visibility()
+	
+	
 
 # ------------------------
 # Virtualization helpers
@@ -145,19 +156,28 @@ func pull_from_scene() -> void:
 		save_container.set_value(property_name, value)
 	state_changed.emit()
 
-func push_to_scene() -> void:
+func push_to_scene() -> Error:
+	setup()
 	assert(save_container, "SaveSynchronizer.push_to_scene() requires a valid SaveContainer.")
 
 	for property_name in save_container:
 		var pname := StringName(property_name)
-		assert(has_state_property(pname),
-			"Trying to push state with property '%s' that is not tracked by the SaveSynchronizer." % property_name)
-
+		if not has_state_property(pname):
+			push_error(
+				"Trying to push state with property 
+				'%s' that is not tracked by the SaveSynchronizer." % property_name)
+			return Error.ERR_UNCONFIGURED
+		
 		var value: Variant = save_container.get_value(pname)
-		assert(value != null,
-			"Trying to push state but the save doesn't have property '%s' that is tracked by the SaveSynchronizer." % property_name)
+		if value == null:
+			push_error(
+				"Trying to push state but the save doesn't have property 
+				'%s' that is tracked by the SaveSynchronizer." % property_name)
+			return Error.ERR_UNCONFIGURED
 
 		_set_scene_value(pname, value)
+	
+	return Error.OK
 
 func force_state_sync() -> void:
 	pull_from_scene()

@@ -13,7 +13,7 @@ func _ready() -> void:
 
 	# Remove offline players and replace them with a player scene.
 	assert(not is_active.resource_local_to_scene, 
-		"In order to detect active players, `%s` resource must not be local
+		"In order to detect active players, `%s` resource must NOT be local
 		to scene." % is_active)
 	var offline_name := owner.name
 	var offline_node: Node = owner.get_node_or_null("%"+offline_name)

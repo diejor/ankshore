@@ -13,7 +13,7 @@ metadata/_edit_lock_ = true
 
 [node name="AutoloadSignals" parent="." instance=ExtResource("2_xy03w")]
 
-[node name="Myoso" parent="." instance=ExtResource("1_kwkoe")]
+[node name="MyosoSpawner" parent="." instance=ExtResource("1_kwkoe")]
 unique_name_in_owner = true
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
