@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpkq68rwbg6aw"]
+
+[ext_resource type="Script" uid="uid://cqsc55hj524gv" path="res://source/autoloads/networking/player_spawner.gd" id="1_6eaj7"]
+[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/myoso/Myoso.tscn" id="2_yxvlh"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner"]
+spawn_path = NodePath("..")
+script = ExtResource("1_6eaj7")
+player_scene = ExtResource("2_yxvlh")

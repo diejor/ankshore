@@ -20,9 +20,9 @@ config/icon="uid://ddkwfh5opq7yw"
 [autoload]
 
 GameInstance="*res://source/autoloads/game_instance.gd"
-Network="*res://source/networking/Network.tscn"
-Server="*res://source/networking/server/server.gd"
-Client="*res://source/networking/client/client.gd"
+Network="*res://source/autoloads/networking/Network.tscn"
+Server="*res://source/autoloads/networking/server/server.gd"
+Client="*res://source/autoloads/networking/client/client.gd"
 SceneManager="*res://source/autoloads/scene_manager.gd"
 
 [debug]
@@ -52,9 +52,9 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 folder_colors={
 "res://source/": "gray",
 "res://source/autoloads/": "yellow",
+"res://source/autoloads/networking/": "teal",
 "res://source/combat/": "red",
 "res://source/combat/character/anatomy/": "teal",
-"res://source/networking/": "teal",
 "res://source/scenes/": "pink",
 "res://source/scenes/areas/": "orange",
 "res://source/scenes/menus/": "purple",

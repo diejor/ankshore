@@ -2,35 +2,32 @@ class_name SaveComponent
 extends Node
 
 signal state_changed
-signal instanciate
-signal spawn
+signal instantiate
 
 @export_dir var save_dir: String
-	
 @export var save_extension: String = ".tdict"
-
 @export var save_container: SaveContainer
-
 @onready var save_synchronizer: SaveSynchronizer:
 	get:
 		return %SaveSynchronizer
 
 @onready var save_path: String:
 	get:
-		_prepare_save_dir()
-		assert(save_extension.begins_with("."), "Save extension should begin with a dot.")
+		assert(save_extension.begins_with("."), 
+			"Save extension should begin with a dot.")
 		save_path = save_dir.path_join(owner.name + save_extension)
-		assert(save_path.is_absolute_path(), "Invalid save to a not valid file path. " + save_path)
+		
+		assert(save_path.is_absolute_path(), 
+			"Invalid save to a not valid file path. " + save_path)
 		return save_path
 
-func _ready() -> void:
-	assert(save_container, "SaveComponent requires a SaveContainer.")
-	assert(save_synchronizer, "SaveComponent needs a SaveSynchronizer reference.")
-	
+func _init() -> void:
+	_prepare_save_dir()
 
-	# Make sure both point to the same container
-	assert(save_synchronizer.save_container == save_container,
-		"SaveComponent and SaveSynchronizer should share the same SaveContainer instance.")
+func _ready() -> void:
+	assert(save_container)
+	assert(save_synchronizer)
+	assert(save_synchronizer.save_container == save_container)
 
 func _prepare_save_dir() -> void:
 	if not OS.has_feature("editor"):
@@ -42,26 +39,34 @@ func _prepare_save_dir() -> void:
 # Public API
 # ------------------------
 
-func load_state() -> Error:
-	var load_error: Error = save_container.load_state(save_path)
-	if load_error == Error.OK:
-		var instanciate_error: Error = save_synchronizer.push_to_scene()
-		match instanciate_error:
-			ERR_UNCONFIGURED:
-				push_error(
-					"Removing unconfigured file at `%s`." % save_path)
-				DirAccess.remove_absolute(save_path)
-			OK:
-				instanciate.emit()
-				spawn.emit.call_deferred()
-			_:
-				return instanciate_error
-	return load_error
-
 func save_state() -> Error:
-	var save_error: Error = save_container.save_state(save_path)
-	assert(save_error == OK, "Something went wrong while saving: %s" % error_string(save_error))
-	return save_error
+	var err: Error = ResourceSaver.save(save_container, save_path)
+	assert(err == OK, 
+		"Failed to save `%s`. Error: %s" % [save_path, error_string(err)])
+	return err
+
+func load_state() -> Error:
+	instantiate.emit()
+	if not ResourceLoader.exists(save_path):
+		push_warning("No file found at path: %s" % save_path)
+		return ERR_FILE_NOT_FOUND
+
+	var saved_container := load(save_path)
+	if saved_container == null:
+		push_error("load returned null for %s." % save_path)
+		return ERR_CANT_OPEN
+
+	save_container = saved_container
+
+	var push_err: Error = save_synchronizer.push_to_scene()
+	match push_err:
+		ERR_UNCONFIGURED:
+			push_error(
+				"Removing unconfigured save at `%s`." % save_path)
+			DirAccess.remove_absolute(save_path)
+			return push_err
+		_:
+			return push_err
 
 func force_state_sync() -> void:
 	save_synchronizer.force_state_sync()

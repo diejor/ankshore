@@ -75,9 +75,10 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 script = ExtResource("10_xdvvs")
 save_dir = "res://saves/myoso"
+save_extension = ".tres"
 save_container = SubResource("Resource_tkyel")
 
-[node name="SaveSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent"]
+[node name="SaveSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent" node_paths=PackedStringArray("base_sync")]
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_interval = 5.0
@@ -85,6 +86,7 @@ delta_interval = 5.0
 replication_config = SubResource("SceneReplicationConfig_sxgn8")
 visibility_update_mode = 2
 script = ExtResource("9_jki01")
+base_sync = NodePath("../../ClientComponent/MultiplayerSynchronizer")
 metadata/_custom_type_script = "uid://n73txgkicr1m"
 
 [node name="InputComponent" type="Node" parent="Components"]
@@ -118,10 +120,10 @@ metadata/_edit_lock_ = true
 [node name="UsernameLabel" parent="PlayerHUD/VBoxContainer/Handle2/PanelContainer" index="0"]
 text = "Spawner"
 
+[connection signal="ready" from="." to="Components/TPComponent" method="_on_myoso_ready"]
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
-[connection signal="spawn" from="Components/SaveComponent" to="." method="on_spawn"]
-[connection signal="spawn" from="Components/SaveComponent" to="Components/TPComponent" method="on_spawn"]
+[connection signal="instantiate" from="Components/SaveComponent" to="Components/SaveComponent/SaveSynchronizer" method="_on_instantiate"]
 [connection signal="state_changed" from="Components/SaveComponent/SaveSynchronizer" to="Components/SaveComponent" method="on_state_changed"]
 
 [editable path="PlayerHUD"]

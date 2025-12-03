@@ -3,40 +3,48 @@ extends MultiplayerSynchronizer
 
 signal state_changed
 
-@onready var base_sync: MultiplayerSynchronizer: 
-	get: return %MultiplayerSynchronizer
+@export var base_sync: MultiplayerSynchronizer:
+	get:
+		return %MultiplayerSynchronizer
+
 @onready var save_container: SaveContainer:
-	get: return (%SaveComponent as SaveComponent).save_container
-@onready var _source_config: SceneReplicationConfig:
-	get: return base_sync.replication_config
+	get:
+		@warning_ignore("unsafe_property_access")
+		return %SaveComponent.save_container
 
 var _property_paths: Dictionary[StringName, NodePath] = {}
 
 var _initialized: bool = false
 
+var _state_changed: bool = false
+
 func _ready() -> void:
+	if not _initialized:
+		setup()
+	assert(_initialized, "Scynchronizer not initialized.")
+	
+func _on_instantiate() -> void:
 	setup()
+	assert(_initialized, "Scynchronizer not initialized.")
 
 func setup() -> void:
 	if _initialized:
+		push_warning("Initializing once again.")
 		return
 	_initialized = true
-	assert(save_container, "Please specify the SaveContainer that will keep track of the save.")
-	assert(save_container.resource_local_to_scene,
-		"Make the exported SaveContainer local_to_scene = true, otherwise saves will be shared.")
-	assert(base_sync, "SaveComponent expects a unique node %MultiplayerSynchronizer in the scene.")
+	
+	assert(save_container)
+	assert(base_sync)
+	assert(base_sync.replication_config)
+	assert(save_container.resource_local_to_scene, 
+		"`%s` is not local to scene." % save_container)
 
-	# If no source config yet, we can't virtualize.
-	assert(_source_config != null,
-		"SaveSynchronizer needs a SceneReplicationConfig. Call setup_from() or pass it to _init().")
-
-	_virtualize_replication_config(_source_config)
+	_virtualize_replication_config(base_sync.replication_config)
 	notify_property_list_changed()
 	
-	add_visibility_filter(func (peer_id: int) -> bool: return peer_id == 1)
+	var only_server: Callable = func (peer_id: int) -> bool: return peer_id == 1
+	add_visibility_filter(only_server)
 	update_visibility()
-	
-	
 
 # ------------------------
 # Virtualization helpers
@@ -141,24 +149,34 @@ func _get(property: StringName) -> Variant:
 func _set(property: StringName, value: Variant) -> bool:
 	if has_state_property(property):
 		save_container.set_value(property, value)
-		state_changed.emit()
+		
+		# Collect changes into a single frame
+		_state_changed = true
+		save_once.call_deferred()
+		
 		return true
 	
 	return false
+
+func save_once() -> void:
+	if _state_changed:
+		state_changed.emit()
+		_state_changed = false
 
 # ------------------------
 # Scene <-> SaveContainer sync
 # ------------------------
 
 func pull_from_scene() -> void:
+	assert(_initialized, "Scynchronizer not initialized.")
 	for property_name: StringName in _get_tracked_property_names():
 		var value: Variant = _get_scene_value(property_name)
 		save_container.set_value(property_name, value)
 	state_changed.emit()
 
 func push_to_scene() -> Error:
-	setup()
-	assert(save_container, "SaveSynchronizer.push_to_scene() requires a valid SaveContainer.")
+	assert(_initialized, "Scynchronizer not initialized.")
+	assert(save_container)
 
 	for property_name in save_container:
 		var pname := StringName(property_name)
@@ -181,10 +199,10 @@ func push_to_scene() -> Error:
 
 func force_state_sync() -> void:
 	pull_from_scene()
-	_force_state_sync.rpc_id(1, save_container.to_bytes())
+	_force_state_sync.rpc_id(1, save_container.serialize())
 
 @rpc("any_peer", "call_remote")
 func _force_state_sync(state_bytes: PackedByteArray) -> void:
-	save_container.from_bytes(state_bytes)
+	save_container.deserialize(state_bytes)
 	push_to_scene()
 	state_changed.emit()

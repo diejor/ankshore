@@ -58,17 +58,18 @@ func request_teleport(player_data: Dictionary) -> void:
 	owner.queue_free()
 	@warning_ignore("unsafe_cast")
 	lobby_spawner.request_spawn_player(player_data)
-
-
-func on_spawn() -> void:
-	var camera: Camera2D = owner.get_node("%Camera2D")
-	camera.reset_smoothing()
-	var is_incorrect_scene_name: bool = current_scene != SceneManager.current_scene.scene_file_path
-	if not current_scene.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
-		get_tree().change_scene_to_file(current_scene)
+	
 
 func get_scene_name(path_or_uid: String) -> String:
 	var path: String = ResourceUID.ensure_path(path_or_uid)
 	var scene: PackedScene = load(path)
 	var scene_state: SceneState = scene.get_state()
 	return scene_state.get_node_name(0)
+
+
+func _on_myoso_ready() -> void:
+	var camera: Camera2D = owner.get_node("%Camera2D")
+	camera.reset_smoothing()
+	var is_incorrect_scene_name: bool = current_scene != SceneManager.current_scene.scene_file_path
+	if not current_scene.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
+		get_tree().change_scene_to_file(current_scene)
