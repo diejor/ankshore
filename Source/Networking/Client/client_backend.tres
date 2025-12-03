@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="WebRTCLoopbackClientBackend" load_steps=2 format=3 uid="uid://ymi2auc4616u"]
-
-[ext_resource type="Script" uid="uid://buo380mj8eweh" path="res://source/networking/client/webrtc_loopback_backend.gd" id="1_dh0bv"]
-
-[resource]
-script = ExtResource("1_dh0bv")
-metadata/_custom_type_script = "uid://buo380mj8eweh"

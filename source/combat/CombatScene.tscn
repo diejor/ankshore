@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cy6ogtu3s0p7a"]
 
 [ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/combat_scene_(Controller).gd" id="1_1axjk"]
-[ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/Assets/guiltymapPlaceholder.jpg" id="1_4m4xd"]
+[ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="1_4m4xd"]
 
 [node name="Combat Set" type="Node2D"]
 script = ExtResource("1_1axjk")
