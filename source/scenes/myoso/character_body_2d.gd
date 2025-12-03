@@ -6,13 +6,17 @@ extends CharacterBody2D
 @export var sprint_speed := 80.0
 
 
+func _init() -> void:
+	pass
+
+
 func _physics_process(_delta: float) -> void:
 	var desired_speed: float
 	if input.sprinting:
-		desired_speed = sprint_speed 
+		desired_speed = sprint_speed
 	else:
 		desired_speed = walk_speed
 
 	velocity = desired_speed * input.direction
-	
+
 	move_and_slide()

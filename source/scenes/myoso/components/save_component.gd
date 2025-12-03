@@ -13,21 +13,28 @@ signal instantiate
 
 @onready var save_path: String:
 	get:
-		assert(save_extension.begins_with("."), 
-			"Save extension should begin with a dot.")
+		assert(
+			save_extension.begins_with("."),
+			"Save extension should begin with a dot.",
+		)
 		save_path = save_dir.path_join(owner.name + save_extension)
-		
-		assert(save_path.is_absolute_path(), 
-			"Invalid save to a not valid file path. " + save_path)
+
+		assert(
+			save_path.is_absolute_path(),
+			"Invalid save to a not valid file path. " + save_path,
+		)
 		return save_path
+
 
 func _init() -> void:
 	_prepare_save_dir()
+
 
 func _ready() -> void:
 	assert(save_container)
 	assert(save_synchronizer)
 	assert(save_synchronizer.save_container == save_container)
+
 
 func _prepare_save_dir() -> void:
 	if not OS.has_feature("editor"):
@@ -39,11 +46,13 @@ func _prepare_save_dir() -> void:
 # Public API
 # ------------------------
 
+
 func save_state() -> Error:
 	var err: Error = ResourceSaver.save(save_container, save_path)
-	assert(err == OK, 
+	assert(err == OK,
 		"Failed to save `%s`. Error: %s" % [save_path, error_string(err)])
 	return err
+
 
 func load_state() -> Error:
 	instantiate.emit()
@@ -62,14 +71,17 @@ func load_state() -> Error:
 	match push_err:
 		ERR_UNCONFIGURED:
 			push_error(
-				"Removing unconfigured save at `%s`." % save_path)
+				"Removing unconfigured save at `%s`." % save_path,
+			)
 			DirAccess.remove_absolute(save_path)
 			return push_err
 		_:
 			return push_err
 
+
 func force_state_sync() -> void:
 	save_synchronizer.force_state_sync()
+
 
 func on_state_changed() -> void:
 	save_state()

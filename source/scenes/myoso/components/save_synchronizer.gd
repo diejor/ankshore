@@ -12,43 +12,49 @@ signal state_changed
 		@warning_ignore("unsafe_property_access")
 		return %SaveComponent.save_container
 
-var _property_paths: Dictionary[StringName, NodePath] = {}
+var _property_paths: Dictionary[StringName, NodePath] = { }
 
 var _initialized: bool = false
 
 var _state_changed: bool = false
 
+
 func _ready() -> void:
 	if not _initialized:
 		setup()
 	assert(_initialized, "Scynchronizer not initialized.")
-	
+
+
 func _on_instantiate() -> void:
 	setup()
 	assert(_initialized, "Scynchronizer not initialized.")
+
 
 func setup() -> void:
 	if _initialized:
 		push_warning("Initializing once again.")
 		return
 	_initialized = true
-	
+
 	assert(save_container)
 	assert(base_sync)
 	assert(base_sync.replication_config)
-	assert(save_container.resource_local_to_scene, 
-		"`%s` is not local to scene." % save_container)
+	assert(
+		save_container.resource_local_to_scene,
+		"`%s` is not local to scene." % save_container,
+	)
 
 	_virtualize_replication_config(base_sync.replication_config)
 	notify_property_list_changed()
-	
-	var only_server: Callable = func (peer_id: int) -> bool: return peer_id == 1
+
+	var only_server: Callable = func(peer_id: int) -> bool: return peer_id == 1
 	add_visibility_filter(only_server)
 	update_visibility()
 
 # ------------------------
 # Virtualization helpers
 # ------------------------
+
 
 func _virtualize_replication_config(source_config: SceneReplicationConfig) -> void:
 	var new_config := SceneReplicationConfig.new()
@@ -62,7 +68,8 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 
 		var node_res: Array = owner.get_node_and_resource(real_path)
 		assert(node_res[0],
-			"Trying to synchronize '%s' which is not a valid property path. Check source_config." % real_path)
+			("Trying to synchronize '%s' which is not a valid property path." + 
+			"Check source_config.") % real_path)
 
 		var node: Node = node_res[0]
 		var prop_path: NodePath = node_res[2]
@@ -78,14 +85,15 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 
 		var virtual_name: String
 		if is_root:
-			virtual_name = leaf                      # "position"
+			virtual_name = leaf # "position"
 		else:
-			virtual_name = node_label + "/" + leaf   # "TPComponent/current_scene_name"
+			virtual_name = node_label + "/" + leaf # "TPComponent/current_scene_name"
 
 		var vname_sn := StringName(virtual_name)
 		assert(not _property_paths.has(vname_sn),
 			"Virtual property name '%s' from '%s' is duplicated. 
-			Use unique node names or adjust mapping." % [virtual_name, String(real_path)])
+			Use unique node names or adjust mapping." % [virtual_name, String(real_path)],
+		)
 
 		_property_paths[vname_sn] = real_path
 
@@ -108,55 +116,67 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 # Virtual property interface
 # ------------------------
 
+
 func _get_tracked_property_names() -> Array[StringName]:
 	return _property_paths.keys()
+
 
 func _get_property_list() -> Array[Dictionary]:
 	var properties: Array[Dictionary] = []
 	for property_name: StringName in _get_tracked_property_names():
 		var value: Variant = save_container.get_value(property_name, null)
-		properties.append({
-			"name": property_name,
-			"type": typeof(value),
-		})
+		properties.append(
+			{
+				"name": property_name,
+				"type": typeof(value),
+			},
+		)
 	return properties
+
 
 func has_state_property(property: StringName) -> bool:
 	return _property_paths.has(property)
 
+
 func _get_scene_value(property_name: StringName) -> Variant:
 	var real_path: NodePath = _property_paths[property_name]
 	var node_res := owner.get_node_and_resource(real_path)
-	assert(node_res[0], "Invalid real property path for get_scene_value: %s" % String(real_path))
+	assert(node_res[0], 
+		"Invalid real property path for get_scene_value: %s" % String(real_path))
 	var node: Node = node_res[0]
 	var prop_path: NodePath = node_res[2]
 	return node.get_indexed(prop_path)
 
+
 func _set_scene_value(property_name: StringName, value: Variant) -> void:
 	var real_path: NodePath = _property_paths[property_name]
 	var node_res := owner.get_node_and_resource(real_path)
-	assert(node_res[0], "Invalid real property path for set_scene_value: %s" % String(real_path))
+	assert(node_res[0], 
+		"Invalid real property path for set_scene_value: %s" % String(real_path))
 	var node: Node = node_res[0]
 	var prop_path: NodePath = node_res[2]
 	node.set_indexed(prop_path, value)
 
+
 func _get(property: StringName) -> Variant:
 	if has_state_property(property):
 		return _get_scene_value(property)
-	
+
 	return null
+
 
 func _set(property: StringName, value: Variant) -> bool:
 	if has_state_property(property):
 		save_container.set_value(property, value)
-		
+
 		# Collect changes into a single frame
 		_state_changed = true
 		save_once.call_deferred()
-		
+
 		return true
-	
+
 	return false
+
 
 func save_once() -> void:
 	if _state_changed:
@@ -167,12 +187,14 @@ func save_once() -> void:
 # Scene <-> SaveContainer sync
 # ------------------------
 
+
 func pull_from_scene() -> void:
 	assert(_initialized, "Scynchronizer not initialized.")
 	for property_name: StringName in _get_tracked_property_names():
 		var value: Variant = _get_scene_value(property_name)
 		save_container.set_value(property_name, value)
 	state_changed.emit()
+
 
 func push_to_scene() -> Error:
 	assert(_initialized, "Scynchronizer not initialized.")
@@ -183,23 +205,27 @@ func push_to_scene() -> Error:
 		if not has_state_property(pname):
 			push_error(
 				"Trying to push state with property 
-				'%s' that is not tracked by the SaveSynchronizer." % property_name)
+				'%s' that is not tracked by the SaveSynchronizer." % property_name,
+			)
 			return Error.ERR_UNCONFIGURED
-		
+
 		var value: Variant = save_container.get_value(pname)
 		if value == null:
 			push_error(
 				"Trying to push state but the save doesn't have property 
-				'%s' that is tracked by the SaveSynchronizer." % property_name)
+				'%s' that is tracked by the SaveSynchronizer." % property_name,
+			)
 			return Error.ERR_UNCONFIGURED
 
 		_set_scene_value(pname, value)
-	
+
 	return Error.OK
+
 
 func force_state_sync() -> void:
 	pull_from_scene()
 	_force_state_sync.rpc_id(1, save_container.serialize())
+
 
 @rpc("any_peer", "call_remote")
 func _force_state_sync(state_bytes: PackedByteArray) -> void:

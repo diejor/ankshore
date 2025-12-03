@@ -2,6 +2,7 @@ extends Marker2D
 
 @export_file var myoso_scene: String
 
+
 func _ready() -> void:
 	var myoso_packed: PackedScene = load(myoso_scene)
 	var myoso: Node2D = myoso_packed.instantiate()

@@ -23,3 +23,6 @@ export
 # Ignore saves
 saves
 save
+
+# Windows open files
+~*
