@@ -1,18 +1,22 @@
 class_name SaveComponent
 extends Node
 
-signal state_changed
+
+@warning_ignore("unused_signal") 
 signal instantiate
+signal state_changed(caller: Node)
+
 
 @export_dir var save_dir: String
 @export var save_extension: String = ".tdict"
 @export var save_container: SaveContainer
 @onready var save_synchronizer: SaveSynchronizer:
 	get:
-		return %SaveSynchronizer
+		return get_child(0)
 
 @onready var save_path: String:
 	get:
+		_prepare_save_dir()
 		assert(
 			save_extension.begins_with("."),
 			"Save extension should begin with a dot.",
@@ -26,15 +30,10 @@ signal instantiate
 		return save_path
 
 
-func _init() -> void:
-	_prepare_save_dir()
-
-
 func _ready() -> void:
 	assert(save_container)
 	assert(save_synchronizer)
 	assert(save_synchronizer.save_container == save_container)
-
 
 func _prepare_save_dir() -> void:
 	if not OS.has_feature("editor"):
@@ -55,7 +54,6 @@ func save_state() -> Error:
 
 
 func load_state() -> Error:
-	instantiate.emit()
 	if not ResourceLoader.exists(save_path):
 		push_warning("No file found at path: %s" % save_path)
 		return ERR_FILE_NOT_FOUND
@@ -66,7 +64,12 @@ func load_state() -> Error:
 		return ERR_CANT_OPEN
 
 	save_container = saved_container
+	push_to_scene()
+	
+	return OK
 
+
+func push_to_scene() -> Error:
 	var push_err: Error = save_synchronizer.push_to_scene()
 	match push_err:
 		ERR_UNCONFIGURED:
@@ -79,10 +82,20 @@ func load_state() -> Error:
 			return push_err
 
 
-func force_state_sync() -> void:
-	save_synchronizer.force_state_sync()
+func push_save_bytes(bytes: PackedByteArray) -> void:
+	save_container.deserialize(bytes)
+	push_to_scene()
+
+
+func push_to(peer_id: int) -> void:
+	save_synchronizer.push_to(peer_id)
 
 
 func on_state_changed() -> void:
 	save_state()
 	state_changed.emit()
+
+
+func _on_instantiate() -> void:
+	save_synchronizer.setup()
+	assert(save_synchronizer._initialized)

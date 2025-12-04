@@ -35,6 +35,7 @@ func on_connected_to_server() -> void:
 	var player_data: Dictionary = {
 		username = Client.username,
 		peer_id = Client.uid,
+		scene=owner.scene_file_path
 	}
 
 	owner.queue_free()

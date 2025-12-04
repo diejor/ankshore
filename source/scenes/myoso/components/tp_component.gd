@@ -41,10 +41,11 @@ func on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
 	
 	if is_multiplayer_authority():
 		SceneManager.teleport(owner)
-		save_component.force_state_sync()
+		save_component.push_to(1)
 		var player_data: Dictionary = {
 			username = Client.username,
 			peer_id = Client.uid,
+			scene=owner.scene_file_path
 		}
 		request_teleport.rpc_id(1, player_data)
 

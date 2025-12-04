@@ -3,16 +3,17 @@
 class_name SaveContainer
 extends Resource
 
-@abstract func set_value(property: StringName, value: Variant) -> void
-@abstract func get_value(property: StringName, default: Variant = null) -> Variant
-@abstract func has_value(property: StringName) -> bool
 
 @abstract func serialize() -> PackedByteArray
 @abstract func deserialize(bytes: PackedByteArray) -> void
 
+@abstract func set_value(property: StringName, value: Variant) -> void
+@abstract func get_value(property: StringName, default: Variant = null) -> Variant
+@abstract func has_value(property: StringName) -> bool
 
 ## All property names stored in this resource.
 @abstract func get_property_names() -> Array[StringName]
+
 
 var _iter_keys: Array[StringName] = []
 var _iter_index: int = 0

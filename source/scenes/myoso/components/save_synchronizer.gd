@@ -25,11 +25,6 @@ func _ready() -> void:
 	assert(_initialized, "Scynchronizer not initialized.")
 
 
-func _on_instantiate() -> void:
-	setup()
-	assert(_initialized, "Scynchronizer not initialized.")
-
-
 func setup() -> void:
 	if _initialized:
 		push_warning("Initializing once again.")
@@ -204,16 +199,16 @@ func push_to_scene() -> Error:
 		var pname := StringName(property_name)
 		if not has_state_property(pname):
 			push_error(
-				"Trying to push state with property 
-				'%s' that is not tracked by the SaveSynchronizer." % property_name,
+				"Trying to push a save with property '%s' that is not tracked by 
+				the `SaveSynchronizer`." % property_name,
 			)
 			return Error.ERR_UNCONFIGURED
 
 		var value: Variant = save_container.get_value(pname)
 		if value == null:
 			push_error(
-				"Trying to push state but the save doesn't have property 
-				'%s' that is tracked by the SaveSynchronizer." % property_name,
+				"Trying to push but save doesn't have property 
+				'%s' that is tracked by the `aveSynchronizer`." % property_name,
 			)
 			return Error.ERR_UNCONFIGURED
 
@@ -222,13 +217,13 @@ func push_to_scene() -> Error:
 	return Error.OK
 
 
-func force_state_sync() -> void:
+	
+func push_to(peer_id: int) -> void:
 	pull_from_scene()
-	_force_state_sync.rpc_id(1, save_container.serialize())
-
+	request_push.rpc_id(peer_id, save_container.serialize())
 
 @rpc("any_peer", "call_remote")
-func _force_state_sync(state_bytes: PackedByteArray) -> void:
-	save_container.deserialize(state_bytes)
+func request_push(bytes: PackedByteArray) -> void:
+	save_container.deserialize(bytes)
 	push_to_scene()
 	state_changed.emit()

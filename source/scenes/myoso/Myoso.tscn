@@ -123,7 +123,7 @@ text = "Spawner"
 [connection signal="ready" from="." to="Components/TPComponent" method="_on_myoso_ready"]
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
-[connection signal="instantiate" from="Components/SaveComponent" to="Components/SaveComponent/SaveSynchronizer" method="_on_instantiate"]
+[connection signal="instantiate" from="Components/SaveComponent" to="Components/SaveComponent" method="_on_instantiate"]
 [connection signal="state_changed" from="Components/SaveComponent/SaveSynchronizer" to="Components/SaveComponent" method="on_state_changed"]
 
 [editable path="PlayerHUD"]
