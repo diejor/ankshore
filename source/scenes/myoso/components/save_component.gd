@@ -2,7 +2,6 @@ class_name SaveComponent
 extends Node
 
 
-@warning_ignore("unused_signal") 
 signal instantiate
 signal state_changed(caller: Node)
 
@@ -29,11 +28,14 @@ signal state_changed(caller: Node)
 		)
 		return save_path
 
+func _init() -> void:
+	instantiate.connect(_on_instantiate)
 
 func _ready() -> void:
 	assert(save_container)
 	assert(save_synchronizer)
 	assert(save_synchronizer.save_container == save_container)
+
 
 func _prepare_save_dir() -> void:
 	if not OS.has_feature("editor"):
@@ -55,12 +57,16 @@ func save_state() -> Error:
 
 func load_state() -> Error:
 	if not ResourceLoader.exists(save_path):
-		push_warning("No file found at path: %s" % save_path)
+		#push_warning("No file found at path: %s" % save_path)
 		return ERR_FILE_NOT_FOUND
-
-	var saved_container := load(save_path)
+	
+	var saved_container := ResourceLoader.load(
+		save_path, 
+		"SaveContainer", 
+		ResourceLoader.CACHE_MODE_REPLACE)
+	
 	if saved_container == null:
-		push_error("load returned null for %s." % save_path)
+		push_error("Save located at `%s` is invalid." % save_path)
 		return ERR_CANT_OPEN
 
 	save_container = saved_container
@@ -69,22 +75,27 @@ func load_state() -> Error:
 	return OK
 
 
+func deserialize(bytes: PackedByteArray) -> void:
+	save_container.deserialize(bytes)
+	push_to_scene()
+	
+func serialize() -> PackedByteArray:
+	return save_container.serialize()
+
+
 func push_to_scene() -> Error:
 	var push_err: Error = save_synchronizer.push_to_scene()
 	match push_err:
 		ERR_UNCONFIGURED:
-			push_error(
-				"Removing unconfigured save at `%s`." % save_path,
-			)
+			push_error("Removing unconfigured save at `%s`." % save_path)
 			DirAccess.remove_absolute(save_path)
 			return push_err
 		_:
 			return push_err
 
 
-func push_save_bytes(bytes: PackedByteArray) -> void:
-	save_container.deserialize(bytes)
-	push_to_scene()
+func pull_from_scene() -> void:
+	save_synchronizer.pull_from_scene()
 
 
 func push_to(peer_id: int) -> void:

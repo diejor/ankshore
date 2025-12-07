@@ -1,13 +1,9 @@
 extends CharacterBody2D
 
-@onready var input: PlayerInputComponent = %InputComponent
+@onready var input: MyosoInputComponent = %InputComponent
 
 @export var walk_speed := 64.0
 @export var sprint_speed := 80.0
-
-
-func _init() -> void:
-	pass
 
 
 func _physics_process(_delta: float) -> void:

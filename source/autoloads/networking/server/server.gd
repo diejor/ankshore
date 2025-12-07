@@ -12,12 +12,11 @@ const LOBBIES_SCENE: PackedScene = preload("uid://qlqsk51s66cw")
 
 
 var multiplayer_api: SceneMultiplayer:
-	get:
-		return backend.multiplayer_api
-
+	get: return backend.multiplayer_api
 var multiplayer_peer: MultiplayerPeer:
-	get:
-		return backend.multiplayer_peer
+	get: return backend.multiplayer_peer
+var root: String: 
+	get: return multiplayer_api.root_path
 
 func _ready() -> void:
 	add_child(lobbies)

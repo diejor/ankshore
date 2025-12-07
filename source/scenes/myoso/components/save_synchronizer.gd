@@ -4,8 +4,7 @@ extends MultiplayerSynchronizer
 signal state_changed
 
 @export var base_sync: MultiplayerSynchronizer:
-	get:
-		return %MultiplayerSynchronizer
+	get: return %MultiplayerSynchronizer
 
 @onready var save_container: SaveContainer:
 	get:
@@ -13,9 +12,7 @@ signal state_changed
 		return %SaveComponent.save_container
 
 var _property_paths: Dictionary[StringName, NodePath] = { }
-
 var _initialized: bool = false
-
 var _state_changed: bool = false
 
 
@@ -80,15 +77,14 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 
 		var virtual_name: String
 		if is_root:
-			virtual_name = leaf # "position"
+			virtual_name = leaf # "property"
 		else:
-			virtual_name = node_label + "/" + leaf # "TPComponent/current_scene_name"
+			virtual_name = node_label + "/" + leaf # "Node/property"
 
 		var vname_sn := StringName(virtual_name)
 		assert(not _property_paths.has(vname_sn),
 			"Virtual property name '%s' from '%s' is duplicated. 
-			Use unique node names or adjust mapping." % [virtual_name, String(real_path)],
-		)
+			Use unique node names or adjust mapping." % [virtual_name, String(real_path)])
 
 		_property_paths[vname_sn] = real_path
 
@@ -172,11 +168,11 @@ func _set(property: StringName, value: Variant) -> bool:
 
 	return false
 
-
 func save_once() -> void:
 	if _state_changed:
 		state_changed.emit()
 		_state_changed = false
+
 
 # ------------------------
 # Scene <-> SaveContainer sync
@@ -188,7 +184,6 @@ func pull_from_scene() -> void:
 	for property_name: StringName in _get_tracked_property_names():
 		var value: Variant = _get_scene_value(property_name)
 		save_container.set_value(property_name, value)
-	state_changed.emit()
 
 
 func push_to_scene() -> Error:
@@ -200,8 +195,7 @@ func push_to_scene() -> Error:
 		if not has_state_property(pname):
 			push_error(
 				"Trying to push a save with property '%s' that is not tracked by 
-				the `SaveSynchronizer`." % property_name,
-			)
+				the `SaveSynchronizer`." % property_name)
 			return Error.ERR_UNCONFIGURED
 
 		var value: Variant = save_container.get_value(pname)
@@ -220,6 +214,7 @@ func push_to_scene() -> Error:
 	
 func push_to(peer_id: int) -> void:
 	pull_from_scene()
+	state_changed.emit()
 	request_push.rpc_id(peer_id, save_container.serialize())
 
 @rpc("any_peer", "call_remote")

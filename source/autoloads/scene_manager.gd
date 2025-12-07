@@ -3,13 +3,22 @@ extends Node2D
 
 signal scene_changed(current_scene: Node, old_scene: Node)
 
+
+var lobby_manager: LobbyManager:
+	get: return get_node("LobbyManager")
+
+
 var current_scene_path: NodePath
 var current_scene: Node
-var previous_scene_to_clean: Node
 
+var previous_scene_to_clean: Node
 var teleporting: bool
 
+
 func _ready() -> void:
+	var lobby_scene: PackedScene = load("uid://c6uoacg4w1nox")
+	var lobby_node: Node = lobby_scene.instantiate()
+	add_child(lobby_node)
 	y_sort_enabled = true
 	reparent_current_scene()
 	if "--server" in OS.get_cmdline_args():

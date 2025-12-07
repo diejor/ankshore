@@ -1,4 +1,4 @@
-class_name PlayerInputComponent
+class_name MyosoInputComponent
 extends InputComponent
 
 ## Inherited @export variables defined in parent

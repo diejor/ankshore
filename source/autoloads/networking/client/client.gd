@@ -5,7 +5,6 @@ signal connected_to_server()
 signal peer_connected(peer_id: int)
 
 var backend: MultiplayerClientBackend
-
 var username: String
 
 var multiplayer_api: SceneMultiplayer:

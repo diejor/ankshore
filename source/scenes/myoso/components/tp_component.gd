@@ -6,7 +6,8 @@ extends Node
 
 var tp_destination: String
 
-@export var current_scene: String = ""
+@export var current_scene: String = "":
+	get: return ResourceUID.ensure_path(current_scene)
 
 var current_scene_name: String:
 	get:
@@ -42,23 +43,23 @@ func on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
 	if is_multiplayer_authority():
 		SceneManager.teleport(owner)
 		save_component.push_to(1)
-		var player_data: Dictionary = {
+		var client_data: Dictionary = {
 			username = Client.username,
 			peer_id = Client.uid,
 			scene=owner.scene_file_path
 		}
-		request_teleport.rpc_id(1, player_data)
+		request_teleport.rpc_id(1, client_data)
 
 @rpc("any_peer", "call_remote")
-func request_teleport(player_data: Dictionary) -> void:
+func request_teleport(client_data: Dictionary) -> void:
 	var lobby_path: NodePath = NodePath(
 		str(Server.multiplayer_api.root_path) + "/%" + current_scene_name)
 	var lobby: Node = get_node_or_null(lobby_path)
-	var lobby_spawner: PlayerSpawner = lobby.get_node("%PlayerSpawner")
+	var player_spawner: PlayerSpawner = lobby.get_node("%PlayerSpawner")
 	
 	owner.queue_free()
 	@warning_ignore("unsafe_cast")
-	lobby_spawner.request_spawn_player(player_data)
+	player_spawner.request_spawn_player(client_data, [])
 	
 
 func get_scene_name(path_or_uid: String) -> String:
@@ -68,9 +69,9 @@ func get_scene_name(path_or_uid: String) -> String:
 	return scene_state.get_node_name(0)
 
 
-func _on_myoso_ready() -> void:
-	var camera: Camera2D = owner.get_node("%Camera2D")
-	camera.reset_smoothing()
-	var is_incorrect_scene_name: bool = current_scene != SceneManager.current_scene.scene_file_path
-	if not current_scene.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
-		get_tree().change_scene_to_file(current_scene)
+#func _on_myoso_ready() -> void:
+	#var camera: Camera2D = owner.get_node("%Camera2D")
+	#camera.reset_smoothing()
+	#var is_incorrect_scene_name: bool = current_scene != SceneManager.current_scene.scene_file_path
+	#if not current_scene.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
+		#get_tree().change_scene_to_file(current_scene)
