@@ -1,12 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://qlqsk51s66cw"]
+[gd_scene load_steps=5 format=3 uid="uid://qlqsk51s66cw"]
 
 [ext_resource type="PackedScene" uid="uid://c6uoacg4w1nox" path="res://source/autoloads/networking/client/LobbyManager.tscn" id="1_5gj4w"]
 [ext_resource type="PackedScene" uid="uid://bqm4gt3kspfkr" path="res://source/autoloads/networking/server/lobbies/Winter.tscn" id="1_dtkm7"]
+[ext_resource type="Script" uid="uid://btj8o53p1bla" path="res://source/autoloads/networking/client/lobby_manager.gd" id="1_yy43q"]
 [ext_resource type="PackedScene" uid="uid://85gtbquxud7a" path="res://source/autoloads/networking/server/lobbies/AreaTest1.tscn" id="2_jocrf"]
 
 [node name="Lobbies" type="Node2D"]
 process_mode = 4
 visible = false
+script = ExtResource("1_yy43q")
 
 [node name="LobbyManager" parent="." instance=ExtResource("1_5gj4w")]
 

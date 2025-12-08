@@ -14,4 +14,4 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	
 	tp.begin_teleport(target_tp_id)
-	get_tree().change_scene_to_file.call_deferred(scene_path)
+	SceneManager.teleport_file.call_deferred(scene_path, body)

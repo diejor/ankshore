@@ -22,7 +22,8 @@ func _on_pressed() -> void:
 		peer_id = Client.uid,
 		scene = MYOSO.resource_path
 	}
-	SceneManager.lobby_manager.connect_player.rpc_id(1, client_data)
+	Client.lobby_manager.connect_player.rpc_id(
+		MultiplayerPeer.TARGET_PEER_SERVER, client_data)
 
 func on_connected_to_server() -> void:
 	disabled = false

@@ -121,7 +121,7 @@ metadata/_edit_lock_ = true
 text = "Spawner"
 
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
-[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="on_scene_changed"]
+[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="_on_scene_changed"]
 [connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="_on_scene_changed"]
 [connection signal="state_changed" from="Components/SaveComponent/SaveSynchronizer" to="Components/SaveComponent" method="on_state_changed"]
 

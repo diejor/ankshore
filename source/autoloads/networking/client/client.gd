@@ -4,22 +4,20 @@ extends Node
 signal connected_to_server()
 signal peer_connected(peer_id: int)
 
+var lobby_manager: LobbyManager:
+	get: return SceneManager.lobby_manager
+
+var multiplayer_api: SceneMultiplayer:
+	get: return backend.multiplayer_api
+var multiplayer_peer: MultiplayerPeer:
+	get: return backend.multiplayer_peer
+var uid: int:
+	get: return multiplayer_api.get_unique_id()
+	set(value): push_warning("Client UID should not be set directly.")
+
 var backend: MultiplayerClientBackend
 var username: String
 
-var multiplayer_api: SceneMultiplayer:
-	get:
-		return backend.multiplayer_api
-
-var multiplayer_peer: MultiplayerPeer:
-	get:
-		return backend.multiplayer_peer
-
-var uid: int:
-	get:
-		return multiplayer_api.get_unique_id()
-	set(value):
-		push_warning("Client UID should not be set directly!")
 
 func _ready() -> void:
 	# Connect multiplayer signals.
@@ -41,7 +39,7 @@ func init(server_address: String, _username: String) -> Error:
 	backend.peer_reset_state()
 
 	var connection_code: Error = backend.create_connection(
-									server_address, _username)
+		server_address, _username)
 	if connection_code == OK:
 		config_api()
 

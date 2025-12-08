@@ -1,7 +1,7 @@
 class_name MyosoInputComponent
 extends InputComponent
 
-## Inherited @export variables defined in parent
+## Inherited from InputComponent
 @onready var actions: PlayerActions = _actions
 
 var direction: Vector2 = Vector2.ZERO

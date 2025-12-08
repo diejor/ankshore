@@ -2,20 +2,24 @@ class_name TPComponent
 extends Node
 
 @onready var owner2d: Node2D = owner as Node2D
-@onready var save_component: SaveComponent = %SaveComponent
 
 var tp_destination: String
+var tp_path: String:
+	get:
+		assert(not tp_destination.is_empty(), 
+			"`begin_teleport` needs to be called before `tp_path` is valid")
+		return "%" + tp_destination + "/Marker2D"
 
 @export var current_scene: String = "":
 	get: return ResourceUID.ensure_path(current_scene)
 
 var current_scene_name: String:
-	get:
-		return get_scene_name(current_scene)
+	get: return get_scene_name(current_scene)
 
 func _ready() -> void:
 	if current_scene.is_empty():
 		current_scene = SceneManager.current_scene.scene_file_path
+
 
 func begin_teleport(_tp_destination: String) -> void:
 	assert(not _tp_destination.is_empty(), "Teleporting to an unnamed `TPArea` is not valid.")
@@ -27,28 +31,31 @@ func begin_teleport(_tp_destination: String) -> void:
 	# already teleported.
 	owner2d.global_position.y += 999999999
 
+
 ## If `on_scene_changed` was called it probably means the player is trying to 
 ## teleport. A player will actually teleport to a `TPArea` if they called 
 ## `begin_teleport` before switching the scene.
-func on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
+func _on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
 	current_scene = _current_scene.scene_file_path
 	
 	if not tp_destination.is_empty():
-		var tp_path: String = "%" + tp_destination + "/Marker2D"
 		var tp_node: Marker2D = _current_scene.get_node_or_null(tp_path)
 		owner2d.global_position = tp_node.global_position
 		var camera: Camera2D = owner.get_node("Camera2D")
 		camera.reset_smoothing()
 	
 	if is_multiplayer_authority():
-		SceneManager.teleport(owner)
-		save_component.push_to(1)
+		var save_component: SaveComponent = %SaveComponent
+		if save_component != null:
+			save_component.push_to(MultiplayerPeer.TARGET_PEER_SERVER)
+			
 		var client_data: Dictionary = {
 			username = Client.username,
 			peer_id = Client.uid,
 			scene=owner.scene_file_path
 		}
-		request_teleport.rpc_id(1, client_data)
+		request_teleport.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, client_data)
+
 
 @rpc("any_peer", "call_remote")
 func request_teleport(client_data: Dictionary) -> void:
@@ -67,11 +74,3 @@ func get_scene_name(path_or_uid: String) -> String:
 	var scene: PackedScene = load(path)
 	var scene_state: SceneState = scene.get_state()
 	return scene_state.get_node_name(0)
-
-
-#func _on_myoso_ready() -> void:
-	#var camera: Camera2D = owner.get_node("%Camera2D")
-	#camera.reset_smoothing()
-	#var is_incorrect_scene_name: bool = current_scene != SceneManager.current_scene.scene_file_path
-	#if not current_scene.is_empty() and is_incorrect_scene_name and is_multiplayer_authority():
-		#get_tree().change_scene_to_file(current_scene)

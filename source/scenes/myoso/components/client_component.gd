@@ -32,12 +32,15 @@ func _on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
 		scene=owner.scene_file_path
 	}
 
-	var save_component: SaveComponent = owner.get_node("%SaveComponent")
-	save_component.pull_from_scene()
-	player_spawner.request_spawn_player.rpc_id(
-		1, 
-		client_data, 
-		save_component.serialize())
+	var save_component: SaveComponent = %SaveComponent
+	if save_component != null:
+		player_spawner.request_spawn_player.rpc_id(
+			MultiplayerPeer.TARGET_PEER_SERVER, 
+			client_data, 
+			save_component.serialize_scene())
+	else:
+		player_spawner.request_spawn_player.rpc_id(
+			MultiplayerPeer.TARGET_PEER_SERVER, client_data, {})
 	
 	owner.queue_free()
 

@@ -75,11 +75,12 @@ func load_state() -> Error:
 	return OK
 
 
-func deserialize(bytes: PackedByteArray) -> void:
+func deserialize_scene(bytes: PackedByteArray) -> void:
 	save_container.deserialize(bytes)
 	push_to_scene()
 	
-func serialize() -> PackedByteArray:
+func serialize_scene() -> PackedByteArray:
+	pull_from_scene()
 	return save_container.serialize()
 
 
