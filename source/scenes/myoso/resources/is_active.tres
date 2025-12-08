@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="IsActive" load_steps=2 format=3 uid="uid://beue3dvjeb3if"]
+
+[ext_resource type="Script" uid="uid://bps2f3681do0d" path="res://source/scenes/myoso/resources/is_active.gd" id="1_td2c3"]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource("1_td2c3")
+metadata/_custom_type_script = "uid://bps2f3681do0d"

@@ -16,5 +16,13 @@ export_credentials.cfg
 data_*/
 mono_crash.*.json
 
-export
+# Ignore exports
 exports
+export
+
+# Ignore saves
+saves
+save
+
+# Windows open files
+~*
