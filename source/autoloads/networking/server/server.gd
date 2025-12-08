@@ -7,7 +7,6 @@ signal peer_disconnected(peer_id: int)
 var backend: MultiplayerServerBackend
 
 const LOBBIES_SCENE: PackedScene = preload("uid://qlqsk51s66cw")
-
 @onready var lobbies: Node = LOBBIES_SCENE.instantiate()
 
 

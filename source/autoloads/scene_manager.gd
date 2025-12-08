@@ -3,8 +3,8 @@ extends Node2D
 
 signal scene_changed(current_scene: Node, old_scene: Node)
 
-@onready var LOBBY_MANAGER: PackedScene = load("uid://c6uoacg4w1nox")
-@onready var lobby_manager: LobbyManager = LOBBY_MANAGER.instantiate()
+@onready var LOBBY_SCENE: PackedScene = load("uid://c6uoacg4w1nox")
+@onready var lobby_manager: LobbyManager = LOBBY_SCENE.instantiate()
 
 var current_scene_path: NodePath
 var current_scene: Node
