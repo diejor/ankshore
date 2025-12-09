@@ -6,8 +6,6 @@ extends Node
 var tp_destination: String
 var tp_path: String:
 	get:
-		assert(not tp_destination.is_empty(), 
-			"`begin_teleport` needs to be called before `tp_path` is valid")
 		return "%" + tp_destination + "/Marker2D"
 
 @export var current_scene: String = "":
@@ -15,10 +13,6 @@ var tp_path: String:
 
 var current_scene_name: String:
 	get: return get_scene_name(current_scene)
-
-func _ready() -> void:
-	if current_scene.is_empty():
-		current_scene = SceneManager.current_scene.scene_file_path
 
 
 func begin_teleport(_tp_destination: String) -> void:
@@ -41,8 +35,6 @@ func _on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
 	if not tp_destination.is_empty():
 		var tp_node: Marker2D = _current_scene.get_node_or_null(tp_path)
 		owner2d.global_position = tp_node.global_position
-		var camera: Camera2D = owner.get_node("Camera2D")
-		camera.reset_smoothing()
 	
 	if is_multiplayer_authority():
 		var save_component: SaveComponent = %SaveComponent
@@ -57,7 +49,7 @@ func _on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
 		request_teleport.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER, client_data)
 
 
-@rpc("any_peer", "call_remote")
+@rpc("any_peer", "call_remote", "reliable")
 func request_teleport(client_data: Dictionary) -> void:
 	var lobby_path: NodePath = NodePath(
 		str(Server.multiplayer_api.root_path) + "/%" + current_scene_name)
@@ -65,11 +57,10 @@ func request_teleport(client_data: Dictionary) -> void:
 	var player_spawner: PlayerSpawner = lobby.get_node("%PlayerSpawner")
 	
 	owner.queue_free()
-	@warning_ignore("unsafe_cast")
 	player_spawner.request_spawn_player(client_data, [])
 	
 
-func get_scene_name(path_or_uid: String) -> String:
+static func get_scene_name(path_or_uid: String) -> String:
 	var path: String = ResourceUID.ensure_path(path_or_uid)
 	var scene: PackedScene = load(path)
 	var scene_state: SceneState = scene.get_state()

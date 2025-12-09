@@ -4,6 +4,7 @@
 
 [node name="ConnectServerUI" type="CanvasLayer"]
 script = ExtResource("1_0nyt2")
+menu_file = "uid://dfvoo60p3ut6n"
 
 [node name="TabContainer" type="TabContainer" parent="."]
 offset_left = 38.0

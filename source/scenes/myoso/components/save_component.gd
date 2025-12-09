@@ -102,7 +102,6 @@ func pull_from_scene() -> void:
 func push_to(peer_id: int) -> void:
 	save_synchronizer.push_to(peer_id)
 
-
 func on_state_changed() -> void:
 	save_state()
 	state_changed.emit()

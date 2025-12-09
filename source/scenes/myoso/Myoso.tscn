@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=19 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
@@ -10,15 +10,10 @@
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/scenes/myoso/components/AutoloadSignals.tscn" id="3_tkyel"]
 [ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/myoso/resources/player_input.gd" id="6_sb6si"]
-[ext_resource type="Script" uid="uid://bps2f3681do0d" path="res://source/scenes/myoso/resources/is_active.gd" id="6_tkyel"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/scenes/myoso/resources/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/scenes/myoso/PlayerHud.tscn" id="9_3l6w3"]
 [ext_resource type="Script" uid="uid://n73txgkicr1m" path="res://source/scenes/myoso/components/save_synchronizer.gd" id="9_jki01"]
 [ext_resource type="Script" uid="uid://c72wanrudisxw" path="res://source/scenes/myoso/components/save_component.gd" id="10_xdvvs"]
-
-[sub_resource type="Resource" id="Resource_jki01"]
-script = ExtResource("6_tkyel")
-metadata/_custom_type_script = "uid://bps2f3681do0d"
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
 properties/0/path = NodePath(".:position")
@@ -61,15 +56,16 @@ script = ExtResource("2_ko57k")
 [node name="ClientComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
 script = ExtResource("2_tlpap")
-is_active = SubResource("Resource_jki01")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent"]
 unique_name_in_owner = true
 root_path = NodePath("../../..")
 replication_config = SubResource("SceneReplicationConfig_cmaps")
+public_visibility = false
 
 [node name="ConnectServerUI" parent="Components/ClientComponent" instance=ExtResource("3_2mjiv")]
 unique_name_in_owner = true
+visible = false
 
 [node name="SaveComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -85,6 +81,7 @@ replication_interval = 5.0
 delta_interval = 5.0
 replication_config = SubResource("SceneReplicationConfig_sxgn8")
 visibility_update_mode = 2
+public_visibility = false
 script = ExtResource("9_jki01")
 base_sync = NodePath("../../ClientComponent/MultiplayerSynchronizer")
 metadata/_custom_type_script = "uid://n73txgkicr1m"
@@ -121,8 +118,7 @@ metadata/_edit_lock_ = true
 text = "Spawner"
 
 [connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
-[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/TPComponent" method="_on_scene_changed"]
-[connection signal="scene_changed" from="Components/AutoloadSignals" to="Components/ClientComponent" method="_on_scene_changed"]
+[connection signal="tree_exiting" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_tree_exiting"]
 [connection signal="state_changed" from="Components/SaveComponent/SaveSynchronizer" to="Components/SaveComponent" method="on_state_changed"]
 
 [editable path="PlayerHUD"]

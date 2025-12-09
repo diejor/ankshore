@@ -23,7 +23,6 @@ GameInstance="*res://source/autoloads/game_instance.gd"
 Network="*res://source/autoloads/networking/Network.tscn"
 Server="*res://source/autoloads/networking/server/server.gd"
 Client="*res://source/autoloads/networking/client/client.gd"
-SceneManager="*res://source/autoloads/scene_manager.gd"
 
 [debug]
 

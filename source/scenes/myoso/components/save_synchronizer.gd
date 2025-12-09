@@ -39,10 +39,6 @@ func setup() -> void:
 	_virtualize_replication_config(base_sync.replication_config)
 	notify_property_list_changed()
 
-	var only_server: Callable = func(peer_id: int) -> bool: return peer_id == 1
-	add_visibility_filter(only_server)
-	update_visibility()
-
 # ------------------------
 # Virtualization helpers
 # ------------------------
@@ -217,7 +213,7 @@ func push_to(peer_id: int) -> void:
 	state_changed.emit()
 	request_push.rpc_id(peer_id, save_container.serialize())
 
-@rpc("any_peer", "call_remote")
+@rpc("any_peer", "call_remote", "reliable")
 func request_push(bytes: PackedByteArray) -> void:
 	save_container.deserialize(bytes)
 	push_to_scene()

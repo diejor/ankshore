@@ -1,49 +1,13 @@
 class_name ClientComponent
 extends Node
 
-@export var is_active: IsActive
-
-@onready var autoload_signals: AutoloadSignals = %AutoloadSignals
-@onready var player_spawner: PlayerSpawner = owner.get_parent().get_node("%PlayerSpawner")
-
 
 func _ready() -> void:
-	if not GameInstance.is_client():
-		push_warning("Running without an active client")
+	if "Spawner" in owner.name and not multiplayer.is_server():
+		owner.queue_free()
 
-	# Remove spawners.
-	assert(not is_active.resource_local_to_scene,
-		"In order to detect active players, `%s` resource must not be local
-		to scene." % is_active)
-	var spawner_node: Node = owner.get_node_or_null("%" + owner.name)
-
-	if is_active.active and spawner_node != null:
-		spawner_node.queue_free()
-
-
-func _on_scene_changed(_current_scene: Node, _old_scene: Node) -> void:
-	assert(GameInstance.is_client())
-	if is_active.active:
-		return
-	is_active.active = true
-	var client_data: Dictionary = {
-		username = Client.username,
-		peer_id = Client.uid,
-		scene=owner.scene_file_path
-	}
-
-	var save_component: SaveComponent = %SaveComponent
-	if save_component != null:
-		player_spawner.request_spawn_player.rpc_id(
-			MultiplayerPeer.TARGET_PEER_SERVER, 
-			client_data, 
-			save_component.serialize_scene())
-	else:
-		player_spawner.request_spawn_player.rpc_id(
-			MultiplayerPeer.TARGET_PEER_SERVER, client_data, {})
-	
-	owner.queue_free()
-
+func shutdown() -> void:
+	%MultiplayerSynchronizer.set_visibility_for(1, false)
 
 static func instantiate(client_data: Dictionary) -> Node:
 	assert(client_data.peer_id)

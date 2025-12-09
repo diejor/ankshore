@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bqm4gt3kspfkr"]
-
-[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/autoloads/networking/PlayerSpawner.tscn" id="1_yj8xo"]
-
-[node name="Winter" type="Node2D"]
-
-[node name="PlayerSpawner" parent="." instance=ExtResource("1_yj8xo")]
-unique_name_in_owner = true

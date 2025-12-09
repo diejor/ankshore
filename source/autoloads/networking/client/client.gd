@@ -4,8 +4,8 @@ extends Node
 signal connected_to_server()
 signal peer_connected(peer_id: int)
 
-var lobby_manager: LobbyManager:
-	get: return SceneManager.lobby_manager
+const LEVEL_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
+@onready var level_manager: LevelManager = LEVEL_MANAGER.instantiate()
 
 var multiplayer_api: SceneMultiplayer:
 	get: return backend.multiplayer_api
@@ -20,6 +20,8 @@ var username: String
 
 
 func _ready() -> void:
+	add_child(level_manager)
+
 	# Connect multiplayer signals.
 	multiplayer_api.peer_connected.connect(on_peer_connected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
@@ -46,9 +48,9 @@ func init(server_address: String, _username: String) -> Error:
 	return connection_code
 
 func config_api() -> void:
-	assert(SceneManager, 
+	assert(level_manager, 
 		"SceneManager autoload must exist before configuring the client.")
-	var scene_root: NodePath = SceneManager.get_path()
+	var scene_root: NodePath = level_manager.get_path()
 	assert(scene_root != NodePath(""), 
 		"SceneManager path must be valid before client configuration.")
 
