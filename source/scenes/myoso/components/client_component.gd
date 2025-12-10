@@ -7,7 +7,8 @@ func _ready() -> void:
 		owner.queue_free()
 
 func shutdown() -> void:
-	%MultiplayerSynchronizer.set_visibility_for(1, false)
+	var sync: MultiplayerSynchronizer = %MultiplayerSynchronizer
+	sync.set_visibility_for(1, false)
 
 static func instantiate(client_data: Dictionary) -> Node:
 	assert(client_data.peer_id)

@@ -5,7 +5,7 @@ extends MultiplayerSpawner
 
 func _ready() -> void:
 	spawn_function = spawn_player
-	
+
 
 func spawn_player(player_data: Dictionary) -> Node2D:
 	var client_data: Dictionary = player_data.client_data

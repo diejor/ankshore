@@ -16,16 +16,12 @@ signal state_changed(caller: Node)
 @onready var save_path: String:
 	get:
 		_prepare_save_dir()
-		assert(
-			save_extension.begins_with("."),
-			"Save extension should begin with a dot.",
-		)
+		assert(save_extension.begins_with("."),
+			"Save extension should begin with a dot.")
 		save_path = save_dir.path_join(owner.name + save_extension)
 
-		assert(
-			save_path.is_absolute_path(),
-			"Invalid save to a not valid file path. " + save_path,
-		)
+		assert(save_path.is_absolute_path(),
+			"Invalid save to a not valid file path. " + save_path)
 		return save_path
 
 func _init() -> void:

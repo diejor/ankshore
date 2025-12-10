@@ -207,11 +207,14 @@ func push_to_scene() -> Error:
 	return Error.OK
 
 
-	
+
+
+
 func push_to(peer_id: int) -> void:
 	pull_from_scene()
 	state_changed.emit()
 	request_push.rpc_id(peer_id, save_container.serialize())
+
 
 @rpc("any_peer", "call_remote", "reliable")
 func request_push(bytes: PackedByteArray) -> void:
