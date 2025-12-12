@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=4 uid="uid://xkil2cmplfcd"]
 
-[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/myoso/Myoso.tscn" id="1_kwkoe"]
-[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/scenes/myoso/components/AutoloadSignals.tscn" id="2_xy03w"]
+[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="1_kwkoe"]
+[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/scenes/characters/components/signals/AutoloadSignals.tscn" id="2_xy03w"]
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/AreaTP.tscn" id="3_4lfof"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/autoloads/networking/PlayerSpawner.tscn" id="4_kwkoe"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="4_xy03w"]
@@ -34,7 +34,6 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 position = Vector2(151, 16)
 scene_path = "uid://dta1ona6odgmr"
-scene_name = "AreaTest1"
 target_tp_id = "AreaTP1"
 
 [node name="PlayerSpawner" parent="." instance=ExtResource("4_kwkoe")]

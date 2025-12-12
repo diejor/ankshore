@@ -19,7 +19,6 @@ config/icon="uid://ddkwfh5opq7yw"
 
 [autoload]
 
-GameInstance="*res://source/autoloads/game_instance.gd"
 Network="*res://source/autoloads/networking/Network.tscn"
 Server="*res://source/autoloads/networking/server/server.gd"
 Client="*res://source/autoloads/networking/client/client.gd"
@@ -55,8 +54,8 @@ folder_colors={
 "res://source/combat/character/anatomy/": "teal",
 "res://source/scenes/": "pink",
 "res://source/scenes/areas/": "orange",
-"res://source/scenes/menus/": "purple",
-"res://source/scenes/myoso/": "blue"
+"res://source/scenes/characters/myoso/": "blue",
+"res://source/scenes/menus/": "purple"
 }
 
 [input]

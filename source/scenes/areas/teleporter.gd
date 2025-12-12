@@ -14,16 +14,4 @@ func _on_body_entered(body: Node2D) -> void:
 	if tp == null or not tp.is_multiplayer_authority():
 		return
 		
-	tp.begin_teleport(target_tp_id)
-	var save_component: SaveComponent = body.get_node("%SaveComponent")
-	save_component.push_to(MultiplayerPeer.TARGET_PEER_SERVER)
-	
-	Client.level_manager.teleport.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER,
-		Client.uid,
-		Client.username,
-		tp.current_scene_name,
-		scene_name
-	)
-	
-	var client_component: ClientComponent = body.get_node("%ClientComponent")
-	client_component.shutdown()
+	tp.begin_teleport(target_tp_id, scene_path)

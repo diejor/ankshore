@@ -1,11 +1,14 @@
 class_name GameClient
 extends Node
 
+
 signal connected_to_server()
 signal peer_connected(peer_id: int)
 
+
 const LEVEL_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
 @onready var level_manager: LevelManager = LEVEL_MANAGER.instantiate()
+
 
 var multiplayer_api: SceneMultiplayer:
 	get: return backend.multiplayer_api
@@ -16,7 +19,16 @@ var uid: int:
 	set(value): push_warning("Client UID should not be set directly.")
 
 var backend: MultiplayerClientBackend
-var username: String
+
+var username: String = "":
+	get:
+		if username.is_empty():
+			var candidate := OS.get_environment("USERNAME")
+			if candidate.is_empty():
+				return "player"
+			return candidate
+		else:
+			return username
 
 
 func _ready() -> void:
@@ -27,14 +39,15 @@ func _ready() -> void:
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
 	# Boot local client
-	var _username: String = GameInstance.default_username()
-	var client_err: Error = connect_client("localhost", _username)
+	var client_err: Error = connect_client("localhost", username)
 	if client_err != OK:
 		push_warning(
 			"Local client bootstrap failed: %s" % error_string(client_err))
 
+
 func connect_client(server_address: String, _username: String) -> Error:
 	return init(server_address, _username)
+
 
 func init(server_address: String, _username: String) -> Error:
 	username = _username
@@ -47,6 +60,7 @@ func init(server_address: String, _username: String) -> Error:
 
 	return connection_code
 
+
 func config_api() -> void:
 	assert(level_manager, 
 		"SceneManager autoload must exist before configuring the client.")
@@ -56,13 +70,16 @@ func config_api() -> void:
 
 	backend.configure_tree(get_tree(), scene_root)
 
+
 func on_peer_connected(peer_id: int) -> void:
 	peer_connected.emit(peer_id)
+
 
 func on_connected_to_server() -> void:
 	print("Client (%d) connected to server." % multiplayer_api.get_unique_id())
 	set_multiplayer_authority(multiplayer_api.get_unique_id(), false)
 	connected_to_server.emit()
+
 
 func _process(dt: float) -> void:
 	if backend:

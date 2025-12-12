@@ -1,8 +1,10 @@
 class_name GameServer
 extends Node
 
+
 signal peer_connected(peer_id: int)
 signal peer_disconnected(peer_id: int)
+
 
 var backend: MultiplayerServerBackend
 
@@ -17,6 +19,7 @@ var multiplayer_peer: MultiplayerPeer:
 var root: String: 
 	get: return multiplayer_api.root_path
 
+
 func _ready() -> void:
 	add_child(level_manager)
 
@@ -27,6 +30,7 @@ func _ready() -> void:
 	assert(server_err == OK,
 		"Dedicated server failed to start: %s" % error_string(server_err))
 
+
 func init() -> Error:
 	backend.peer_reset_state()
 	var err: Error = backend.create_server()
@@ -36,16 +40,20 @@ func init() -> Error:
 	config_api()
 	return OK
 
+
 func config_api() -> void:
 	assert(is_instance_valid(level_manager), 
 		"Server lobbies node is missing before configuration.")
 	backend.configure_tree(get_tree(), level_manager.get_path())
 
+
 func on_peer_connected(peer_id: int) -> void:
 	peer_connected.emit(peer_id)
 
+
 func on_peer_disconnected(peer_id: int) -> void:
 	peer_disconnected.emit(peer_id)
+
 
 func _process(dt: float) -> void:
 	if backend:

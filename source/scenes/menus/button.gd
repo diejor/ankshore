@@ -4,8 +4,6 @@ extends Button
 @onready var play_game: Label = $PlayGame
 @onready var connecting: Label = $Connecting
 
-@export_file var empty_scene: String
-
 const MYOSO: PackedScene = preload("uid://bxpx2n4hugojx")
 
 func _ready() -> void:
@@ -26,7 +24,7 @@ func _on_pressed() -> void:
 	}
 	Client.level_manager.connect_player.rpc_id(
 		MultiplayerPeer.TARGET_PEER_SERVER, client_data)
-	get_tree().change_scene_to_file(empty_scene)
+	get_tree().unload_current_scene.call_deferred()
 
 func on_connected_to_server() -> void:
 	disabled = false

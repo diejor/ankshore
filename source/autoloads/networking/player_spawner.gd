@@ -10,11 +10,10 @@ func _ready() -> void:
 func spawn_player(player_data: Dictionary) -> Node2D:
 	var client_data: Dictionary = player_data.client_data
 	var player: Node = ClientComponent.instantiate(client_data)
-	var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
-	save_component.deserialize_scene(player_data.save as PackedByteArray)
-	var sync: MultiplayerSynchronizer = player.get_node("%MultiplayerSynchronizer")
 	
-	sync.set_visibility_for(client_data.peer_id as int, true)
-	sync.set_visibility_for(1, true)
+
+	var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
+	if save_component:
+		save_component.deserialize_scene(player_data.save as PackedByteArray)	
 	
 	return player

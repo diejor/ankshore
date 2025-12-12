@@ -1,0 +1,126 @@
+[gd_scene load_steps=19 format=3 uid="uid://bxpx2n4hugojx"]
+
+[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
+[ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
+[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://source/scenes/characters/myoso/assets/limbusWolf.png" id="2_gjcb4"]
+[ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://source/scenes/characters/components/tp_component.gd" id="2_ko57k"]
+[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://source/scenes/characters/components/client/client_component.gd" id="2_tlpap"]
+[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://source/scenes/characters/components/client/ConnectServerUI.tscn" id="3_2mjiv"]
+[ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/scenes/characters/components/components.gd" id="3_a6gmg"]
+[ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
+[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/scenes/characters/components/signals/AutoloadSignals.tscn" id="3_tkyel"]
+[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/characters/myoso/components/myoso_input_component.gd" id="6_sb6si"]
+[ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/scenes/characters/components/save/dictionary_save.gd" id="8_xdvvs"]
+[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/scenes/characters/components/client/PlayerHud.tscn" id="9_3l6w3"]
+[ext_resource type="Script" uid="uid://n73txgkicr1m" path="res://source/scenes/characters/components/save/save_synchronizer.gd" id="9_jki01"]
+[ext_resource type="Script" uid="uid://c72wanrudisxw" path="res://source/scenes/characters/components/save/save_component.gd" id="10_xdvvs"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("PlayerHUD/VBoxContainer/Handle2/PanelContainer/UsernameLabel:text")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Components/TPComponent:current_scene")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="Resource" id="Resource_tkyel"]
+resource_local_to_scene = true
+script = ExtResource("8_xdvvs")
+metadata/_custom_type_script = "uid://d1mnum02gn0c0"
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sxgn8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wo7us"]
+radius = 2.0
+height = 16.0
+
+[node name="Myoso" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_jpx56")
+sprint_speed = 96.0
+
+[node name="Components" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_a6gmg")
+
+[node name="AutoloadSignals" parent="Components" instance=ExtResource("3_tkyel")]
+unique_name_in_owner = true
+
+[node name="TPComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
+script = ExtResource("2_ko57k")
+starting_scene_path = "uid://xkil2cmplfcd"
+
+[node name="ClientComponent" type="Node" parent="Components" node_paths=PackedStringArray("sync")]
+unique_name_in_owner = true
+script = ExtResource("2_tlpap")
+sync = NodePath("MultiplayerSynchronizer")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent"]
+unique_name_in_owner = true
+root_path = NodePath("../../..")
+replication_config = SubResource("SceneReplicationConfig_cmaps")
+public_visibility = false
+
+[node name="ConnectServerUI" parent="Components/ClientComponent" instance=ExtResource("3_2mjiv")]
+unique_name_in_owner = true
+visible = false
+
+[node name="SaveComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
+script = ExtResource("10_xdvvs")
+save_dir = "res://saves/players"
+save_container = SubResource("Resource_tkyel")
+
+[node name="SaveSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent" node_paths=PackedStringArray("base_sync")]
+unique_name_in_owner = true
+root_path = NodePath("../../..")
+replication_interval = 5.0
+delta_interval = 5.0
+replication_config = SubResource("SceneReplicationConfig_sxgn8")
+visibility_update_mode = 2
+public_visibility = false
+script = ExtResource("9_jki01")
+base_sync = NodePath("../../ClientComponent/MultiplayerSynchronizer")
+metadata/_custom_type_script = "uid://n73txgkicr1m"
+
+[node name="InputComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
+script = ExtResource("6_sb6si")
+_actions = ExtResource("2_a6gmg")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(7.748604e-07, -12.999999)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_gjcb4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_wo7us")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+zoom = Vector2(3, 3)
+process_callback = 0
+position_smoothing_enabled = true
+drag_left_margin = 0.1
+drag_top_margin = 0.1
+drag_right_margin = 0.1
+drag_bottom_margin = 0.1
+script = ExtResource("3_cmaps")
+metadata/_edit_lock_ = true
+
+[node name="PlayerHUD" parent="." instance=ExtResource("9_3l6w3")]
+
+[node name="UsernameLabel" parent="PlayerHUD/VBoxContainer/Handle2/PanelContainer" index="0"]
+text = "Spawner"
+
+[connection signal="connected_to_server" from="Components/AutoloadSignals" to="Components/ClientComponent" method="on_connected_to_server"]
+[connection signal="tree_exiting" from="Components/ClientComponent" to="Components/ClientComponent" method="_on_tree_exiting"]
+[connection signal="spawned" from="Components/SaveComponent" to="Components/TPComponent" method="_on_spawned"]
+[connection signal="state_changed" from="Components/SaveComponent/SaveSynchronizer" to="Components/SaveComponent" method="on_state_changed"]
+
+[editable path="PlayerHUD"]
