@@ -51,15 +51,11 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 [file_customization]
 
 folder_colors={
-"res://source/": "gray",
 "res://source/autoloads/": "yellow",
-"res://source/autoloads/networking/": "teal",
-"res://source/combat/": "red",
-"res://source/combat/character/anatomy/": "teal",
-"res://source/scenes/": "pink",
-"res://source/scenes/areas/": "orange",
-"res://source/scenes/characters/myoso/": "blue",
-"res://source/scenes/menus/": "purple"
+"res://source/combat/": "blue",
+"res://source/components/": "orange",
+"res://source/scenes/": "teal",
+"res://source/scenes/characters/myoso/": "blue"
 }
 
 [input]
