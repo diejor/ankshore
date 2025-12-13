@@ -12,7 +12,7 @@ func _ready() -> void:
 
 
 func shutdown() -> void:
-	sync.set_visibility_for(1, false)
+	sync.set_visibility_for(0, false)
 
 
 static func instantiate(client_data: Dictionary) -> Node:

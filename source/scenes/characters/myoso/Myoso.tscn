@@ -10,10 +10,10 @@
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/scenes/characters/components/signals/AutoloadSignals.tscn" id="3_tkyel"]
 [ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/characters/myoso/components/myoso_input_component.gd" id="6_sb6si"]
-[ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/scenes/characters/components/save/dictionary_save.gd" id="8_xdvvs"]
+[ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/scenes/characters/components/persistent/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/scenes/characters/components/client/PlayerHud.tscn" id="9_3l6w3"]
-[ext_resource type="Script" uid="uid://n73txgkicr1m" path="res://source/scenes/characters/components/save/save_synchronizer.gd" id="9_jki01"]
-[ext_resource type="Script" uid="uid://c72wanrudisxw" path="res://source/scenes/characters/components/save/save_component.gd" id="10_xdvvs"]
+[ext_resource type="Script" uid="uid://n73txgkicr1m" path="res://source/scenes/characters/components/persistent/save_synchronizer.gd" id="9_jki01"]
+[ext_resource type="Script" uid="uid://c72wanrudisxw" path="res://source/scenes/characters/components/persistent/save_component.gd" id="10_xdvvs"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
 properties/0/path = NodePath(".:position")
