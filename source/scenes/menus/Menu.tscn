@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfvoo60p3ut6n"]
+[gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://source/scenes/areas/Winter.tscn" id="2_5yleq"]
-[ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://source/scenes/characters/components/signals/autoload_signals.gd" id="3_i7gu7"]
+[ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://source/components/signals/autoload_signals.gd" id="3_i7gu7"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 

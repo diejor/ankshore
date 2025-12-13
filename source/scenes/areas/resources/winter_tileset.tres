@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" load_steps=9 format=3 uid="uid://h637lr7t1rs1"]
+[gd_resource type="TileSet" format=3 uid="uid://h637lr7t1rs1"]
 
 [ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://source/scenes/areas/assets/seasonal sample (winter).png" id="1_a6xd0"]
 
