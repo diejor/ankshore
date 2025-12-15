@@ -9,6 +9,7 @@ signal state_changed(caller: Node)
 @export_dir var save_dir: String
 @export var save_extension: String = ".tdict"
 @export var save_container: SaveContainer
+
 @onready var save_synchronizer: SaveSynchronizer:
 	get:
 		return get_child(0)
@@ -110,3 +111,6 @@ func instantiate() -> void:
 	save_synchronizer.setup()
 	assert(save_synchronizer._initialized)
 	instantiated.emit()
+
+func spawner_name() -> String:
+	return TPComponent.get_scene_name(owner.scene_file_path)

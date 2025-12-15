@@ -28,24 +28,10 @@ func spawn_lobby(lobby_file_path: String) -> Node:
 func remove_peer(username: String, scene_name: String) -> Node2D:
 	var scene: Node = get_node(scene_name)
 	
-	var players: Node2D = scene.get_node("%Players")
-	var player: Node2D = players.get_node(username)
+	var player: Node2D = scene.get_node(username)
 
 	player.queue_free()
 	await player.tree_exited
-	
-	var level_sync: LevelSynchronizer = scene.get_node("%LevelSynchronizer")
-	level_sync.connected_clients.erase(player.get_multiplayer_authority())
-	
-	var ps: Node = scene.get_node("%Players")
-	for p in ps.get_children():
-		var client: ClientComponent = p.get_node("%ClientComponent")
-		client.server_visibility.update_visibility()
-		client.sync.update_visibility()
-	
-	level_sync.set_visibility_for(player.get_multiplayer_authority(), false)
-	
-	
 	
 	return player
 
@@ -71,7 +57,6 @@ func connect_player(
 	client_data: Dictionary, 
 	destination_scene_name: String = "", 
 	tp_path: String = "") -> void:
-	var peer_id: int = client_data.peer_id
 	var player: Node2D = ClientComponent.instantiate(client_data)
 	var save_component: SaveComponent = player.get_node("%SaveComponent")
 	var tp_component: TPComponent = player.get_node("%TPComponent")
@@ -84,19 +69,14 @@ func connect_player(
 	var destination_scene: Node = get_node_or_null(destination_scene_name)
 	tp_component.teleported(destination_scene, tp_path)
 	
-	
 	var current_scene: Node = get_node(tp_component.current_scene_name)
 	
-	var level_sync: LevelSynchronizer = current_scene.get_node("%LevelSynchronizer")
-	level_sync.set_visibility_for(peer_id, true)
-	level_sync.connected_clients[peer_id] = true
-	
-	var ps: Node = current_scene.get_node("%Players")
-	for p in ps.get_children():
-		var client: ClientComponent = p.get_node("%ClientComponent")
-		client.server_visibility.update_visibility()
-		client.sync.update_visibility()
-	
+	# No player saved, create from spawner.
+	if load_error == ERR_FILE_NOT_FOUND:
+		var spawner_name := player.name
+		var spawner := current_scene.get_node("%" + save_component.spawner_name())
+		save_component = spawner.get_node("%SaveComponent")
+		
 	var player_spawner: PlayerSpawner = current_scene.get_node("%PlayerSpawner")
 	player_spawner.spawn({
 		save=save_component.serialize_scene(),

@@ -23,9 +23,13 @@ func _ready() -> void:
 	server_visibility.add_visibility_filter(scene_visibility_filter)
 	sync.add_visibility_filter(scene_visibility_filter)
 	
+	username = owner.name
+	owner.renamed.connect(func() -> void: username = owner.name)
+	
 	if owner.has_node("%TPComponent"):
 		var tp: TPComponent = owner.get_node("%TPComponent")
 		tp.teleport.connect(_on_teleport)
+
 
 func scene_visibility_filter(peer_id: int) -> bool:
 	if "Spawner" in owner.name:
@@ -49,15 +53,13 @@ static func instantiate(client_data: Dictionary) -> Node:
 	assert(client_data.username)
 	assert(client_data.scene)
 	
-	@warning_ignore("unsafe_cast")
 	var peer_id: int = client_data.peer_id as int
-	@warning_ignore("unsafe_cast")
 	var scene_path: String = ResourceUID.ensure_path(client_data.scene as String)
 	
 	var scene: PackedScene = load(scene_path)
 	var player: Node = scene.instantiate()
 	player.set_multiplayer_authority(peer_id)
-	player.name = str(client_data.username)
+	player.name = client_data.username as String
 	
 	var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
 	if save_component:

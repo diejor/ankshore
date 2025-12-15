@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=4 uid="uid://xkil2cmplfcd"]
+[gd_scene load_steps=6 format=4 uid="uid://xkil2cmplfcd"]
 
 [ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/LevelSynchronizer.tscn" id="1_535hd"]
+[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="1_kwkoe"]
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/AreaTP.tscn" id="3_4lfof"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/autoloads/networking/PlayerSpawner.tscn" id="4_kwkoe"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="4_xy03w"]
@@ -15,12 +16,6 @@ unique_name_in_owner = true
 
 [node name="PlayerSpawner" parent="." instance=ExtResource("4_kwkoe")]
 unique_name_in_owner = true
-spawn_path = NodePath("../Players")
-
-[node name="Players" type="Node2D" parent="."]
-unique_name_in_owner = true
-y_sort_enabled = true
-metadata/_edit_lock_ = true
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
 z_index = -1
@@ -39,3 +34,7 @@ unique_name_in_owner = true
 position = Vector2(151, 16)
 scene_path = "uid://dta1ona6odgmr"
 target_tp_id = "AreaTP1"
+
+[node name="MyosoSpawner" parent="." instance=ExtResource("1_kwkoe")]
+unique_name_in_owner = true
+position = Vector2(-81, 62)

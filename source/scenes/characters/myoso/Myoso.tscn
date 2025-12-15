@@ -39,7 +39,7 @@ metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 radius = 2.0
 height = 16.0
 
-[node name="Myoso" type="CharacterBody2D"]
+[node name="MyosoSpawner" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_jpx56")
 sprint_speed = 96.0
