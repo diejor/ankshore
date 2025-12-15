@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
+[gd_scene load_steps=5 format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://source/scenes/areas/Winter.tscn" id="2_5yleq"]
@@ -57,6 +57,14 @@ theme_override_font_sizes/font_size = 67
 text = "ANKSHORE!!!!!!"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="UsernameEdit" type="LineEdit" parent="."]
+unique_name_in_owner = true
+offset_left = 451.0
+offset_top = 235.0
+offset_right = 674.0
+offset_bottom = 280.0
+placeholder_text = "Enter Username"
 
 [connection signal="connected_to_server" from="AutoloadSignals" to="Button" method="on_connected_to_server"]
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

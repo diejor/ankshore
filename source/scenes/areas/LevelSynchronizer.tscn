@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://by6v45orjo182"]
+
+[ext_resource type="Script" uid="uid://c0xlvld8td501" path="res://source/scenes/areas/level_synchronizer.gd" id="1_inu3m"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_adjto"]
+properties/0/path = NodePath("LevelSynchronizer:connected_clients")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="LevelSynchronizer" type="MultiplayerSynchronizer"]
+replication_config = SubResource("SceneReplicationConfig_adjto")
+public_visibility = false
+script = ExtResource("1_inu3m")

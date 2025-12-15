@@ -2,12 +2,22 @@
 
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="1_suw44"]
+[ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/LevelSynchronizer.tscn" id="1_xbm22"]
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="3_ed0e1"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/autoloads/networking/PlayerSpawner.tscn" id="4_gke6c"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_adjto"]
-
 [node name="AreaTest1" type="Node2D"]
+y_sort_enabled = true
+
+[node name="LevelSynchronizer" parent="." instance=ExtResource("1_xbm22")]
+unique_name_in_owner = true
+
+[node name="PlayerSpawner" parent="." instance=ExtResource("4_gke6c")]
+unique_name_in_owner = true
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node2D" parent="."]
+unique_name_in_owner = true
 y_sort_enabled = true
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
@@ -30,11 +40,3 @@ target_tp_id = "AreaTPWinter"
 [node name="MyosoSpawner" parent="." instance=ExtResource("3_ed0e1")]
 unique_name_in_owner = true
 position = Vector2(257, 305)
-
-[node name="PlayerSpawner" parent="." instance=ExtResource("4_gke6c")]
-unique_name_in_owner = true
-
-[node name="LevelSynchronizer" type="MultiplayerSynchronizer" parent="."]
-unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_adjto")
-public_visibility = false

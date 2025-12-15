@@ -3,6 +3,7 @@ extends Button
 
 @onready var play_game: Label = $PlayGame
 @onready var connecting: Label = $Connecting
+@onready var username_edit: LineEdit = %UsernameEdit
 
 const MYOSO: PackedScene = preload("uid://bxpx2n4hugojx")
 
@@ -17,8 +18,13 @@ func flip_labels() -> void:
 
 
 func _on_pressed() -> void:
+	var username: String
+	if username_edit.text.is_empty():
+		username = Client.username
+	else:
+		username = username_edit.text
 	var client_data: Dictionary = {
-		username = Client.username,
+		username = username,
 		peer_id = Client.uid,
 		scene = MYOSO.resource_path
 	}

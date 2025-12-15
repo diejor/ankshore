@@ -19,6 +19,9 @@ var _state_changed: bool = false
 func _ready() -> void:
 	if not _initialized:
 		setup()
+	
+	set_visibility_for(MultiplayerPeer.TARGET_PEER_SERVER, true)
+	set_visibility_for(get_multiplayer_authority(), true)
 
 
 func setup() -> void:

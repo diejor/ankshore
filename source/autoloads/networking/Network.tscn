@@ -4,15 +4,15 @@
 [ext_resource type="Script" uid="uid://buo380mj8eweh" path="res://source/autoloads/networking/client/webrtc_loopback_backend.gd" id="2_lkhf7"]
 [ext_resource type="Script" uid="uid://b4x6usceefd6p" path="res://source/autoloads/networking/server/webrtc_loopback_backend.gd" id="3_adxt7"]
 
-[sub_resource type="Resource" id="Resource_d7vgn"]
+[sub_resource type="Resource" id="Resource_lkhf7"]
 script = ExtResource("2_lkhf7")
 metadata/_custom_type_script = "uid://buo380mj8eweh"
 
-[sub_resource type="Resource" id="Resource_agsdx"]
+[sub_resource type="Resource" id="Resource_adxt7"]
 script = ExtResource("3_adxt7")
 metadata/_custom_type_script = "uid://b4x6usceefd6p"
 
 [node name="Network" type="Node"]
 script = ExtResource("1_bdq42")
-client_backend = SubResource("Resource_d7vgn")
-server_backend = SubResource("Resource_agsdx")
+client_backend = SubResource("Resource_lkhf7")
+server_backend = SubResource("Resource_adxt7")

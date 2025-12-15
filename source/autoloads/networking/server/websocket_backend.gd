@@ -12,12 +12,13 @@ func _init() -> void:
 
 func create_server() -> Error:
 	var err := ws_peer.create_server(port)
-	if err != OK:
-		push_warning("WebSocketServerBackend.create_server failed: %s" % error_string(err))
-		return err
+	match err:
+		OK:
+			print("WebSocket server ready on *:%d" % port)
+			return OK
+		_:
+			return err
 
-	print("WebSocket server ready on *:%d" % port)
-	return OK
 
 func peer_reset_state() -> void:
 	if (multiplayer_api.has_multiplayer_peer() 

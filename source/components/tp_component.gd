@@ -1,6 +1,8 @@
 class_name TPComponent
 extends Node
 
+signal teleport
+
 var owner2d: Node2D:
 	get: return owner as Node2D
 
@@ -29,8 +31,7 @@ func begin_teleport(tp_id: String, new_scene: String) -> void:
 		tp_path
 	)
 	
-	var client_component: ClientComponent = owner.get_node("%ClientComponent")
-	client_component.shutdown()
+	teleport.emit()
 
 func teleported(scene: Node, _tp_path: String) -> void:
 	if scene:

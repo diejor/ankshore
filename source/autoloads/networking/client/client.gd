@@ -4,6 +4,7 @@ extends Node
 
 signal connected_to_server()
 signal peer_connected(peer_id: int)
+signal peer_disconnected(peer_id: int)
 
 
 const LEVEL_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
@@ -36,6 +37,7 @@ func _ready() -> void:
 
 	# Connect multiplayer signals.
 	multiplayer_api.peer_connected.connect(on_peer_connected)
+	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
 	# Boot local client
@@ -73,6 +75,9 @@ func config_api() -> void:
 
 func on_peer_connected(peer_id: int) -> void:
 	peer_connected.emit(peer_id)
+
+func on_peer_disconnected(peer_id: int) -> void:
+	peer_disconnected.emit(peer_id)
 
 
 func on_connected_to_server() -> void:

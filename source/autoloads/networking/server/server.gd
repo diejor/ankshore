@@ -21,14 +21,15 @@ var root: String:
 
 
 func _ready() -> void:
-	add_child(level_manager)
-
 	multiplayer_api.peer_connected.connect(on_peer_connected)
 	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 
 	var server_err := init()
-	assert(server_err == OK,
+	match server_err:
+		_:
+			assert(server_err == OK or server_err == ERR_ALREADY_IN_USE,
 		"Dedicated server failed to start: %s" % error_string(server_err))
+	
 
 
 func init() -> Error:
@@ -37,6 +38,7 @@ func init() -> Error:
 	if err != OK:
 		return err
 
+	add_child(level_manager)
 	config_api()
 	return OK
 
