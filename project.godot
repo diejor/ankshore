@@ -23,9 +23,9 @@ boot_splash/stretch_mode=0
 
 [autoload]
 
-Network="*res://source/autoloads/networking/Network.tscn"
-Server="*res://source/autoloads/networking/server/server.gd"
-Client="*res://source/autoloads/networking/client/client.gd"
+Network="*res://source/networking/Network.tscn"
+Server="*res://source/networking/server/server.gd"
+Client="*res://source/networking/client/client.gd"
 
 [debug]
 
@@ -51,12 +51,16 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 [file_customization]
 
 folder_colors={
-"res://source/autoloads/": "yellow",
 "res://source/combat/": "blue",
 "res://source/components/": "orange",
+"res://source/networking/": "purple",
 "res://source/scenes/": "teal",
 "res://source/scenes/characters/myoso/": "blue"
 }
+
+[global_group]
+
+persistent=""
 
 [input]
 

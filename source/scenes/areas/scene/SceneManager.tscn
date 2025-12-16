@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3ag2052swfwd"]
+
+[ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://source/scenes/areas/scene/scene_manager.gd" id="1_mer5l"]
+
+[node name="SceneManager" type="MultiplayerSpawner"]
+spawn_path = NodePath(".")
+script = ExtResource("1_mer5l")
+areas_path = Array[String](["uid://xkil2cmplfcd", "uid://dta1ona6odgmr"])

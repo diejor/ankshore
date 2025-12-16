@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://source/components/client/ConnectServerUI.tscn" id="3_2mjiv"]
 [ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
-[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/characters/myoso/components/myoso_input_component.gd" id="6_sb6si"]
+[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/characters/myoso/components/input_component.gd" id="6_sb6si"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="9_3l6w3"]
 [ext_resource type="Script" uid="uid://n73txgkicr1m" path="res://source/components/persistent/save_synchronizer.gd" id="9_jki01"]
@@ -70,7 +70,7 @@ replication_config = SubResource("SceneReplicationConfig_cmaps")
 unique_name_in_owner = true
 visible = false
 
-[node name="SaveComponent" type="Node" parent="Components"]
+[node name="SaveComponent" type="Node" parent="Components" groups=["persistent"]]
 unique_name_in_owner = true
 script = ExtResource("10_xdvvs")
 save_dir = "res://saves/players"

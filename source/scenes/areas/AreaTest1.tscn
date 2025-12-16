@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=4 uid="uid://dta1ona6odgmr"]
 
-[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/AreaTP.tscn" id="1_6x6co"]
+[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/tp/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="1_suw44"]
-[ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/SceneSynchronizer.tscn" id="1_xbm22"]
+[ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/scene/SceneSynchronizer.tscn" id="1_xbm22"]
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="3_ed0e1"]
-[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/autoloads/networking/SceneSpawner.tscn" id="4_gke6c"]
+[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/scenes/areas/scene/SceneSpawner.tscn" id="4_gke6c"]
 
 [node name="AreaTest1" type="Node2D"]
 y_sort_enabled = true
