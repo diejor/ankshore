@@ -50,7 +50,6 @@ script = ExtResource("3_a6gmg")
 [node name="TPComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
 script = ExtResource("2_ko57k")
-starting_scene_path = "uid://xkil2cmplfcd"
 
 [node name="ClientComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -74,6 +73,7 @@ visible = false
 unique_name_in_owner = true
 script = ExtResource("10_xdvvs")
 save_dir = "res://saves/players"
+save_extension = ".tres"
 save_container = SubResource("Resource_tkyel")
 
 [node name="SaveSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent" node_paths=PackedStringArray("base_sync")]

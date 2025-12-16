@@ -6,3 +6,4 @@
 spawn_path = NodePath(".")
 script = ExtResource("1_mer5l")
 areas_path = Array[String](["uid://xkil2cmplfcd", "uid://dta1ona6odgmr"])
+starting_scene_path = "uid://dta1ona6odgmr"

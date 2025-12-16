@@ -2,6 +2,7 @@ class_name SceneManager
 extends MultiplayerSpawner
 
 @export_file var areas_path: Array[String]
+@export_file var starting_scene_path: String
 
 func _ready() -> void:
 	spawn_function = spawn_lobby
@@ -59,30 +60,44 @@ func connect_player(
 	destination_scene_name: String = "", 
 	tp_path: String = "") -> void:
 	var player: Node2D = ClientComponent.instantiate(client_data)
-	var save_component: SaveComponent = player.get_node("%SaveComponent")
-	var tp_component: TPComponent = player.get_node("%TPComponent")
 	
-	var load_error: Error = save_component.load_state()
-	assert(load_error == OK or load_error == ERR_FILE_NOT_FOUND, 
-		"Something failed while trying to load player. 
-		Error: %s." % error_string(load_error))
+	var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
+	var load_err: Error
+	if save_component:
+		load_err = save_component.load_state()
+		assert(load_err == OK or load_err == ERR_FILE_NOT_FOUND, 
+			"Something failed while trying to load player. 
+			Error: %s." % error_string(load_err))
+	
+	var tp_component: TPComponent = player.get_node_or_null("%TPComponent")
+	if tp_component and destination_scene_name.is_empty() and not tp_component.current_scene.is_empty():
+		destination_scene_name = tp_component.current_scene_name
+	elif destination_scene_name.is_empty():
+		destination_scene_name = TPComponent.get_scene_name(starting_scene_path)
+	
 	
 	var destination_scene: Node = get_node_or_null(destination_scene_name)
-	tp_component.teleported(destination_scene, tp_path)
 	
-	var current_scene: Node = get_node(tp_component.current_scene_name)
-	
-	
-	if load_error == ERR_FILE_NOT_FOUND:
+	if tp_component:
+		if tp_component.current_scene.is_empty():
+			tp_component.current_scene = destination_scene.scene_file_path
+		tp_component.teleported(destination_scene, tp_path)
+		
+	if save_component and load_err == ERR_FILE_NOT_FOUND:
 		# No player save found, create from spawner.
 		var spawner_name := save_component.spawner_name()
-		var spawner := current_scene.get_node("%" + spawner_name)
+		var spawner := destination_scene.get_node("%" + spawner_name)
 		var spawner_save := spawner.get_node_or_null("%SaveComponent")
 		if spawner_save:
 			save_component = spawner_save
-		
-	var player_spawner: SceneSpawner = current_scene.get_node("%SceneSpawner")
-	player_spawner.spawn({
-		save=save_component.serialize_scene(),
-		client_data=client_data,
-	})
+	
+	
+	var player_spawner: SceneSpawner = destination_scene.get_node("%SceneSpawner")
+	var serialized: PackedByteArray
+	if save_component:
+		serialized = save_component.serialize_scene()
+	
+		player_spawner.spawn({
+			save=serialized,
+			client_data=client_data,
+		})
