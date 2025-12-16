@@ -44,8 +44,8 @@ func scene_visibility_filter(peer_id: int) -> bool:
 		return false
 	
 	var scene: Node = owner.get_parent()
-	var level_sync: LevelSynchronizer = scene.get_node("%LevelSynchronizer")
-	var res: bool = peer_id in level_sync.connected_clients
+	var scene_sync: SceneSynchronizer = scene.get_node("%SceneSynchronizer")
+	var res: bool = peer_id in scene_sync.connected_clients
 	return res
 
 static func instantiate(client_data: Dictionary) -> Node:

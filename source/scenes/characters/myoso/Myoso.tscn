@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=19 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://source/components/client/ConnectServerUI.tscn" id="3_2mjiv"]
 [ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
-[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/components/signals/AutoloadSignals.tscn" id="3_tkyel"]
 [ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/characters/myoso/components/myoso_input_component.gd" id="6_sb6si"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="9_3l6w3"]
@@ -47,9 +46,6 @@ sprint_speed = 96.0
 [node name="Components" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_a6gmg")
-
-[node name="AutoloadSignals" parent="Components" instance=ExtResource("3_tkyel")]
-unique_name_in_owner = true
 
 [node name="TPComponent" type="Node" parent="Components"]
 unique_name_in_owner = true

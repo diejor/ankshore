@@ -7,8 +7,8 @@ signal peer_connected(peer_id: int)
 signal peer_disconnected(peer_id: int)
 
 
-const LEVEL_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
-@onready var level_manager: LevelManager = LEVEL_MANAGER.instantiate()
+const SCENE_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
+@onready var scene_manager: SceneManager = SCENE_MANAGER.instantiate()
 
 
 var multiplayer_api: SceneMultiplayer:
@@ -33,7 +33,7 @@ var username: String = "":
 
 
 func _ready() -> void:
-	add_child(level_manager)
+	add_child(scene_manager)
 
 	# Connect multiplayer signals.
 	multiplayer_api.peer_connected.connect(on_peer_connected)
@@ -64,9 +64,9 @@ func init(server_address: String, _username: String) -> Error:
 
 
 func config_api() -> void:
-	assert(level_manager, 
+	assert(scene_manager, 
 		"SceneManager autoload must exist before configuring the client.")
-	var scene_root: NodePath = level_manager.get_path()
+	var scene_root: NodePath = scene_manager.get_path()
 	assert(scene_root != NodePath(""), 
 		"SceneManager path must be valid before client configuration.")
 

@@ -8,8 +8,8 @@ signal peer_disconnected(peer_id: int)
 
 var backend: MultiplayerServerBackend
 
-const LEVEL_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
-@onready var level_manager: LevelManager = LEVEL_MANAGER.instantiate()
+const SCENE_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
+@onready var scene_manager: SceneManager = SCENE_MANAGER.instantiate()
 
 
 var multiplayer_api: SceneMultiplayer:
@@ -38,15 +38,15 @@ func init() -> Error:
 	if err != OK:
 		return err
 
-	add_child(level_manager)
+	add_child(scene_manager)
 	config_api()
 	return OK
 
 
 func config_api() -> void:
-	assert(is_instance_valid(level_manager), 
+	assert(is_instance_valid(scene_manager), 
 		"Server lobbies node is missing before configuration.")
-	backend.configure_tree(get_tree(), level_manager.get_path())
+	backend.configure_tree(get_tree(), scene_manager.get_path())
 
 
 func on_peer_connected(peer_id: int) -> void:
