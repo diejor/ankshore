@@ -2,24 +2,17 @@
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://source/scenes/areas/Winter.tscn" id="2_5yleq"]
-[ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://source/scenes/myoso/components/autoload_signals.gd" id="3_i7gu7"]
+[ext_resource type="Script" uid="uid://b45nyqhksohxg" path="res://source/components/signals/autoload_signals.gd" id="3_i7gu7"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 
-[node name="Control" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Control" type="CanvasLayer"]
 
 [node name="AutoloadSignals" type="Node" parent="."]
 script = ExtResource("3_i7gu7")
 metadata/_custom_type_script = "uid://b45nyqhksohxg"
 
 [node name="Button" type="Button" parent="."]
-layout_mode = 0
 offset_left = 409.0
 offset_top = 307.0
 offset_right = 724.0
@@ -55,7 +48,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Label" type="Label" parent="."]
-layout_mode = 0
 offset_left = 332.0
 offset_top = 105.0
 offset_right = 803.0
@@ -65,6 +57,14 @@ theme_override_font_sizes/font_size = 67
 text = "ANKSHORE!!!!!!"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="UsernameEdit" type="LineEdit" parent="."]
+unique_name_in_owner = true
+offset_left = 451.0
+offset_top = 235.0
+offset_right = 674.0
+offset_bottom = 280.0
+placeholder_text = "Enter Username"
 
 [connection signal="connected_to_server" from="AutoloadSignals" to="Button" method="on_connected_to_server"]
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

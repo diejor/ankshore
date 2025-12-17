@@ -1,0 +1,82 @@
+[gd_scene load_steps=14 format=3 uid="uid://bxpx2n4hugojx"]
+
+[ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
+[ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
+[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://source/scenes/characters/myoso/assets/limbusWolf.png" id="2_gjcb4"]
+[ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://source/components/tp_component.gd" id="2_ko57k"]
+[ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
+[ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
+[ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://source/components/client/ClientComponent.tscn" id="4_1j2t1"]
+[ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://source/components/persistent/SaveComponent.tscn" id="6_7n34x"]
+[ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
+[ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://source/scenes/characters/myoso/components/input_component.gd" id="9_7n34x"]
+
+[sub_resource type="Resource" id="Resource_3el0l"]
+resource_local_to_scene = true
+script = ExtResource("8_xdvvs")
+metadata/_custom_type_script = "uid://d1mnum02gn0c0"
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("Components/ClientComponent:username")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Components/TPComponent:current_scene")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wo7us"]
+radius = 2.0
+height = 16.0
+
+[node name="MyosoSpawner" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_jpx56")
+sprint_speed = 96.0
+
+[node name="Components" type="Node2D" parent="."]
+script = ExtResource("3_a6gmg")
+
+[node name="TPComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
+script = ExtResource("2_ko57k")
+
+[node name="ClientComponent" parent="Components" node_paths=PackedStringArray("replicated_properties") instance=ExtResource("4_1j2t1")]
+unique_name_in_owner = true
+replicated_properties = NodePath("../../ReplicatedState")
+
+[node name="SaveComponent" parent="Components" node_paths=PackedStringArray("replicated_properties") instance=ExtResource("6_7n34x")]
+unique_name_in_owner = true
+save_container = SubResource("Resource_3el0l")
+replicated_properties = NodePath("../../ReplicatedState")
+
+[node name="InputComponent" type="Node" parent="Components"]
+unique_name_in_owner = true
+script = ExtResource("9_7n34x")
+_actions = ExtResource("2_a6gmg")
+
+[node name="ReplicatedState" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_cmaps")
+
+[node name="Icon" type="Sprite2D" parent="."]
+position = Vector2(7.748604e-07, -12.999999)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_gjcb4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_wo7us")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+unique_name_in_owner = true
+zoom = Vector2(3, 3)
+process_callback = 0
+position_smoothing_enabled = true
+drag_left_margin = 0.1
+drag_top_margin = 0.1
+drag_right_margin = 0.1
+drag_bottom_margin = 0.1
+script = ExtResource("3_cmaps")
+metadata/_edit_lock_ = true

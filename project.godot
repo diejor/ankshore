@@ -8,22 +8,24 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="Ankshore"
 run/main_scene="uid://dfvoo60p3ut6n"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-boot_splash/fullsize=false
 boot_splash/image="uid://ddkwfh5opq7yw"
 config/icon="uid://ddkwfh5opq7yw"
+boot_splash/stretch_mode=0
 
 [autoload]
 
-GameInstance="*res://source/autoloads/game_instance.gd"
-Network="*res://source/autoloads/networking/Network.tscn"
-Server="*res://source/autoloads/networking/server/server.gd"
-Client="*res://source/autoloads/networking/client/client.gd"
-SceneManager="*res://source/autoloads/scene_manager.gd"
+Network="*res://source/networking/Network.tscn"
+Server="*res://source/networking/server/server.gd"
+Client="*res://source/networking/client/client.gd"
 
 [debug]
 
@@ -49,16 +51,16 @@ enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 [file_customization]
 
 folder_colors={
-"res://source/": "gray",
-"res://source/autoloads/": "yellow",
-"res://source/autoloads/networking/": "teal",
-"res://source/combat/": "red",
-"res://source/combat/character/anatomy/": "teal",
-"res://source/scenes/": "pink",
-"res://source/scenes/areas/": "orange",
-"res://source/scenes/menus/": "purple",
-"res://source/scenes/myoso/": "blue"
+"res://source/combat/": "blue",
+"res://source/components/": "orange",
+"res://source/networking/": "purple",
+"res://source/scenes/": "teal",
+"res://source/scenes/characters/myoso/": "blue"
 }
+
+[global_group]
+
+persistent=""
 
 [input]
 

@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=4 uid="uid://xkil2cmplfcd"]
 
-[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/myoso/Myoso.tscn" id="1_kwkoe"]
-[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/scenes/myoso/components/AutoloadSignals.tscn" id="2_xy03w"]
-[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/AreaTP.tscn" id="3_4lfof"]
-[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/autoloads/networking/PlayerSpawner.tscn" id="4_kwkoe"]
+[ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/scene/SceneSynchronizer.tscn" id="1_535hd"]
+[ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="1_kwkoe"]
+[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/tp/AreaTP.tscn" id="3_4lfof"]
+[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/scenes/areas/scene/SceneSpawner.tscn" id="4_kwkoe"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="4_xy03w"]
 
 [node name="Winter" type="Node2D"]
@@ -11,9 +11,10 @@ process_priority = -1
 y_sort_enabled = true
 metadata/_edit_lock_ = true
 
-[node name="AutoloadSignals" parent="." instance=ExtResource("2_xy03w")]
+[node name="SceneSynchronizer" parent="." instance=ExtResource("1_535hd")]
+unique_name_in_owner = true
 
-[node name="MyosoSpawner" parent="." instance=ExtResource("1_kwkoe")]
+[node name="SceneSpawner" parent="." instance=ExtResource("4_kwkoe")]
 unique_name_in_owner = true
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
@@ -32,10 +33,8 @@ metadata/_edit_lock_ = true
 unique_name_in_owner = true
 position = Vector2(151, 16)
 scene_path = "uid://dta1ona6odgmr"
-scene_name = "AreaTest1"
 target_tp_id = "AreaTP1"
 
-[node name="PlayerSpawner" parent="." instance=ExtResource("4_kwkoe")]
+[node name="MyosoSpawner" parent="." instance=ExtResource("1_kwkoe")]
 unique_name_in_owner = true
-
-[connection signal="connected_to_server" from="AutoloadSignals" to="." method="on_connected_to_server"]
+position = Vector2(-81, 62)

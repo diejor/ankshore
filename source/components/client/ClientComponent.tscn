@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://8dmbjqnbp0rn"]
+
+[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://source/components/client/client_component.gd" id="1_qa662"]
+[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://source/components/client/ConnectServerUI.tscn" id="2_umyft"]
+[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="3_umyft"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_umyft"]
+
+[node name="ClientComponent" type="Node2D"]
+script = ExtResource("1_qa662")
+
+[node name="ServerVisibility" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_umyft")
+
+[node name="ConnectServerUI" parent="." instance=ExtResource("2_umyft")]
+unique_name_in_owner = true
+visible = false
+
+[node name="ClientHUD" parent="." instance=ExtResource("3_umyft")]
+unique_name_in_owner = true
