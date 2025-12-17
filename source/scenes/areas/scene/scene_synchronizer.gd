@@ -28,7 +28,7 @@ func update_clients() -> void:
 		update_client(client)
 
 func update_client(client: Node) -> void:
-	client.request_ready()
+	#client.request_ready()
 	var component: ClientComponent = client.get_node("%ClientComponent")
 	component.replicated_properties.update_visibility()
 	component.server_visibility.update_visibility()
