@@ -3,13 +3,18 @@ extends MultiplayerSynchronizer
 
 signal state_changed
 
-@export var base_sync: MultiplayerSynchronizer:
-	get: return %MultiplayerSynchronizer
+@onready var base_sync: MultiplayerSynchronizer:
+	get:
+		@warning_ignore("unsafe_property_access")
+		return owner.replicated_properties
 
 @onready var save_container: SaveContainer:
 	get:
 		@warning_ignore("unsafe_property_access")
-		return %SaveComponent.save_container
+		return get_parent().save_container
+
+var scene_owner: Node:
+	get: return get_parent().get_parent().owner
 
 var _property_paths: Dictionary[StringName, NodePath] = { }
 var _initialized: bool = false
@@ -56,7 +61,7 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 		var sync_flag := source_config.property_get_sync(real_path)
 		var watch := source_config.property_get_watch(real_path)
 
-		var node_res: Array = owner.get_node_and_resource(real_path)
+		var node_res: Array = scene_owner.get_node_and_resource(real_path)
 		assert(node_res[0],
 			("Trying to synchronize '%s' which is not a valid property path." + 
 			"Check source_config.") % real_path)
@@ -64,7 +69,7 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 		var node: Node = node_res[0]
 		var prop_path: NodePath = node_res[2]
 
-		var is_root := node == owner
+		var is_root := node == scene_owner
 		var node_label := "" if is_root else String(node.name)
 
 		var leaf: String
@@ -129,7 +134,7 @@ func has_state_property(property: StringName) -> bool:
 
 func _get_scene_value(property_name: StringName) -> Variant:
 	var real_path: NodePath = _property_paths[property_name]
-	var node_res := owner.get_node_and_resource(real_path)
+	var node_res := scene_owner.get_node_and_resource(real_path)
 	assert(node_res[0], 
 		"Invalid real property path for get_scene_value: %s" % String(real_path))
 	var node: Node = node_res[0]
@@ -139,7 +144,7 @@ func _get_scene_value(property_name: StringName) -> Variant:
 
 func _set_scene_value(property_name: StringName, value: Variant) -> void:
 	var real_path: NodePath = _property_paths[property_name]
-	var node_res := owner.get_node_and_resource(real_path)
+	var node_res := scene_owner.get_node_and_resource(real_path)
 	assert(node_res[0], 
 		"Invalid real property path for set_scene_value: %s" % String(real_path))
 	var node: Node = node_res[0]

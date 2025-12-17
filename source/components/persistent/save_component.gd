@@ -9,6 +9,7 @@ signal state_changed(caller: Node)
 @export_dir var save_dir: String
 @export var save_extension: String = ".tdict"
 @export var save_container: SaveContainer
+@export var replicated_properties: MultiplayerSynchronizer
 
 @onready var save_synchronizer: SaveSynchronizer:
 	get:

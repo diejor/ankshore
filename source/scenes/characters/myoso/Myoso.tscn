@@ -1,38 +1,31 @@
-[gd_scene load_steps=19 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=14 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
 [ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://source/scenes/characters/myoso/assets/limbusWolf.png" id="2_gjcb4"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://source/components/tp_component.gd" id="2_ko57k"]
-[ext_resource type="Script" uid="uid://d152g6yt57q6n" path="res://source/components/client/client_component.gd" id="2_tlpap"]
-[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://source/components/client/ConnectServerUI.tscn" id="3_2mjiv"]
 [ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
-[ext_resource type="Script" uid="uid://c17wtihkdn34c" path="res://source/scenes/characters/myoso/components/input_component.gd" id="6_sb6si"]
+[ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://source/components/client/ClientComponent.tscn" id="4_1j2t1"]
+[ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://source/components/persistent/SaveComponent.tscn" id="6_7n34x"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
-[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="9_3l6w3"]
-[ext_resource type="Script" uid="uid://n73txgkicr1m" path="res://source/components/persistent/save_synchronizer.gd" id="9_jki01"]
-[ext_resource type="Script" uid="uid://c72wanrudisxw" path="res://source/components/persistent/save_component.gd" id="10_xdvvs"]
+[ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://source/scenes/characters/myoso/components/input_component.gd" id="9_7n34x"]
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_y8aqg"]
+[sub_resource type="Resource" id="Resource_3el0l"]
+resource_local_to_scene = true
+script = ExtResource("8_xdvvs")
+metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cmaps"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath("PlayerHUD/VBoxContainer/Handle2/PanelContainer/UsernameLabel:text")
+properties/1/path = NodePath("Components/ClientComponent:username")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 properties/2/path = NodePath("Components/TPComponent:current_scene")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-
-[sub_resource type="Resource" id="Resource_tkyel"]
-resource_local_to_scene = true
-script = ExtResource("8_xdvvs")
-metadata/_custom_type_script = "uid://d1mnum02gn0c0"
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sxgn8"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wo7us"]
 radius = 2.0
@@ -43,55 +36,29 @@ motion_mode = 1
 script = ExtResource("1_jpx56")
 sprint_speed = 96.0
 
-[node name="Components" type="Node" parent="."]
-unique_name_in_owner = true
+[node name="Components" type="Node2D" parent="."]
 script = ExtResource("3_a6gmg")
 
 [node name="TPComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
 script = ExtResource("2_ko57k")
 
-[node name="ClientComponent" type="Node" parent="Components"]
+[node name="ClientComponent" parent="Components" node_paths=PackedStringArray("replicated_properties") instance=ExtResource("4_1j2t1")]
 unique_name_in_owner = true
-script = ExtResource("2_tlpap")
+replicated_properties = NodePath("../../ReplicatedState")
 
-[node name="ServerVisibility" type="MultiplayerSynchronizer" parent="Components/ClientComponent"]
+[node name="SaveComponent" parent="Components" node_paths=PackedStringArray("replicated_properties") instance=ExtResource("6_7n34x")]
 unique_name_in_owner = true
-root_path = NodePath("../../..")
-replication_config = SubResource("SceneReplicationConfig_y8aqg")
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components/ClientComponent"]
-unique_name_in_owner = true
-root_path = NodePath("../../..")
-replication_config = SubResource("SceneReplicationConfig_cmaps")
-
-[node name="ConnectServerUI" parent="Components/ClientComponent" instance=ExtResource("3_2mjiv")]
-unique_name_in_owner = true
-visible = false
-
-[node name="SaveComponent" type="Node" parent="Components" groups=["persistent"]]
-unique_name_in_owner = true
-script = ExtResource("10_xdvvs")
-save_dir = "res://saves/players"
-save_extension = ".tres"
-save_container = SubResource("Resource_tkyel")
-
-[node name="SaveSynchronizer" type="MultiplayerSynchronizer" parent="Components/SaveComponent" node_paths=PackedStringArray("base_sync")]
-unique_name_in_owner = true
-root_path = NodePath("../../..")
-replication_interval = 5.0
-delta_interval = 5.0
-replication_config = SubResource("SceneReplicationConfig_sxgn8")
-visibility_update_mode = 2
-public_visibility = false
-script = ExtResource("9_jki01")
-base_sync = NodePath("../../ClientComponent/MultiplayerSynchronizer")
-metadata/_custom_type_script = "uid://n73txgkicr1m"
+save_container = SubResource("Resource_3el0l")
+replicated_properties = NodePath("../../ReplicatedState")
 
 [node name="InputComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
-script = ExtResource("6_sb6si")
+script = ExtResource("9_7n34x")
 _actions = ExtResource("2_a6gmg")
+
+[node name="ReplicatedState" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_cmaps")
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)
@@ -113,13 +80,3 @@ drag_right_margin = 0.1
 drag_bottom_margin = 0.1
 script = ExtResource("3_cmaps")
 metadata/_edit_lock_ = true
-
-[node name="PlayerHUD" parent="." instance=ExtResource("9_3l6w3")]
-
-[node name="UsernameLabel" parent="PlayerHUD/VBoxContainer/Handle2/PanelContainer" index="0"]
-text = "Spawner"
-
-[connection signal="spawned" from="Components/SaveComponent" to="Components/TPComponent" method="_on_spawned"]
-[connection signal="state_changed" from="Components/SaveComponent/SaveSynchronizer" to="Components/SaveComponent" method="on_state_changed"]
-
-[editable path="PlayerHUD"]

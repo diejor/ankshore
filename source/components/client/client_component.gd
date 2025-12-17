@@ -1,27 +1,30 @@
 class_name ClientComponent
 extends Node
 
-@onready var sync: MultiplayerSynchronizer:
-	get: return %MultiplayerSynchronizer
-@onready var server_visibility: MultiplayerSynchronizer:
-	get: return %ServerVisibility
+@export var replicated_properties: MultiplayerSynchronizer
+var server_visibility: MultiplayerSynchronizer:
+	get: return $ServerVisibility
+var root_path: NodePath:
+	get: return server_visibility.get_path_to(owner)
 
-
+@export_group("Replicated")
 var username_label: RichTextLabel:
-	get: return owner.get_node("PlayerHUD/%UsernameLabel")
-var username: String:
+	get: return %ClientHUD/%UsernameLabel
+@export var username: String = "":
 	get: return username_label.text
 	set(user): username_label.text = user
 
 func _enter_tree() -> void:
+	server_visibility.root_path = root_path
 	server_visibility.set_multiplayer_authority(MultiplayerPeer.TARGET_PEER_SERVER)
 
 func _ready() -> void:
+	assert(server_visibility.public_visibility == true)
 	if "Spawner" in owner.name and not multiplayer.is_server():
 		owner.queue_free()
 	
 	server_visibility.add_visibility_filter(scene_visibility_filter)
-	sync.add_visibility_filter(scene_visibility_filter)
+	replicated_properties.add_visibility_filter(scene_visibility_filter)
 	
 	username = owner.name
 	owner.renamed.connect(func() -> void: username = owner.name)
@@ -71,8 +74,8 @@ static func instantiate(client_data: Dictionary) -> Node:
 	return player
 
 
-### Avoids Synchronizers trying to communicate with the server when the server
-### already removed the node.
+### Effectively disables Synchronizers trying to communicate with the server 
+### when the server already removed the node.
 func _on_teleport() -> void:
 	server_visibility.set_visibility_for(0, false)
-	sync.set_visibility_for(0, false)
+	replicated_properties.set_visibility_for(0, false)

@@ -6,11 +6,16 @@ signal teleport
 var owner2d: Node2D:
 	get: return owner as Node2D
 
-
-@export var current_scene: String = "":
+@export_group("Replicated")
+@export_custom(PROPERTY_HINT_NONE, "replicated") var current_scene: String = "":
 	get: return ResourceUID.ensure_path(current_scene)
 var current_scene_name: String:
 	get: return get_scene_name(current_scene)
+
+
+func _ready() -> void:
+	if current_scene.is_empty():
+		current_scene = owner.owner.scene_file_path
 
 
 func begin_teleport(tp_id: String, new_scene: String) -> void:
