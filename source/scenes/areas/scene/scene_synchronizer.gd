@@ -41,9 +41,9 @@ func connect_client(peer_id: int) -> void:
 	update_clients()
 
 func disconnect_client(peer_id: int) -> void:
-	set_visibility_for.call_deferred(peer_id, false) # trick to call last
 	connected_clients.erase(peer_id)
 	update_clients()
+	set_visibility_for.call_deferred(peer_id, false) # trick to call last
 
 
 func _on_spawned(node: Node) -> void:
