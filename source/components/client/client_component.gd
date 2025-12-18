@@ -1,6 +1,8 @@
 class_name ClientComponent
 extends Node
 
+signal shutdown
+
 @export var state_sync: StateSynchronizer
 @export var spawn_sync: SpawnSynchronizer
 
@@ -12,6 +14,9 @@ func _ready() -> void:
 	spawn_sync.add_visibility_filter(scene_visibility_filter)
 	state_sync.add_visibility_filter(scene_visibility_filter)
 	
+	var tp_component: TPComponent = owner.get_node_or_null("%TPComponent")
+	if tp_component:
+		tp_component.teleport.connect(_on_teleport)
 
 func scene_visibility_filter(peer_id: int) -> bool:
 	if "Spawner" in owner.name:
@@ -52,7 +57,11 @@ static func instantiate(client_data: Dictionary) -> Node:
 	
 	return player
 
+@rpc("any_peer", "call_remote", "reliable")
+func emit_shutdown() -> void:
+	shutdown.emit()
 
 func _on_teleport() -> void:
-	#state_sync.set_visibility_for(0, false)
+	state_sync.set_visibility_for(0, false)
 	spawn_sync.set_visibility_for(0, false)
+	emit_shutdown.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)

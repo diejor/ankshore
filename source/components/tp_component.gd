@@ -1,6 +1,8 @@
 class_name TPComponent
 extends Node
 
+signal teleport
+
 var owner2d: Node2D:
 	get: return owner as Node2D
 
@@ -44,3 +46,8 @@ static func get_scene_name(path_or_uid: String) -> String:
 	var scene: PackedScene = load(path)
 	var scene_state: SceneState = scene.get_state()
 	return scene_state.get_node_name(0)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func emit_teleport() -> void:
+	teleport.emit()
