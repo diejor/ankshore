@@ -17,6 +17,10 @@ var current_scene_name: String:
 func _ready() -> void:
 	if current_scene.is_empty():
 		current_scene = starting_scene_path
+	
+	var client: ClientComponent = owner.get_node_or_null("%ClientComponent")
+	if client:
+		teleport.connect(client._on_teleport)
 
 
 func begin_teleport(tp_id: String, new_scene: String) -> void:
@@ -46,8 +50,3 @@ static func get_scene_name(path_or_uid: String) -> String:
 	var scene: PackedScene = load(path)
 	var scene_state: SceneState = scene.get_state()
 	return scene_state.get_node_name(0)
-
-
-@rpc("any_peer", "call_remote", "reliable")
-func emit_teleport() -> void:
-	teleport.emit()

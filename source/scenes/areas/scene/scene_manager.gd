@@ -47,9 +47,8 @@ func teleport(
 	var client: ClientComponent = player.get_node("%ClientComponent")
 	var tp_component: TPComponent = player.get_node("%TPComponent")
 	
+	# TODO: add a timeout if the client never synchronizes
 	await client.state_sync.delta_synchronized # Make sure the player has been updated
-	tp_component.emit_teleport.rpc_id(player.get_multiplayer_authority())
-	await client.shutdown
 	
 	
 	var to_scene: Node = get_node(tp_component.current_scene_name)

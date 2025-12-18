@@ -1,7 +1,7 @@
 class_name SceneSynchronizer
 extends MultiplayerSynchronizer
 
-@onready var player_spawner: MultiplayerSpawner = %SceneSpawner
+@onready var scene_spawner: MultiplayerSpawner = %SceneSpawner
 
 @export var connected_clients: Dictionary[int, bool]:
 	get:
@@ -14,8 +14,8 @@ var tracked_nodes: Dictionary[Node, bool]
 
 func _ready() -> void:
 	delta_synchronized.connect(update_clients)
-	player_spawner.spawned.connect(_on_spawned)
-	player_spawner.despawned.connect(_on_despawned)
+	scene_spawner.spawned.connect(_on_spawned)
+	scene_spawner.despawned.connect(_on_despawned)
 
 
 func track_player(player: Node) -> void:
@@ -30,14 +30,12 @@ func update_clients() -> void:
 
 func update_client(client: Node) -> void:
 	var component: ClientComponent = client.get_node("%ClientComponent")
-	component.state_sync.update_visibility()
-	component.spawn_sync.update_visibility()
-	
-	
+	component.state_sync.update()
 
 
 # Very important the order in which the client visibility is handled:
 # `https://github.com/godotengine/godot/issues/68508#issuecomment-2597110958`
+
 func connect_client(peer_id: int) -> void:
 	set_visibility_for(peer_id, true)
 	connected_clients[peer_id] = true
