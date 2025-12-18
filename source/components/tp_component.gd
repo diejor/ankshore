@@ -1,10 +1,10 @@
 class_name TPComponent
 extends Node
 
-signal teleport
-
 var owner2d: Node2D:
 	get: return owner as Node2D
+
+@export_file var starting_scene_path: String
 
 @export_group("Replicated")
 @export_custom(PROPERTY_HINT_NONE, "replicated") var current_scene: String = "":
@@ -12,10 +12,9 @@ var owner2d: Node2D:
 var current_scene_name: String:
 	get: return get_scene_name(current_scene)
 
-
 func _ready() -> void:
 	if current_scene.is_empty():
-		current_scene = owner.owner.scene_file_path
+		current_scene = starting_scene_path
 
 
 func begin_teleport(tp_id: String, new_scene: String) -> void:
@@ -30,11 +29,8 @@ func begin_teleport(tp_id: String, new_scene: String) -> void:
 	Client.scene_manager.teleport.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER,
 		owner.name,
 		previous_scene_name,
-		current_scene_name,
 		tp_path
 	)
-	
-	teleport.emit()
 
 func teleported(scene: Node, _tp_path: String) -> void:
 	if scene:

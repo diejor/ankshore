@@ -1,7 +1,7 @@
 class_name SceneSynchronizer
 extends MultiplayerSynchronizer
 
-@onready var player_spawner: SceneSpawner = %SceneSpawner
+@onready var player_spawner: MultiplayerSpawner = %SceneSpawner
 
 @export var connected_clients: Dictionary[int, bool]:
 	get:
@@ -23,14 +23,17 @@ func track_player(player: Node) -> void:
 	player.tree_exiting.connect(_on_despawned.bind(player))
 
 
+
 func update_clients() -> void:
 	for client: Node in tracked_nodes.keys():
 		update_client(client)
 
 func update_client(client: Node) -> void:
 	var component: ClientComponent = client.get_node("%ClientComponent")
-	component.replicated_properties.update_visibility()
-	component.server_visibility.update_visibility()
+	component.state_sync.update_visibility()
+	component.spawn_sync.update_visibility()
+	
+	
 
 
 # Very important the order in which the client visibility is handled:

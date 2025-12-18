@@ -1,38 +1,17 @@
 class_name ClientComponent
 extends Node
 
-@export var replicated_properties: MultiplayerSynchronizer
-var server_visibility: MultiplayerSynchronizer:
-	get: return $ServerVisibility
-var root_path: NodePath:
-	get: return server_visibility.get_path_to(owner)
-
-@export_group("Replicated")
-var username_label: RichTextLabel:
-	get: return %ClientHUD/%UsernameLabel
-@export var username: String = "":
-	get: return username_label.text
-	set(user): username_label.text = user
-
-func _enter_tree() -> void:
-	server_visibility.root_path = root_path
-	server_visibility.set_multiplayer_authority(MultiplayerPeer.TARGET_PEER_SERVER)
+@export var state_sync: StateSynchronizer
+@export var spawn_sync: SpawnSynchronizer
 
 func _ready() -> void:
-	assert(server_visibility.public_visibility == true)
+	assert(spawn_sync.public_visibility == true)
 	if "Spawner" in owner.name and not multiplayer.is_server():
 		owner.queue_free()
 	
-	server_visibility.add_visibility_filter(scene_visibility_filter)
-	replicated_properties.add_visibility_filter(scene_visibility_filter)
+	spawn_sync.add_visibility_filter(scene_visibility_filter)
+	state_sync.add_visibility_filter(scene_visibility_filter)
 	
-	username = owner.name
-	owner.renamed.connect(func() -> void: username = owner.name)
-	
-	if owner.has_node("%TPComponent"):
-		var tp: TPComponent = owner.get_node("%TPComponent")
-		tp.teleport.connect(_on_teleport)
-
 
 func scene_visibility_filter(peer_id: int) -> bool:
 	if "Spawner" in owner.name:
@@ -56,26 +35,24 @@ static func instantiate(client_data: Dictionary) -> Node:
 	assert(client_data.username)
 	assert(client_data.scene)
 	
-	var peer_id: int = client_data.peer_id as int
+	var peer_id: int = client_data.peer_id
 	var scene_path: String = ResourceUID.ensure_path(client_data.scene as String)
 	
 	var scene: PackedScene = load(scene_path)
 	var player: Node = scene.instantiate()
 	player.set_multiplayer_authority(peer_id)
-	player.name = client_data.username as String
+	player.name = str(client_data.peer_id)
+	
+	var _state_sync: StateSynchronizer = player.get_node("%StateSynchronizer")
+	_state_sync.username = client_data.username
 	
 	var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
 	if save_component:
 		save_component.instantiate()
 	
-	var client_component: ClientComponent = player.get_node("%ClientComponent")
-	client_component.username = client_data.username as String
-	
 	return player
 
 
-### Effectively disables Synchronizers trying to communicate with the server 
-### when the server already removed the node.
 func _on_teleport() -> void:
-	server_visibility.set_visibility_for(0, false)
-	replicated_properties.set_visibility_for(0, false)
+	#state_sync.set_visibility_for(0, false)
+	spawn_sync.set_visibility_for(0, false)
