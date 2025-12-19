@@ -6,7 +6,7 @@ signal state_changed
 @onready var base_sync: MultiplayerSynchronizer:
 	get:
 		@warning_ignore("unsafe_property_access")
-		return owner.replicated_properties
+		return owner.state_sync
 
 @onready var save_container: SaveContainer:
 	get:

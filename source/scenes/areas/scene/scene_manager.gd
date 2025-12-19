@@ -2,7 +2,6 @@ class_name SceneManager
 extends MultiplayerSpawner
 
 @export_file var areas_path: Array[String]
-@export_file var starting_scene_path: String
 
 func _ready() -> void:
 	spawn_function = spawn_lobby
@@ -32,7 +31,6 @@ func remove_peer(username: String, scene_name: String) -> Node2D:
 	var player: Node2D = scene.get_node(username)
 
 	player.queue_free()
-	await player.tree_exited
 	
 	return player
 
@@ -41,17 +39,39 @@ func remove_peer(username: String, scene_name: String) -> Node2D:
 func teleport(
 	username: String, 
 	from_scene_name: String, 
-	destination_scene_name: String, 
 	tp_path: String) -> void:
-	var removed_player: Node2D = await remove_peer(username, from_scene_name)
+	var from_scene: Node = get_node(from_scene_name)
+	var from_scene_sync: SceneSynchronizer = from_scene.get_node("%SceneSynchronizer")
 	
-	var client_data: Dictionary = {
-		peer_id = removed_player.get_multiplayer_authority(),
-		username = removed_player.name,
-		scene = removed_player.scene_file_path
-	}
+	var player: Node2D = from_scene.get_node(username)
+	var client: ClientComponent = player.get_node("%ClientComponent")
+	var tp_component: TPComponent = player.get_node("%TPComponent")
 	
-	connect_player(client_data, destination_scene_name, tp_path)
+	# TODO: add a timeout if the client never synchronizes
+	await client.state_sync.delta_synchronized # Make sure the player has been updated
+	
+	
+	var to_scene: Node = get_node(tp_component.current_scene_name)
+	var to_scene_sync: SceneSynchronizer = to_scene.get_node("%SceneSynchronizer")
+	
+	
+	var flip := func(event: Signal, from: Callable, to: Callable) -> void:
+		event.disconnect(from)
+		event.connect(to.bind(player))
+		if event == player.tree_exiting:
+			tp_component.teleported(to_scene, tp_path)
+			player.request_ready()
+	
+	var from_spawn := from_scene_sync._on_spawned
+	var to_spawn := to_scene_sync._on_spawned
+	var from_despawn := from_scene_sync._on_despawned
+	var to_despawn := to_scene_sync._on_despawned
+	
+	flip.call(player.tree_entered, from_spawn, to_spawn)
+	
+	player.tree_entered.connect(flip.bind(player.tree_exiting, from_despawn, to_despawn))
+	player.reparent(to_scene)
+	player.tree_entered.disconnect(flip)
 
 
 @rpc("any_peer", "call_remote", "reliable")
@@ -73,7 +93,7 @@ func connect_player(
 	if tp_component and destination_scene_name.is_empty() and not tp_component.current_scene.is_empty():
 		destination_scene_name = tp_component.current_scene_name
 	elif destination_scene_name.is_empty():
-		destination_scene_name = TPComponent.get_scene_name(starting_scene_path)
+		destination_scene_name = TPComponent.get_scene_name(tp_component.starting_scene_path)
 	
 	
 	var destination_scene: Node = get_node_or_null(destination_scene_name)
@@ -91,13 +111,8 @@ func connect_player(
 		if spawner_save:
 			save_component = spawner_save
 	
+	var scene_sync: SceneSynchronizer = destination_scene.get_node("%SceneSynchronizer")
+	if multiplayer.is_server():
+		scene_sync.track_player(player)
 	
-	var player_spawner: SceneSpawner = destination_scene.get_node("%SceneSpawner")
-	var serialized: PackedByteArray
-	if save_component:
-		serialized = save_component.serialize_scene()
-	
-		player_spawner.spawn({
-			save=serialized,
-			client_data=client_data,
-		})
+	destination_scene.add_child(player)

@@ -9,7 +9,7 @@ signal state_changed(caller: Node)
 @export_dir var save_dir: String
 @export var save_extension: String = ".tdict"
 @export var save_container: SaveContainer
-@export var replicated_properties: MultiplayerSynchronizer
+@export var state_sync: StateSynchronizer
 
 @onready var save_synchronizer: SaveSynchronizer:
 	get:
@@ -20,7 +20,8 @@ signal state_changed(caller: Node)
 		_prepare_save_dir()
 		assert(save_extension.begins_with("."),
 			"Save extension should begin with a dot.")
-		save_path = save_dir.path_join(owner.name + save_extension)
+		
+		save_path = save_dir.path_join(state_sync.username + save_extension)
 
 		assert(save_path.is_absolute_path(),
 			"Invalid save to a not valid file path. " + save_path)

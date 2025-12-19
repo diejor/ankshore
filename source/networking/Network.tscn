@@ -1,18 +1,18 @@
 [gd_scene load_steps=6 format=3 uid="uid://dxxt4ntwj3v7g"]
 
 [ext_resource type="Script" uid="uid://bgg6a75ednv0l" path="res://source/networking/network.gd" id="1_bdq42"]
-[ext_resource type="Script" uid="uid://dwihbc0yyvhgr" path="res://source/networking/client/websocket_backend.gd" id="2_lkhf7"]
-[ext_resource type="Script" uid="uid://bi1iqs0c4ouvh" path="res://source/networking/server/websocket_backend.gd" id="3_adxt7"]
+[ext_resource type="Script" uid="uid://buo380mj8eweh" path="res://source/networking/client/webrtc_loopback_backend.gd" id="2_tc0rw"]
+[ext_resource type="Script" uid="uid://b4x6usceefd6p" path="res://source/networking/server/webrtc_loopback_backend.gd" id="3_v00d8"]
 
-[sub_resource type="Resource" id="Resource_lkhf7"]
-script = ExtResource("2_lkhf7")
-metadata/_custom_type_script = "uid://dwihbc0yyvhgr"
+[sub_resource type="Resource" id="Resource_ms2e8"]
+script = ExtResource("2_tc0rw")
+metadata/_custom_type_script = "uid://buo380mj8eweh"
 
-[sub_resource type="Resource" id="Resource_adxt7"]
-script = ExtResource("3_adxt7")
-metadata/_custom_type_script = "uid://bi1iqs0c4ouvh"
+[sub_resource type="Resource" id="Resource_0vl32"]
+script = ExtResource("3_v00d8")
+metadata/_custom_type_script = "uid://b4x6usceefd6p"
 
 [node name="Network" type="Node"]
 script = ExtResource("1_bdq42")
-client_backend = SubResource("Resource_lkhf7")
-server_backend = SubResource("Resource_adxt7")
+client_backend = SubResource("Resource_ms2e8")
+server_backend = SubResource("Resource_0vl32")
