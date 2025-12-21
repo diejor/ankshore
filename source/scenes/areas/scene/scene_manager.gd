@@ -1,8 +1,6 @@
 class_name SceneManager
 extends MultiplayerSpawner
 
-@export_file var areas_path: Array[String]
-
 func _ready() -> void:
 	spawn_function = spawn_lobby
 	
@@ -11,8 +9,9 @@ func _ready() -> void:
 
 func spawn_lobbies() -> void:
 	if multiplayer.is_server():
-		for path in areas_path:
-			spawn(path)
+		for path_index: int in get_spawnable_scene_count():
+			var scene_path: String = get_spawnable_scene(path_index)
+			add_child(spawn_lobby(scene_path))
 
 
 func spawn_lobby(lobby_file_path: String) -> Node:
@@ -44,11 +43,12 @@ func teleport(
 	var from_scene_sync: SceneSynchronizer = from_scene.get_node("%SceneSynchronizer")
 	
 	var player: Node2D = from_scene.get_node(username)
-	var client: ClientComponent = player.get_node("%ClientComponent")
 	var tp_component: TPComponent = player.get_node("%TPComponent")
 	
-	# TODO: add a timeout if the client never synchronizes
-	await client.state_sync.delta_synchronized # Make sure the player has been updated
+	var client: ClientComponent = player.get_node_or_null("%ClientComponent")
+	if client:
+		# TODO: add a timeout for the case the client never synchronizes
+		await client.state_sync.delta_synchronized # Make sure the player has been updated
 	
 	
 	var to_scene: Node = get_node(tp_component.current_scene_name)
