@@ -25,7 +25,7 @@ properties/0/replication_mode = 2
 properties/1/path = NodePath("Components/TPComponent:current_scene")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath("StateSynchronizer:username")
+properties/2/path = NodePath("Components/ClientComponent:username")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 

@@ -5,15 +5,6 @@ extends MultiplayerSynchronizer
 @onready var spawn_sync: SpawnSynchronizer:
 	get: return $SpawnSynchronizer
 
-@export_group("Replicated")
-var username_label: RichTextLabel:
-	get: return %ClientHUD/%UsernameLabel
-@export var username: String = "":
-	set(user):
-		username = user
-		username_label.text = user
-
-
 func _ready() -> void:
 	# Fixes weird behavior where `replication_config` is shared between scene
 	# instances

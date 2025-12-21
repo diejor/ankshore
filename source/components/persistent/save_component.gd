@@ -21,7 +21,14 @@ signal state_changed(caller: Node)
 		assert(save_extension.begins_with("."),
 			"Save extension should begin with a dot.")
 		
-		save_path = save_dir.path_join(state_sync.username + save_extension)
+		var client: ClientComponent = owner.get_node_or_null("%ClientComponent")
+		var base: String
+		if client:
+			base = client.username
+		else:
+			base = owner.name
+		
+		save_path = save_dir.path_join(base + save_extension)
 
 		assert(save_path.is_absolute_path(),
 			"Invalid save to a not valid file path. " + save_path)
