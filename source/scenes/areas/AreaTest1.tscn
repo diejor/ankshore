@@ -1,10 +1,14 @@
-[gd_scene load_steps=6 format=4 uid="uid://dta1ona6odgmr"]
+[gd_scene load_steps=8 format=4 uid="uid://dta1ona6odgmr"]
 
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/tp/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="1_suw44"]
 [ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/scene/SceneSynchronizer.tscn" id="1_xbm22"]
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="3_ed0e1"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/scenes/areas/scene/SceneSpawner.tscn" id="4_gke6c"]
+[ext_resource type="Texture2D" uid="uid://de21e330cnf3u" path="res://source/scenes/characters/zBrolyNpcTester/assets/zbrolytemplate.png" id="6_msqkd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vn16"]
+size = Vector2(264.7058, 280.92468)
 
 [node name="AreaTest1" type="Node2D"]
 y_sort_enabled = true
@@ -34,4 +38,16 @@ target_tp_id = "AreaTPWinter"
 
 [node name="MyosoSpawner" parent="." instance=ExtResource("3_ed0e1")]
 unique_name_in_owner = true
-position = Vector2(257, 305)
+position = Vector2(267, 314)
+
+[node name="ZBrolyNPC" type="CharacterBody2D" parent="."]
+position = Vector2(656, 393.99997)
+scale = Vector2(0.24555556, 0.1922222)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZBrolyNPC"]
+position = Vector2(2.0361328, 5.2023926)
+scale = Vector2(1, 1.0000004)
+shape = SubResource("RectangleShape2D_1vn16")
+
+[node name="sprite" type="Sprite2D" parent="ZBrolyNPC"]
+texture = ExtResource("6_msqkd")

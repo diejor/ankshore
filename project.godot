@@ -26,6 +26,7 @@ boot_splash/stretch_mode=0
 Network="*res://source/networking/Network.tscn"
 Server="*res://source/networking/server/server.gd"
 Client="*res://source/networking/client/client.gd"
+SignalBusDialogue="*res://singletons/SignalBusDialogue.gd"
 
 [debug]
 
@@ -55,7 +56,8 @@ folder_colors={
 "res://source/components/": "orange",
 "res://source/networking/": "purple",
 "res://source/scenes/": "teal",
-"res://source/scenes/characters/myoso/": "blue"
+"res://source/scenes/characters/myoso/": "blue",
+"res://source/scenes/characters/zBrolyNpcTester/": "blue"
 }
 
 [global_group]

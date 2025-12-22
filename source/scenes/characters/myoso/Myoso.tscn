@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene load_steps=17 format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
@@ -32,6 +32,9 @@ properties/2/replication_mode = 2
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wo7us"]
 radius = 2.0
 height = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3el0l"]
+size = Vector2(42, 40.5)
 
 [node name="MyosoSpawner" type="CharacterBody2D"]
 motion_mode = 1
@@ -87,3 +90,11 @@ metadata/_edit_lock_ = true
 
 [node name="ClientHUD" parent="." instance=ExtResource("12_7n34x")]
 unique_name_in_owner = true
+
+[node name="InteractionArea" type="Area2D" parent="."]
+collision_layer = 3
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_3el0l")
