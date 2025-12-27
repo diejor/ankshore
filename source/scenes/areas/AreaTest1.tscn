@@ -1,12 +1,27 @@
-[gd_scene load_steps=4 format=4 uid="uid://dta1ona6odgmr"]
+[gd_scene load_steps=10 format=4 uid="uid://dta1ona6odgmr"]
 
 [ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/tp/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="1_suw44"]
+[ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/scene/SceneSynchronizer.tscn" id="1_xbm22"]
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="3_ed0e1"]
+[ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/scenes/areas/scene/SceneSpawner.tscn" id="4_gke6c"]
+[ext_resource type="Texture2D" uid="uid://de21e330cnf3u" path="res://source/scenes/characters/zBrolyNpcTester/assets/zbrolytemplate.png" id="6_msqkd"]
+[ext_resource type="PackedScene" uid="uid://c6ldibx17a3tk" path="res://source/scenes/DialogueStuff/DialogueArea.tscn" id="7_1vn16"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vn16"]
+size = Vector2(228.05426, 223.69907)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_07spc"]
+size = Vector2(509.04974, 489.01764)
 
 [node name="AreaTest1" type="Node2D"]
 y_sort_enabled = true
-metadata/_edit_lock_ = true
+
+[node name="SceneSynchronizer" parent="." instance=ExtResource("1_xbm22")]
+unique_name_in_owner = true
+
+[node name="SceneSpawner" parent="." instance=ExtResource("4_gke6c")]
+unique_name_in_owner = true
 
 [node name="GroundLayer" type="TileMapLayer" parent="."]
 z_index = -2
@@ -14,11 +29,10 @@ tile_map_data = PackedByteArray("AAAAAAAAAAAAAAEAAAABAAAAAAAAAAEAAAABAAEAAAAAAAU
 tile_set = ExtResource("1_suw44")
 metadata/_edit_lock_ = true
 
-[node name="TreesLayer" type="TileMapLayer" parent="."]
+[node name="TreeLayer" type="TileMapLayer" parent="."]
 y_sort_enabled = true
 tile_map_data = PackedByteArray("AAAbABMAAQABAAAAAAAbABQAAQABAAAAAAAcABQAAQABAAAAAAAdABQAAQABAAAAAAAeABMAAQABAAAAAAAfABMAAQABAAAAAAAgABMAAQABAAAAAAAhABMAAQABAAAAAAAiABMAAQABAAAAAAAjABIAAQABAAAAAAAkABIAAQABAAAAAAAlABIAAQABAAAAAAAmABIAAQABAAAAAAAnABIAAQABAAAAAAAoABIAAQABAAAAAAApABIAAQABAAAAAAAqABIAAQABAAAAAAArABIAAQABAAAAAAAsABIAAQABAAAAAAAtABIAAQABAAAAAAAuABIAAQABAAAAAAAvABIAAQABAAAAAAAwABIAAQABAAAAAAAxABIAAQABAAAAAAAyABIAAQABAAAAAAAzABIAAQABAAAAAAA0ABIAAQABAAAAAAA1ABIAAQABAAAAAAA2ABIAAQABAAAAAAA3ABIAAQABAAAAAAA4ABIAAQABAAAAAAA5ABIAAQABAAAAAAA=")
 tile_set = ExtResource("1_suw44")
-metadata/_edit_lock_ = true
 
 [node name="AreaTP1" parent="." instance=ExtResource("1_6x6co")]
 unique_name_in_owner = true
@@ -28,4 +42,23 @@ target_tp_id = "AreaTPWinter"
 
 [node name="MyosoSpawner" parent="." instance=ExtResource("3_ed0e1")]
 unique_name_in_owner = true
-position = Vector2(257, 305)
+position = Vector2(267, 314)
+
+[node name="ZBrolyNPC" type="CharacterBody2D" parent="."]
+position = Vector2(656, 393.99997)
+scale = Vector2(0.24555556, 0.1922222)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ZBrolyNPC"]
+position = Vector2(0, -2.6010742)
+scale = Vector2(1, 1.0000006)
+shape = SubResource("RectangleShape2D_1vn16")
+
+[node name="sprite" type="Sprite2D" parent="ZBrolyNPC"]
+texture = ExtResource("6_msqkd")
+
+[node name="DialogueArea" parent="ZBrolyNPC" instance=ExtResource("7_1vn16")]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="ZBrolyNPC/DialogueArea"]
+position = Vector2(-4.0724144, 5.2024555)
+scale = Vector2(1, 1.0000004)
+shape = SubResource("RectangleShape2D_07spc")
