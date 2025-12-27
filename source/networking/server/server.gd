@@ -25,9 +25,7 @@ func _ready() -> void:
 	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 
 	var server_err := init()
-	match server_err:
-		_:
-			assert(server_err == OK or server_err == ERR_ALREADY_IN_USE,
+	assert(server_err == OK or server_err == ERR_ALREADY_IN_USE,
 		"Dedicated server failed to start: %s" % error_string(server_err))
 	
 

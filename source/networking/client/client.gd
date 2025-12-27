@@ -33,22 +33,17 @@ var username: String = "":
 
 
 func _ready() -> void:
-	add_child(scene_manager)
-
 	# Connect multiplayer signals.
 	multiplayer_api.peer_connected.connect(on_peer_connected)
 	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 
-	# Boot local client
-	var client_err: Error = connect_client("localhost", username)
-	if client_err != OK:
-		push_warning(
-			"Local client bootstrap failed: %s" % error_string(client_err))
 
 
 func connect_client(server_address: String, _username: String) -> Error:
-	return init(server_address, _username)
+	var code: Error = init(server_address, _username)
+	await connected_to_server
+	return code
 
 
 func init(server_address: String, _username: String) -> Error:
@@ -64,13 +59,8 @@ func init(server_address: String, _username: String) -> Error:
 
 
 func config_api() -> void:
-	assert(scene_manager, 
-		"SceneManager autoload must exist before configuring the client.")
-	var scene_root: NodePath = scene_manager.get_path()
-	assert(scene_root != NodePath(""), 
-		"SceneManager path must be valid before client configuration.")
-
-	backend.configure_tree(get_tree(), scene_root)
+	add_child(scene_manager)
+	backend.configure_tree(get_tree(), scene_manager.get_path())
 
 
 func on_peer_connected(peer_id: int) -> void:

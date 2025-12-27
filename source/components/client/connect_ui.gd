@@ -21,7 +21,7 @@ func _on_join_button_pressed() -> void:
 	var username := username_edit.text
 	_hide_on_connect = true
 	Server.backend.peer_reset_state()
-	var err: Error = Client.connect_client(server_address, username)
+	var err: Error = await Client.connect_client(server_address, username)
 	if err != OK:
 		push_warning("Connection failed: %s" % error_string(err))
 		_hide_on_connect = false

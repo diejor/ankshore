@@ -13,6 +13,7 @@ scale = Vector2(0.24555556, 0.1922222)
 position = Vector2(0, -2.6010742)
 scale = Vector2(1, 1.0000006)
 shape = SubResource("RectangleShape2D_1vn16")
+disabled = true
 
 [node name="sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_raqbs")

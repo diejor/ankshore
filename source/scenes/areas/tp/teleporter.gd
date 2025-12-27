@@ -7,6 +7,8 @@ var scene_name: String:
 
 @export var target_tp_id: String
 
+func _ready() -> void:
+	unique_name_in_owner = true
 
 func _on_body_entered(body: Node2D) -> void:
 	# Only teleport nodes that have a `TPComponent`
