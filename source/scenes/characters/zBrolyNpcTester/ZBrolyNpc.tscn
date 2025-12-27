@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddckx2o2oy5mx"]
+
+[ext_resource type="Texture2D" uid="uid://de21e330cnf3u" path="res://source/scenes/characters/zBrolyNpcTester/assets/zbrolytemplate.png" id="1_raqbs"]
+[ext_resource type="PackedScene" uid="uid://c6ldibx17a3tk" path="res://source/scenes/DialogueStuff/DialogueArea.tscn" id="2_1jtc2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1vn16"]
+size = Vector2(228.05426, 223.69907)
+
+[node name="ZBrolyNPC" type="CharacterBody2D"]
+scale = Vector2(0.24555556, 0.1922222)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2.6010742)
+scale = Vector2(1, 1.0000006)
+shape = SubResource("RectangleShape2D_1vn16")
+
+[node name="sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_raqbs")
+
+[node name="DialogueArea" parent="." instance=ExtResource("2_1jtc2")]
