@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://source/scenes/areas/scene/scene_manager.gd" id="1_mer5l"]
 
 [node name="SceneManager" type="MultiplayerSpawner"]
-_spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr")
 spawn_path = NodePath(".")
 script = ExtResource("1_mer5l")
+lobbies = Array[String](["uid://xkil2cmplfcd", "uid://dta1ona6odgmr"])
+world_server_path = "uid://dga0loylsa26i"
+world_client_path = "uid://cr2k17cu45app"

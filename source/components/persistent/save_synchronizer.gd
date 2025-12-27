@@ -3,12 +3,8 @@ extends MultiplayerSynchronizer
 
 signal state_changed
 
-@onready var base_sync: MultiplayerSynchronizer:
-	get:
-		@warning_ignore("unsafe_property_access")
-		return owner.state_sync
 
-@onready var save_container: SaveContainer:
+var save_container: SaveContainer:
 	get:
 		@warning_ignore("unsafe_property_access")
 		return get_parent().save_container
@@ -16,6 +12,8 @@ signal state_changed
 var scene_owner: Node:
 	get: return get_parent().get_parent().owner
 
+var _base_sync: MultiplayerSynchronizer:
+	get: return owner.get_node("%StateSynchronizer")
 var _property_paths: Dictionary[StringName, NodePath] = { }
 var _initialized: bool = false
 var _state_changed: bool = false
@@ -36,14 +34,14 @@ func setup() -> void:
 	_initialized = true
 
 	assert(save_container)
-	assert(base_sync)
-	assert(base_sync.replication_config)
+	assert(_base_sync)
+	assert(_base_sync.replication_config)
 	assert(
 		save_container.resource_local_to_scene,
 		"`%s` is not local to scene." % save_container,
 	)
 
-	_virtualize_replication_config(base_sync.replication_config)
+	_virtualize_replication_config(_base_sync.replication_config)
 	notify_property_list_changed()
 
 # ------------------------
@@ -63,8 +61,8 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 
 		var node_res: Array = scene_owner.get_node_and_resource(real_path)
 		assert(node_res[0],
-			("Trying to synchronize '%s' which is not a valid property path." + 
-			"Check source_config.") % real_path)
+			"Trying to synchronize '%s' which is not a valid property path. \
+Check source_config." % real_path)
 
 		var node: Node = node_res[0]
 		var prop_path: NodePath = node_res[2]
@@ -86,8 +84,8 @@ func _virtualize_replication_config(source_config: SceneReplicationConfig) -> vo
 
 		var vname_sn := StringName(virtual_name)
 		assert(not _property_paths.has(vname_sn),
-			"Virtual property name '%s' from '%s' is duplicated. 
-			Use unique node names or adjust mapping." % [virtual_name, String(real_path)])
+			"Virtual property name '%s' from '%s' is duplicated. \
+Use unique node names or adjust mapping." % [virtual_name, String(real_path)])
 
 		_property_paths[vname_sn] = real_path
 
@@ -197,15 +195,15 @@ func push_to_scene() -> Error:
 		var pname := StringName(property_name)
 		if not has_state_property(pname):
 			push_error(
-				"Trying to push a save with property '%s' that is not tracked by 
-				the `SaveSynchronizer`." % property_name)
+				"Trying to push a save with property '%s' that is not tracked by \
+the `SaveSynchronizer`." % property_name)
 			return Error.ERR_UNCONFIGURED
 
 		var value: Variant = save_container.get_value(pname)
 		if value == null:
 			push_error(
-				"Trying to push but save doesn't have property 
-				'%s' that is tracked by the `aveSynchronizer`." % property_name,
+				"Trying to push but save doesn't have property \
+'%s' that is tracked by the `aveSynchronizer`." % property_name,
 			)
 			return Error.ERR_UNCONFIGURED
 

@@ -1,17 +1,17 @@
 class_name SaveComponent
 extends Node
 
-signal spawned
+
 signal instantiated
+signal loaded
 signal state_changed(caller: Node)
 
 
 @export_dir var save_dir: String
 @export var save_extension: String = ".tdict"
 @export var save_container: SaveContainer
-@export var state_sync: StateSynchronizer
 
-@onready var save_synchronizer: SaveSynchronizer:
+var _save_synchronizer: SaveSynchronizer:
 	get:
 		return get_child(0)
 
@@ -36,8 +36,8 @@ signal state_changed(caller: Node)
 
 func _ready() -> void:
 	assert(save_container)
-	assert(save_synchronizer)
-	assert(save_synchronizer.save_container == save_container)
+	assert(_save_synchronizer)
+	assert(_save_synchronizer.save_container == save_container)
 
 
 func _prepare_save_dir() -> void:
@@ -61,6 +61,7 @@ func save_state() -> Error:
 func load_state() -> Error:
 	if not ResourceLoader.exists(save_path):
 		#push_warning("No file found at path: %s" % save_path)
+		loaded.emit()
 		return ERR_FILE_NOT_FOUND
 	
 	var saved_container := ResourceLoader.load(
@@ -74,6 +75,7 @@ func load_state() -> Error:
 
 	save_container = saved_container
 	push_to_scene()
+	loaded.emit()
 	
 	return OK
 
@@ -88,14 +90,13 @@ func serialize_scene() -> PackedByteArray:
 
 
 func push_to_scene() -> Error:
-	var push_err: Error = save_synchronizer.push_to_scene()
+	var push_err: Error = _save_synchronizer.push_to_scene()
 	match push_err:
 		ERR_UNCONFIGURED:
 			push_error("Removing unconfigured save at `%s`." % save_path)
 			DirAccess.remove_absolute(save_path)
 			return push_err
 		OK:
-			spawned.emit()
 			return push_err
 		_:
 			push_error("Unexpected error: %s." % error_string(push_err))
@@ -104,11 +105,11 @@ func push_to_scene() -> Error:
 
 
 func pull_from_scene() -> void:
-	save_synchronizer.pull_from_scene()
+	_save_synchronizer.pull_from_scene()
 
 
 func push_to(peer_id: int) -> void:
-	save_synchronizer.push_to(peer_id)
+	_save_synchronizer.push_to(peer_id)
 	
 
 func on_state_changed() -> void:
@@ -117,9 +118,6 @@ func on_state_changed() -> void:
 
 
 func instantiate() -> void:
-	save_synchronizer.setup()
-	assert(save_synchronizer._initialized)
+	_save_synchronizer.setup()
+	assert(_save_synchronizer._initialized)
 	instantiated.emit()
-
-func spawner_name() -> String:
-	return TPComponent.get_scene_name(owner.scene_file_path)

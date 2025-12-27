@@ -15,7 +15,6 @@ func _ready() -> void:
 	assert(root_path == get_path_to(owner))
 	add_visibility_filter(scene_visibility_filter)
 	spawn_sync.add_visibility_filter(scene_visibility_filter)
-	
 
 
 func only_server() -> void:
@@ -42,7 +41,11 @@ func scene_visibility_filter(peer_id: int) -> bool:
 	if peer_id == 0:
 		return false
 	
-	var scene: Node = owner.get_parent()
-	var scene_sync: SceneSynchronizer = scene.get_node("%SceneSynchronizer")
+	var world: Node = owner.get_parent().get_parent()
+	var scene_sync: SceneSynchronizer = world.get_node("%SceneSynchronizer")
 	var res: bool = peer_id in scene_sync.connected_clients
 	return res
+
+
+func _on_teleport() -> void:
+	only_server()

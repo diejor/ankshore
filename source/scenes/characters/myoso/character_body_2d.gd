@@ -16,9 +16,3 @@ func _physics_process(_delta: float) -> void:
 	velocity = desired_speed * input.direction
 
 	move_and_slide()
-
-
-
-
-func _enter_tree() -> void:
-	set_multiplayer_authority(name.to_int())

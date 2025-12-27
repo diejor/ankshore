@@ -22,10 +22,10 @@ metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath("Components/TPComponent:current_scene")
+properties/1/path = NodePath("Components/ClientComponent:username")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath("Components/ClientComponent:username")
+properties/2/path = NodePath("Components/TPComponent:current_scene")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
@@ -46,14 +46,12 @@ unique_name_in_owner = true
 script = ExtResource("2_ko57k")
 starting_scene_path = "uid://xkil2cmplfcd"
 
-[node name="ClientComponent" parent="Components" node_paths=PackedStringArray("state_sync") instance=ExtResource("4_1j2t1")]
+[node name="ClientComponent" parent="Components" instance=ExtResource("4_1j2t1")]
 unique_name_in_owner = true
-state_sync = NodePath("../../StateSynchronizer")
 
-[node name="SaveComponent" parent="Components" node_paths=PackedStringArray("state_sync") instance=ExtResource("6_7n34x")]
+[node name="SaveComponent" parent="Components" instance=ExtResource("6_7n34x")]
 unique_name_in_owner = true
 save_container = SubResource("Resource_3el0l")
-state_sync = NodePath("../../StateSynchronizer")
 
 [node name="InputComponent" type="Node" parent="Components"]
 unique_name_in_owner = true
@@ -87,3 +85,5 @@ metadata/_edit_lock_ = true
 
 [node name="ClientHUD" parent="." instance=ExtResource("12_7n34x")]
 unique_name_in_owner = true
+
+[connection signal="tree_entered" from="." to="Components/ClientComponent" method="_on_owner_tree_entered"]

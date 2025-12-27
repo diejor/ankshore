@@ -29,8 +29,8 @@ func update_clients() -> void:
 		update_client(client)
 
 func update_client(client: Node) -> void:
-	var component: ClientComponent = client.get_node("%ClientComponent")
-	component.state_sync.update()
+	var state: StateSynchronizer = client.get_node("%StateSynchronizer")
+	state.update()
 
 
 # Very important the order in which the client visibility is handled:
@@ -44,7 +44,9 @@ func connect_client(peer_id: int) -> void:
 func disconnect_client(peer_id: int) -> void:
 	connected_clients.erase(peer_id)
 	update_clients()
-	set_visibility_for.call_deferred(peer_id, false) # trick to call last
+	
+	# trick to call last
+	set_visibility_for.call_deferred(peer_id, false) 
 
 
 func _on_spawned(node: Node) -> void:

@@ -1,37 +1,40 @@
 class_name SceneManager
 extends MultiplayerSpawner
 
+@export_file("*.tscn") var lobbies: Array[String]
+@export_file("*.tscn") var world_server_path: String
+@export_file("*.tscn") var world_client_path: String
+
 func _ready() -> void:
 	spawn_function = spawn_lobby
-	
 	spawn_lobbies.call_deferred()
 
 
 func spawn_lobbies() -> void:
 	if multiplayer.is_server():
-		for path_index: int in get_spawnable_scene_count():
-			var scene_path: String = get_spawnable_scene(path_index)
-			add_child(spawn_lobby(scene_path))
+		for lobby_path: String in lobbies:
+			spawn(lobby_path)
 
 
 func spawn_lobby(lobby_file_path: String) -> Node:
 	var lobby_scene: PackedScene = load(lobby_file_path)
-	var lobby: Node2D = lobby_scene.instantiate()
+	var lobby: Node = lobby_scene.instantiate()
 	
+	var world_path: String
 	if multiplayer.is_server():
-		lobby.visible = false
-		lobby.process_mode = Node.PROCESS_MODE_DISABLED 
-	return lobby
-
-
-func remove_peer(username: String, scene_name: String) -> Node2D:
-	var scene: Node = get_node(scene_name)
+		world_path = world_server_path
+	else:
+		world_path = world_client_path
+	var world_scene: PackedScene = load(world_path)
+	var world: Node = world_scene.instantiate()
 	
-	var player: Node2D = scene.get_node(username)
-
-	player.queue_free()
+	var scene_spawner: MultiplayerSpawner = world.get_node("%SceneSpawner")
+	scene_spawner.spawn_path = "../" + lobby.name
 	
-	return player
+	world.name = lobby.name + world.name
+	world.add_child(lobby)
+	
+	return world
 
 
 @rpc("any_peer", "call_remote", "reliable")
@@ -39,20 +42,20 @@ func teleport(
 	username: String, 
 	from_scene_name: String, 
 	tp_path: String) -> void:
-	var from_scene: Node = get_node(from_scene_name)
-	var from_scene_sync: SceneSynchronizer = from_scene.get_node("%SceneSynchronizer")
+	var from_world: Node = get_node(from_scene_name + "World")
+	var from_scene: Node = from_world.get_node(from_scene_name)
+	var from_scene_sync: SceneSynchronizer = from_world.get_node("%SceneSynchronizer")
 	
 	var player: Node2D = from_scene.get_node(username)
 	var tp_component: TPComponent = player.get_node("%TPComponent")
 	
-	var client: ClientComponent = player.get_node_or_null("%ClientComponent")
-	if client:
-		# TODO: add a timeout for the case the client never synchronizes
-		await client.state_sync.delta_synchronized # Make sure the player has been updated
+	var state: StateSynchronizer = player.get_node_or_null("%StateSynchronizer")
+	if state: # TODO: add a timeout for the case the client never synchronizes
+		await state.delta_synchronized # Make sure the player has been updated
 	
-	
-	var to_scene: Node = get_node(tp_component.current_scene_name)
-	var to_scene_sync: SceneSynchronizer = to_scene.get_node("%SceneSynchronizer")
+	var to_world: Node = get_node(tp_component.current_scene_name + "World")
+	var to_scene: Node = to_world.get_node(tp_component.current_scene_name)
+	var to_scene_sync: SceneSynchronizer = to_world.get_node("%SceneSynchronizer")
 	
 	
 	var flip := func(event: Signal, from: Callable, to: Callable) -> void:
@@ -76,12 +79,11 @@ func teleport(
 
 @rpc("any_peer", "call_remote", "reliable")
 func connect_player(
-	client_data: Dictionary, 
-	destination_scene_name: String = "", 
-	tp_path: String = "") -> void:
+	client_data: Dictionary) -> void:
 	var player: Node2D = ClientComponent.instantiate(client_data)
 	
 	var save_component: SaveComponent = player.get_node_or_null("%SaveComponent")
+	
 	var load_err: Error
 	if save_component:
 		load_err = save_component.load_state()
@@ -89,30 +91,21 @@ func connect_player(
 			"Something failed while trying to load player. 
 			Error: %s." % error_string(load_err))
 	
-	var tp_component: TPComponent = player.get_node_or_null("%TPComponent")
-	if tp_component and destination_scene_name.is_empty() and not tp_component.current_scene.is_empty():
-		destination_scene_name = tp_component.current_scene_name
-	elif destination_scene_name.is_empty():
-		destination_scene_name = TPComponent.get_scene_name(tp_component.starting_scene_path)
+	var tp_component: TPComponent = player.get_node("%TPComponent")
+	var world: SubViewport = get_node(tp_component.current_scene_name + "World")
+	var destination_scene: Node = world.get_node(tp_component.current_scene_name)
 	
-	
-	var destination_scene: Node = get_node_or_null(destination_scene_name)
-	
-	if tp_component:
-		if tp_component.current_scene.is_empty():
-			tp_component.current_scene = destination_scene.scene_file_path
-		tp_component.teleported(destination_scene, tp_path)
-		
-	if save_component and load_err == ERR_FILE_NOT_FOUND:
+	var client: ClientComponent = player.get_node("%ClientComponent")
+	if client and load_err == ERR_FILE_NOT_FOUND:
 		# No player save found, create from spawner.
-		var spawner_name := save_component.spawner_name()
+		var spawner_name := client.spawner_name()
 		var spawner := destination_scene.get_node("%" + spawner_name)
-		var spawner_save := spawner.get_node_or_null("%SaveComponent")
+		var spawner_save: SaveComponent = spawner.get_node_or_null("%SaveComponent")
 		if spawner_save:
-			save_component = spawner_save
+			save_component.deserialize_scene(spawner_save.serialize_scene())
+		client.username = client_data.username
 	
-	var scene_sync: SceneSynchronizer = destination_scene.get_node("%SceneSynchronizer")
-	if multiplayer.is_server():
-		scene_sync.track_player(player)
+	var scene_sync: SceneSynchronizer = world.get_node("%SceneSynchronizer")
+	scene_sync.track_player(player)
 	
 	destination_scene.add_child(player)
