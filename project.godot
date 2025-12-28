@@ -23,10 +23,11 @@ boot_splash/stretch_mode=0
 
 [autoload]
 
-Network="*res://source/networking/Network.tscn"
+Network="res://source/networking/Network.tscn"
 Server="*res://source/networking/server/server.gd"
 Client="*res://source/networking/client/client.gd"
 SignalBusDialogue="*res://singletons/SignalBusDialogue.gd"
+SceneManager="*res://source/scenes/areas/scene/scene_manager_autoload.gd"
 
 [debug]
 

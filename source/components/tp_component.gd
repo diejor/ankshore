@@ -34,7 +34,7 @@ func teleport(tp_id: String, new_scene: String) -> void:
 	if save_component:
 		save_component.push_to(MultiplayerPeer.TARGET_PEER_SERVER)
 	
-	Client.scene_manager.teleport.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER,
+	SceneManager.teleport(
 		owner.name,
 		previous_scene_name,
 		tp_path

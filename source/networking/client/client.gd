@@ -8,7 +8,7 @@ signal peer_disconnected(peer_id: int)
 
 
 const SCENE_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
-@onready var scene_manager: SceneManager = SCENE_MANAGER.instantiate()
+@onready var scene_manager: LobbyManager = SCENE_MANAGER.instantiate()
 
 
 var multiplayer_api: SceneMultiplayer:

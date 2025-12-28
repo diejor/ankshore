@@ -1,4 +1,4 @@
-class_name SceneManager
+class_name LobbyManager
 extends MultiplayerSpawner
 
 @export_file("*.tscn") var lobbies: Array[String]
@@ -38,7 +38,7 @@ func spawn_lobby(lobby_file_path: String) -> Node:
 
 
 @rpc("any_peer", "call_remote", "reliable")
-func teleport(
+func request_teleport(
 	username: String, 
 	from_scene_name: String, 
 	tp_path: String) -> void:
@@ -78,7 +78,7 @@ func teleport(
 
 
 @rpc("any_peer", "call_remote", "reliable")
-func connect_player(
+func request_connect_player(
 	client_data: Dictionary) -> void:
 	var player: Node2D = ClientComponent.instantiate(client_data)
 	

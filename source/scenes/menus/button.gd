@@ -30,6 +30,5 @@ func _on_pressed() -> void:
 		peer_id = Client.uid,
 		scene = MYOSO.resource_path
 	}
-	Client.scene_manager.connect_player.rpc_id(
-		MultiplayerPeer.TARGET_PEER_SERVER, client_data)
-	get_tree().unload_current_scene.call_deferred()
+	
+	SceneManager.connect_player(client_data)
