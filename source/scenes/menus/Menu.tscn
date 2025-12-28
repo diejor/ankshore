@@ -55,6 +55,7 @@ vertical_alignment = 1
 
 [node name="UsernameEdit" type="LineEdit" parent="."]
 unique_name_in_owner = true
+visible = false
 offset_left = 451.0
 offset_top = 235.0
 offset_right = 674.0

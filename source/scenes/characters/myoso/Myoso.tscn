@@ -85,5 +85,6 @@ metadata/_edit_lock_ = true
 
 [node name="ClientHUD" parent="." instance=ExtResource("12_7n34x")]
 unique_name_in_owner = true
+visible = false
 
 [connection signal="tree_entered" from="." to="Components/ClientComponent" method="_on_owner_tree_entered"]
