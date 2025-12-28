@@ -22,4 +22,3 @@ root_path = NodePath("..")
 
 [node name="SceneSpawner" parent="." instance=ExtResource("2_b4l3b")]
 unique_name_in_owner = true
-script = null

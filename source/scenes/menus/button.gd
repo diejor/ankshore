@@ -24,7 +24,7 @@ func _on_pressed() -> void:
 		username = Client.username
 	else:
 		username = username_edit.text
-
+	
 	var client_data: Dictionary = {
 		username = username,
 		peer_id = Client.uid,

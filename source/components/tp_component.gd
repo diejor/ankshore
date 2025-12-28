@@ -1,6 +1,8 @@
 class_name TPComponent
 extends NodeComponent
 
+@onready var animation_player: AnimationPlayer = SceneManager.transition_anim
+
 var owner2d: Node2D:
 	get: return owner as Node2D
 
@@ -25,6 +27,17 @@ static func get_scene_name(path_or_uid: String) -> String:
 	return scene_state.get_node_name(0)
 
 
+func _ready() -> void:
+	if is_multiplayer_authority():
+		var anim: Callable = animation_player.play_backwards.bind("tp_out")
+		teleport_animation(anim)
+
+func teleport_animation(animation: Callable) -> void:
+	owner.process_mode = Node.PROCESS_MODE_DISABLED
+	animation.call()
+	await animation_player.animation_finished
+	owner.process_mode = Node.PROCESS_MODE_INHERIT
+
 func teleport(tp_id: String, new_scene: String) -> void:
 	var previous_scene_name: String = current_scene_name
 	current_scene = new_scene
@@ -33,6 +46,9 @@ func teleport(tp_id: String, new_scene: String) -> void:
 	var save_component: SaveComponent = owner.get_node_or_null("%SaveComponent")
 	if save_component:
 		save_component.push_to(MultiplayerPeer.TARGET_PEER_SERVER)
+	
+	var anim: Callable = animation_player.play.bind("tp_out")
+	await teleport_animation(anim)
 	
 	SceneManager.teleport(
 		owner.name,
@@ -47,3 +63,4 @@ func teleported(scene: Node, _tp_path: String) -> void:
 		var tp_node: Marker2D = scene.get_node_or_null(_tp_path)
 		if tp_node:
 			owner2d.global_position = tp_node.global_position
+	

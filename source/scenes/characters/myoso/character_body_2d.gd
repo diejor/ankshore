@@ -12,7 +12,7 @@ func _physics_process(_delta: float) -> void:
 		desired_speed = sprint_speed
 	else:
 		desired_speed = walk_speed
-
+	
 	velocity = desired_speed * input.direction
-
+	
 	move_and_slide()

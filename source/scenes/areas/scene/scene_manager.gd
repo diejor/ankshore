@@ -57,13 +57,12 @@ func request_teleport(
 	var to_scene: Node = to_world.get_node(tp_component.current_scene_name)
 	var to_scene_sync: SceneSynchronizer = to_world.get_node("%SceneSynchronizer")
 	
-	
 	var flip := func(event: Signal, from: Callable, to: Callable) -> void:
 		event.disconnect(from)
 		event.connect(to.bind(player))
 		if event == player.tree_exiting:
-			tp_component.teleported(to_scene, tp_path)
 			player.request_ready()
+			tp_component.teleported(to_scene, tp_path)
 	
 	var from_spawn := from_scene_sync._on_spawned
 	var to_spawn := to_scene_sync._on_spawned

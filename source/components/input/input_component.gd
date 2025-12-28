@@ -18,17 +18,16 @@ func _ready() -> void:
 		process_mode = Node.PROCESS_MODE_DISABLED
 		return
 
-
 func build_state_dict_from_actions() -> Dictionary[StringName, bool]:
 	var _state: Dictionary[StringName, bool]
-
+	
 	for action in _actions.get_actions():
 		_state[action] = false
-
+	
 	assert(not _state.is_empty(),
-		"`state` dictionary is empty when it's expected to have actions." +
-		"Probably because the action properties are not marked with" +
-		"`action` through the `hint_string` of `@export_custom`.")
+		"`state` dictionary is empty when it's expected to have actions. \
+Probably because the action properties are not marked with \
+`action` through the `hint_string` of `@export_custom`.")
 	return _state
 
 

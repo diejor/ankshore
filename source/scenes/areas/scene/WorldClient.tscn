@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://by6v45orjo182" path="res://source/scenes/areas/scene/SceneSynchronizer.tscn" id="2_ooybb"]
 [ext_resource type="PackedScene" uid="uid://cpkq68rwbg6aw" path="res://source/scenes/areas/scene/SceneSpawner.tscn" id="3_v3bv0"]
 
-[node name="World" type="Node"]
+[node name="World" type="Node2D"]
 
 [node name="SceneSynchronizer" parent="." instance=ExtResource("2_ooybb")]
 unique_name_in_owner = true
