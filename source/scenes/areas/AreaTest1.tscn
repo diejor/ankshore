@@ -23,7 +23,7 @@ metadata/_edit_lock_ = true
 
 [node name="AreaTP1" parent="." instance=ExtResource("1_6x6co")]
 unique_name_in_owner = true
-position = Vector2(91, 2)
+position = Vector2(280, 136)
 scene_path = "uid://xkil2cmplfcd"
 target_tp_id = "AreaTPWinter"
 
