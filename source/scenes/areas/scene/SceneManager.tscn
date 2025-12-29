@@ -42,6 +42,22 @@ tracks/2/keys = {
 "values": [Color(1, 1, 1, 1)]
 }
 
+[sub_resource type="Animation" id="Animation_oxlvd"]
+resource_name = "show"
+length = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TPCanvasLayer:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
 [sub_resource type="Animation" id="Animation_ifkpp"]
 resource_name = "tp_out"
 length = 1.1
@@ -76,26 +92,10 @@ tracks/2/path = NodePath("TPCanvasLayer/TransitionProgress:tint_progress")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 1),
+"times": PackedFloat32Array(0, 1.0333333),
 "transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(0.09985284, 0.09985284, 0.09985284, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_oxlvd"]
-resource_name = "show"
-length = 0.01
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("TPCanvasLayer:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
+"values": [Color(1, 1, 1, 0), Color(0.9063318, 0.9063318, 0.9063318, 1)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_y8aqg"]
@@ -135,3 +135,4 @@ root_node = NodePath("../..")
 libraries = {
 &"": SubResource("AnimationLibrary_y8aqg")
 }
+autoplay = "RESET"

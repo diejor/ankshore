@@ -16,6 +16,7 @@ func teleport(
 func connect_player(client_data: Dictionary) -> void:
 	transition_anim.play("show")
 	await transition_anim.animation_finished
+	
 	Client.scene_manager.request_connect_player.rpc_id(
 		MultiplayerPeer.TARGET_PEER_SERVER, 
 		client_data

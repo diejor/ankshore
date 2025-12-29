@@ -42,6 +42,7 @@ func _ready() -> void:
 
 func connect_client(server_address: String, _username: String) -> Error:
 	var code: Error = init(server_address, _username)
+	print("Client initialized with code: ", error_string(code))
 	await connected_to_server
 	return code
 
