@@ -28,7 +28,7 @@ static func get_scene_name(path_or_uid: String) -> String:
 
 
 func _ready() -> void:
-	if is_multiplayer_authority():
+	if is_multiplayer_authority() and not multiplayer.is_server():
 		var anim: Callable = animation_player.play_backwards.bind("tp_out")
 		teleport_animation(anim)
 

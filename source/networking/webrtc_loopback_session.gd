@@ -76,6 +76,7 @@ func ensure_initialized() -> void:
 		push_warning("Loopback: pc_server.create_offer failed: %s" % error_string(err))
 		return
 
+	print("WebRTC loopback session created.")
 	_initialized = true
 
 func get_server_peer() -> WebRTCMultiplayerPeer:

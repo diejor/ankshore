@@ -37,7 +37,11 @@ func _ready() -> void:
 	multiplayer_api.peer_connected.connect(on_peer_connected)
 	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
-
+	
+	var client_err: Error = await Client.connect_client("localhost", Client.username)
+	if client_err != OK:
+		push_warning(
+			"Local client failed: %s" % error_string(client_err))
 
 
 func connect_client(server_address: String, _username: String) -> Error:

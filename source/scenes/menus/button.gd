@@ -2,23 +2,21 @@ extends Button
 @export var winterScene: PackedScene
 
 @onready var play_game: Label = $PlayGame
-@onready var connecting: Label = $Connecting
+@onready var connecting: Label = $Loading
 @onready var username_edit: LineEdit = %UsernameEdit
 
 const MYOSO: PackedScene = preload("uid://bxpx2n4hugojx")
+
+func _ready() -> void:
+	disabled = true
+	flip_labels()
 
 func flip_labels() -> void:
 	play_game.visible = not play_game.visible
 	connecting.visible = not play_game.visible
 
 
-func _on_pressed() -> void:
-	# Boot local client
-	var client_err: Error = await Client.connect_client("localhost", Client.username)
-	if client_err != OK:
-		push_warning(
-			"Local client failed: %s" % error_string(client_err))
-	
+func _on_pressed() -> void:	
 	var username: String
 	if username_edit.text.is_empty():
 		username = Client.username
@@ -32,3 +30,8 @@ func _on_pressed() -> void:
 	}
 	
 	SceneManager.connect_player(client_data)
+
+
+func _on_connected_to_server() -> void:
+	disabled = false
+	flip_labels()

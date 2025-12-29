@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dxxt4ntwj3v7g"]
 
-[ext_resource type="Script" uid="uid://bgg6a75ednv0l" path="res://source/networking/network.gd" id="1_bdq42"]
+[ext_resource type="Script" uid="uid://bgg6a75ednv0l" path="res://source/networking/server/network.gd" id="1_bdq42"]
 [ext_resource type="Script" uid="uid://buo380mj8eweh" path="res://source/networking/client/webrtc_loopback_backend.gd" id="2_tc0rw"]
 [ext_resource type="Script" uid="uid://b4x6usceefd6p" path="res://source/networking/server/webrtc_loopback_backend.gd" id="3_v00d8"]
 
