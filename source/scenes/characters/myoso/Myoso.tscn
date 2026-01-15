@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
-[ext_resource type="Texture2D" uid="uid://ddkwfh5opq7yw" path="res://source/scenes/characters/myoso/assets/limbusWolf.png" id="2_gjcb4"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://source/components/tp_component.gd" id="2_ko57k"]
 [ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
@@ -11,6 +10,7 @@
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://1q6d5gvkg84r" path="res://source/components/StateSynchronizer.tscn" id="9_3el0l"]
 [ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://source/scenes/characters/myoso/components/input_component.gd" id="9_7n34x"]
+[ext_resource type="Texture2D" uid="uid://d13l1gmeqvkch" path="res://source/scenes/characters/myoso/assets/Myosov2.png" id="10_7n34x"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="12_7n34x"]
 
 [sub_resource type="Resource" id="Resource_3el0l"]
@@ -18,7 +18,7 @@ resource_local_to_scene = true
 script = ExtResource("8_xdvvs")
 metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7n34x"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3el0l"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -60,12 +60,12 @@ _actions = ExtResource("2_a6gmg")
 
 [node name="StateSynchronizer" parent="." instance=ExtResource("9_3el0l")]
 unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_7n34x")
+replication_config = SubResource("SceneReplicationConfig_3el0l")
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("2_gjcb4")
+texture = ExtResource("10_7n34x")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5707964

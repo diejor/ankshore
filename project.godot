@@ -19,7 +19,7 @@ run/main_scene="uid://dfvoo60p3ut6n"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 run/low_processor_mode_sleep_usec=6434
 boot_splash/image="uid://ddkwfh5opq7yw"
-config/icon="uid://ddkwfh5opq7yw"
+config/icon="uid://d13l1gmeqvkch"
 boot_splash/stretch_mode=0
 
 [autoload]
