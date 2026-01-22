@@ -18,7 +18,7 @@ resource_local_to_scene = true
 script = ExtResource("8_xdvvs")
 metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3el0l"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7n34x"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -60,7 +60,7 @@ _actions = ExtResource("2_a6gmg")
 
 [node name="StateSynchronizer" parent="." instance=ExtResource("9_3el0l")]
 unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_3el0l")
+replication_config = SubResource("SceneReplicationConfig_7n34x")
 
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(7.748604e-07, -12.999999)

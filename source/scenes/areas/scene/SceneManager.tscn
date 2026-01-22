@@ -1,50 +1,29 @@
-[gd_scene load_steps=7 format=3 uid="uid://d3ag2052swfwd"]
+[gd_scene load_steps=8 format=3 uid="uid://d3ag2052swfwd"]
 
 [ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://source/scenes/areas/scene/scene_manager.gd" id="1_mer5l"]
 [ext_resource type="Texture2D" uid="uid://cm2g07mnst7ig" path="res://source/scenes/DialogueStuff/blueskything.jpg" id="2_ifkpp"]
 
 [sub_resource type="Animation" id="Animation_x8vg6"]
 length = 0.001
+
+[sub_resource type="Animation" id="Animation_vcj5i"]
+resource_name = "hide"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("TPCanvasLayer/TransitionProgress:value")
+tracks/0/path = NodePath("TPCanvasLayer:visible")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("TPCanvasLayer:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("TPCanvasLayer/TransitionProgress:tint_progress")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_oxlvd"]
 resource_name = "show"
-length = 0.01
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -60,7 +39,6 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_ifkpp"]
 resource_name = "tp_out"
-length = 1.1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -92,7 +70,7 @@ tracks/2/path = NodePath("TPCanvasLayer/TransitionProgress:tint_progress")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 1.0333333),
+"times": PackedFloat32Array(0, 1),
 "transitions": PackedFloat32Array(0.5, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(0.9063318, 0.9063318, 0.9063318, 1)]
@@ -101,6 +79,7 @@ tracks/2/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_y8aqg"]
 _data = {
 &"RESET": SubResource("Animation_x8vg6"),
+&"hide": SubResource("Animation_vcj5i"),
 &"show": SubResource("Animation_oxlvd"),
 &"tp_out": SubResource("Animation_ifkpp")
 }
@@ -113,10 +92,11 @@ world_server_path = "uid://dga0loylsa26i"
 world_client_path = "uid://cr2k17cu45app"
 
 [node name="TPCanvasLayer" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 layer = 10
-visible = false
 
 [node name="TransitionProgress" type="TextureProgressBar" parent="TPCanvasLayer"]
+unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -127,6 +107,7 @@ size_flags_vertical = 3
 fill_mode = 8
 nine_patch_stretch = true
 texture_progress = ExtResource("2_ifkpp")
+tint_progress = Color(1, 1, 1, 0)
 metadata/_edit_use_anchors_ = true
 
 [node name="TransitionAnim" type="AnimationPlayer" parent="TPCanvasLayer"]
@@ -135,4 +116,3 @@ root_node = NodePath("../..")
 libraries = {
 &"": SubResource("AnimationLibrary_y8aqg")
 }
-autoplay = "RESET"
