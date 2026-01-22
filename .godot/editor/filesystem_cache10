@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1768454471
+::res://::1769049003
 export_presets.cfg::TextFile::-1::1766210647::0::1::::<><><>0<>0<><>::
 ::res://addons/::1766210647
 ::res://addons/script-ide/::1762649944
@@ -28,7 +28,7 @@ multiline_tab_container.gd::GDScript::826788674424172162::1762649944::0::1::::<>
 multiline_tab_container.tscn::PackedScene::1493773027729435784::1762649944::0::1::::<><><>0<>0<><>::uid://l1rdargfn67o::::res://addons/script-ide/tabbar/multiline_tab_container.gd
 ::res://addons/webrtc/::1766210647
 webrtc.gdextension::GDExtension::1302179412406105170::1766210647::0::1::::<><><>0<>0<><>::
-::res://addons/webrtc/lib/::1768454462
+::res://addons/webrtc/lib/::1769048994
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_debug.universal.framework/::1766210649
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_debug.universal.framework/Resources/::1766210647
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_release.universal.framework/::1766210650
@@ -101,8 +101,8 @@ AreaTest1.tscn::PackedScene::8494454407359399065::1767052657::0::1::::<><><>0<>0
 Winter.tscn::PackedScene::1635493982676199203::1768454375::0::1::::<><><>0<>0<><>::uid://bxpx2n4hugojx::::res://source/scenes/characters/myoso/Myoso.tscn<>uid://dfdmdo8f0q07p::::res://source/scenes/areas/tp/AreaTP.tscn<>uid://h637lr7t1rs1::::res://source/scenes/areas/resources/winter_tileset.tres
 ::res://source/scenes/areas/assets/::1766358318
 seasonal sample (winter).png::CompressedTexture2D::5498382678577912403::1766210647::1766358318::1::::<><><>0<>0<>bc58cf60a475ebf27169e025ad318e5c<>res://.godot/imported/seasonal sample (winter).png-e4e4b6da5d7e6889035b7607b45a7b20.ctex::
-::res://source/scenes/areas/resources/::1768454313
-winter_tileset.tres::TileSet::557075442543390210::1768454313::0::1::::<><><>0<>0<><>::uid://cklptawmhtnp0::::res://source/scenes/areas/assets/seasonal sample (winter).png
+::res://source/scenes/areas/resources/::1769048812
+winter_tileset.tres::TileSet::557075442543390210::1769048812::0::1::::<><><>0<>0<><>::uid://cklptawmhtnp0::::res://source/scenes/areas/assets/seasonal sample (winter).png
 ::res://source/scenes/areas/scene/::1766979428
 SceneManager.tscn::PackedScene::9124963552015808691::1766979428::0::1::::<><><>0<>0<><>::uid://lb7h272e5fhb::::res://source/scenes/areas/scene/scene_manager.gd<>uid://cm2g07mnst7ig::::res://source/scenes/DialogueStuff/blueskything.jpg
 SceneSpawner.tscn::PackedScene::5847346391526018002::1766210647::0::1::::<><><>0<>0<><>::
@@ -118,13 +118,13 @@ WorldServer.tscn::PackedScene::7581933454385696914::1766979097::0::1::::<><><>0<
 AreaTP.tscn::PackedScene::7517134150393248803::1767052657::0::1::::<><><>0<>0<><>::uid://dpokufhqiu4rj::::res://source/scenes/areas/tp/teleporter.gd<>uid://cklptawmhtnp0::::res://source/scenes/areas/assets/seasonal sample (winter).png
 teleporter.gd::GDScript::8241639154181247647::1766979097::0::1::::AreaTP<>Area2D<><>0<>0<><>::
 ::res://source/scenes/characters/::1766366445
-::res://source/scenes/characters/myoso/::1768454313
+::res://source/scenes/characters/myoso/::1769048812
 camera_2d.gd::GDScript::2225246903101236790::1766210647::0::1::::<>Camera2D<><>0<>0<><>::
 character_body_2d.gd::GDScript::3501384206777374384::1766979097::0::1::::<>CharacterBody2D<><>0<>0<><>::
-Myoso.tscn::PackedScene::4033175188895710353::1768454313::0::1::::<><><>0<>0<><>::uid://bp5djy82cenim::::res://source/scenes/characters/myoso/character_body_2d.gd<>uid://bueemf6fbwhei::::res://source/scenes/characters/myoso/resources/myoso_actions.tres<>uid://c4gt8tvkmcals::::res://source/components/tp_component.gd<>uid://epumm5e7aa5c::::res://source/components/components.gd<>uid://6x6qybix5loo::::res://source/scenes/characters/myoso/camera_2d.gd<>uid://8dmbjqnbp0rn::::res://source/components/client/ClientComponent.tscn<>uid://b25ufiuigcd5::::res://source/components/persistent/SaveComponent.tscn<>uid://d1mnum02gn0c0::::res://source/components/persistent/dictionary_save.gd<>uid://1q6d5gvkg84r::::res://source/components/StateSynchronizer.tscn<>uid://cwf8sf34fk0ib::::res://source/scenes/characters/myoso/components/input_component.gd<>uid://d13l1gmeqvkch::::res://source/scenes/characters/myoso/assets/Myosov2.png<>uid://s3msqppyuw2j::::res://source/components/client/PlayerHud.tscn
-::res://source/scenes/characters/myoso/assets/::1768454267
+Myoso.tscn::PackedScene::4033175188895710353::1769048812::0::1::::<><><>0<>0<><>::uid://bp5djy82cenim::::res://source/scenes/characters/myoso/character_body_2d.gd<>uid://bueemf6fbwhei::::res://source/scenes/characters/myoso/resources/myoso_actions.tres<>uid://c4gt8tvkmcals::::res://source/components/tp_component.gd<>uid://epumm5e7aa5c::::res://source/components/components.gd<>uid://6x6qybix5loo::::res://source/scenes/characters/myoso/camera_2d.gd<>uid://8dmbjqnbp0rn::::res://source/components/client/ClientComponent.tscn<>uid://b25ufiuigcd5::::res://source/components/persistent/SaveComponent.tscn<>uid://d1mnum02gn0c0::::res://source/components/persistent/dictionary_save.gd<>uid://1q6d5gvkg84r::::res://source/components/StateSynchronizer.tscn<>uid://cwf8sf34fk0ib::::res://source/scenes/characters/myoso/components/input_component.gd<>uid://by0tw5rc8fns8::::res://source/scenes/characters/myoso/assets/MyosoANK.png<>uid://s3msqppyuw2j::::res://source/components/client/PlayerHud.tscn
+::res://source/scenes/characters/myoso/assets/::1769048780
 limbusWolf.png::CompressedTexture2D::7391817477008775926::1766210647::1766358318::1::::<><><>0<>0<>6f3ddf39b6632e204498fef79785ebde<>res://.godot/imported/limbusWolf.png-9ecde70508af90ce840577f474ddfde9.ctex::
-Myoso.png::CompressedTexture2D::4260154618193024359::1768454095::1768454095::1::::<><><>0<>0<>1a3375422df36f2ebc11b8d0792fc033<>res://.godot/imported/Myoso.png-644dfbc9f75c52e7b6786882832e3aca.ctex::
+MyosoANK.png::CompressedTexture2D::4123756887283204721::1769048760::1769048760::1::::<><><>0<>0<>907841dd8511384ddd2ce464e748ff19<>res://.godot/imported/MyosoANK.png-fc20ff8ca2e24950c5e2b13dee77f29d.ctex::
 Myosov2.png::CompressedTexture2D::9042689214225491227::1768454266::1768454267::1::::<><><>0<>0<>1b080c7d770a84a3da62d55c5ed4d31f<>res://.godot/imported/Myosov2.png-d1e365f49446164b0d46dfa24af99139.ctex::
 ::res://source/scenes/characters/myoso/components/::1766979097
 input_component.gd::GDScript::6329353928440800437::1766979097::0::1::::MyosoInputComponent<>InputComponent<><>0<>0<><>::

@@ -10,7 +10,7 @@
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://1q6d5gvkg84r" path="res://source/components/StateSynchronizer.tscn" id="9_3el0l"]
 [ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://source/scenes/characters/myoso/components/input_component.gd" id="9_7n34x"]
-[ext_resource type="Texture2D" uid="uid://d13l1gmeqvkch" path="res://source/scenes/characters/myoso/assets/Myosov2.png" id="10_7n34x"]
+[ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="10_7n34x"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="12_7n34x"]
 
 [sub_resource type="Resource" id="Resource_3el0l"]
