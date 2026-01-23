@@ -2,6 +2,7 @@ class_name TPComponent
 extends NodeComponent
 
 @onready var animation_player: AnimationPlayer = SceneManager.transition_anim
+@onready var transition_progress: TextureProgressBar = SceneManager.transition_progress
 
 var owner2d: Node2D:
 	get: return owner as Node2D
@@ -29,14 +30,22 @@ static func get_scene_name(path_or_uid: String) -> String:
 
 func _ready() -> void:
 	if is_multiplayer_authority() and not multiplayer.is_server():
-		var anim: Callable = animation_player.play_backwards.bind("tp_out")
-		teleport_animation(anim)
+		teleport_in_animation()
 
 func teleport_animation(animation: Callable) -> void:
 	owner.process_mode = Node.PROCESS_MODE_DISABLED
 	animation.call()
 	await animation_player.animation_finished
 	owner.process_mode = Node.PROCESS_MODE_INHERIT
+
+func teleport_in_animation() -> void:
+	var anim: Callable = animation_player.play_backwards.bind("tp")
+	await teleport_animation(anim)
+
+func teleport_out_animation() -> void:
+	var anim: Callable = animation_player.play.bind("tp")
+	await teleport_animation(anim)
+	
 
 func teleport(tp_id: String, new_scene: String) -> void:
 	var previous_scene_name: String = current_scene_name
@@ -47,8 +56,7 @@ func teleport(tp_id: String, new_scene: String) -> void:
 	if save_component:
 		save_component.push_to(MultiplayerPeer.TARGET_PEER_SERVER)
 	
-	var anim: Callable = animation_player.play.bind("tp_out")
-	await teleport_animation(anim)
+	await teleport_out_animation()
 	
 	SceneManager.teleport(
 		owner.name,
