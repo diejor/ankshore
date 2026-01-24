@@ -84,6 +84,7 @@ audio/channel_defaults={
 "volume": 0.0
 }
 }
+layout/style_directory={}
 
 [display]
 

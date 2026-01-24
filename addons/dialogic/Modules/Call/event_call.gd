@@ -24,8 +24,8 @@ var arguments := []:
 
 var _current_method_arg_hints := {'a':null, 'm':null, 'info':{}}
 
-################################################################################
-## 						EXECUTION
+
+#region EXECUTION
 ################################################################################
 
 func _execute() -> void:
@@ -62,20 +62,23 @@ func _execute() -> void:
 
 	finish()
 
+#endregion
 
-################################################################################
-## 						INITIALIZE
+
+#region INITIALIZE
 ################################################################################
 
 func _init() -> void:
 	event_name = "Call"
+	event_description = "Calls a method on an autoload script or scene."
 	set_default_color('Color6')
 	event_category = "Logic"
 	event_sorting_index = 10
 
+#endregion
 
-################################################################################
-## 						SAVING/LOADING
+
+#region SAVING/LOADING
 ################################################################################
 
 func to_text() -> String:
@@ -131,9 +134,10 @@ func get_shortcode_parameters() -> Dictionary:
 		"args" 		: {"property": "arguments", 		"default": []},
 	}
 
+#endregion
 
-################################################################################
-## 						EDITOR REPRESENTATION
+
+#region EDITOR REPRESENTATION
 ################################################################################
 
 func build_event_editor() -> void:
@@ -197,10 +201,13 @@ func check_arguments_and_update_warning() -> void:
 		return
 	ui_update_warning.emit()
 
-####################### CODE COMPLETION ########################################
+#endregion
+
+
+#region CODE COMPLETION
 ################################################################################
 
-func _get_code_completion(CodeCompletionHelper:Node, TextNode:TextEdit, line:String, word:String, symbol:String) -> void:
+func _get_code_completion(CodeCompletionHelper:Node, TextNode:TextEdit, line:String, _word:String, symbol:String) -> void:
 	var autoloads := DialogicUtil.get_autoload_suggestions()
 	var line_until_caret: String = CodeCompletionHelper.get_line_untill_caret(line)
 
@@ -209,9 +216,9 @@ func _get_code_completion(CodeCompletionHelper:Node, TextNode:TextEdit, line:Str
 			TextNode.add_code_completion_option(CodeEdit.KIND_MEMBER, i, i+'.', event_color.lerp(TextNode.syntax_highlighter.normal_color, 0.3), TextNode.get_theme_icon("Node", "EditorIcons"))
 
 	elif (line_until_caret.ends_with(".") or symbol == "."):
-		var autoload_name := line_until_caret.split(" ")[-1].split(".")[0]
-		if autoload_name in autoloads:
-			var methods := DialogicUtil.get_autoload_method_suggestions("", autoload_name)
+		var some_autoload := line_until_caret.split(" ")[-1].split(".")[0]
+		if some_autoload in autoloads:
+			var methods := DialogicUtil.get_autoload_method_suggestions("", some_autoload)
 			for i in methods.keys():
 				TextNode.add_code_completion_option(CodeEdit.KIND_MEMBER, i, i+'(', event_color.lerp(TextNode.syntax_highlighter.normal_color, 0.3), TextNode.get_theme_icon("MemberMethod", "EditorIcons"))
 
@@ -220,8 +227,10 @@ func _get_code_completion(CodeCompletionHelper:Node, TextNode:TextEdit, line:Str
 func _get_start_code_completion(_CodeCompletionHelper:Node, TextNode:TextEdit) -> void:
 	TextNode.add_code_completion_option(CodeEdit.KIND_PLAIN_TEXT, 'do', 'do ', event_color.lerp(TextNode.syntax_highlighter.normal_color, 0.3), _get_icon())
 
+#endregion
 
-#################### SYNTAX HIGHLIGHTING #######################################
+
+#region SYNTAX HIGHLIGHTING
 ################################################################################
 
 func _get_syntax_highlighting(Highlighter:SyntaxHighlighter, dict:Dictionary, line:String) -> Dictionary:
@@ -233,3 +242,5 @@ func _get_syntax_highlighting(Highlighter:SyntaxHighlighter, dict:Dictionary, li
 	Highlighter.color_word(dict, Highlighter.boolean_operator_color, line, 'true')
 	Highlighter.color_word(dict, Highlighter.boolean_operator_color, line, 'false')
 	return dict
+
+#endregion

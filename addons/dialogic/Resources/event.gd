@@ -50,7 +50,8 @@ var empty_lines_above: int = 0
 
 
 ### Editor UI Properties ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+## The description that is displayed in the editor tooltip.
+var event_description := ""
 ## The event color that event node will take in the editor
 var event_color := Color("FBB13C"):
 	get:
@@ -63,8 +64,10 @@ var dialogic_color_name: = ""
 var event_sorting_index: int = 0
 ## If true the event will not have a button in the visual editor sidebar
 var disable_editor_button := false
-## If false the event will hide it's body by default. Recommended for most events
+## If false the event will hide its body by default (when loaded). Recommended for most events
 var expand_by_default := false
+## If true the event will hide its body when created. It's false by default, meaning when added the event is expanded.
+var collapse_on_create := false
 ## The URL to open when right_click>Documentation is selected
 var help_page_path := ""
 ## Is the event block created by a button?
@@ -105,7 +108,9 @@ var editor_list: Array = []
 var this_folder: String = get_script().resource_path.get_base_dir()
 
 ## Singal that notifies the visual editor block to update
+@warning_ignore("unused_signal")
 signal ui_update_needed
+@warning_ignore("unused_signal")
 signal ui_update_warning(text:String)
 
 
@@ -267,6 +272,21 @@ func _test_event_string(string:String) -> bool:
 	if '#id:' in string and can_be_translated():
 		return is_valid_event(string.get_slice('#id:', 0))
 	return is_valid_event(string.strip_edges())
+
+
+func get_dependencies() -> PackedStringArray:
+	var deps := PackedStringArray()
+	var params := get_shortcode_parameters()
+	for i in params:
+		if params[i].has("ext_file"):
+			var path: String = get(params[i].property)
+			if path.begins_with("res://") or path.begins_with("uid://"):
+				deps.append(path)
+			elif i == "character":
+				deps.append(DialogicResourceUtil.get_resource_path_from_identifier(path, "dch"))
+			elif i == "timeline":
+				deps.append(DialogicResourceUtil.get_resource_path_from_identifier(path, "dtl"))
+	return deps
 
 #endregion
 
@@ -441,6 +461,9 @@ func _get_icon() -> Resource:
 
 
 func set_default_color(value:Variant) -> void:
+	# Skip in running games
+	if not Engine.is_editor_hint():
+		return
 	dialogic_color_name = value
 	event_color = DialogicUtil.get_color(value)
 
