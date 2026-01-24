@@ -1,7 +1,7 @@
 join MyosoDialogic left
 join zBroly right
-Myoso have you seen Kakarot
+zBroly: Myoso have you seen Kakarot
 - no
-	oh ok
+	zBroly: oh ok
 - yeah
-	no you didn't
+	zBroly: no you didn't

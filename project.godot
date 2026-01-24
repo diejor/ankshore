@@ -27,7 +27,7 @@ boot_splash/stretch_mode=0
 Network="res://source/networking/Network.tscn"
 Server="*res://source/networking/server/server.gd"
 Client="*res://source/networking/client/client.gd"
-SignalBusDialogue="*res://singletons/SignalBusDialogue.gd"
+SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
 SceneManager="*res://source/scenes/areas/scene/scene_manager_autoload.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 
