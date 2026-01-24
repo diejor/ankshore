@@ -40,9 +40,12 @@ gdscript/warnings/unsafe_call_argument=1
 
 [dialogic]
 
-directories/dch_directory={}
+directories/dch_directory={
+"MyosoDialogic": "res://source/scenes/DialogueStuff/DialogicCharacter/MyosoChar/MyosoDialogic.dch",
+"zBroly": "res://source/scenes/DialogueStuff/DialogicCharacter/zBroly/zBroly.dch"
+}
 directories/dtl_directory={
-"testTimeline": "res://source/DialogicText/testTimeline.dtl"
+"testTimeline": "res://source/scenes/DialogueStuff/DialogicText/testTimeline.dtl"
 }
 glossary/default_case_sensitive=true
 layout/style_list=[]
@@ -99,11 +102,13 @@ enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/scri
 [file_customization]
 
 folder_colors={
-"res://source/DialogicText/": "pink",
 "res://source/combat/": "blue",
 "res://source/components/": "orange",
 "res://source/networking/": "purple",
 "res://source/scenes/": "teal",
+"res://source/scenes/DialogueStuff/DialogicCharacter/": "yellow",
+"res://source/scenes/DialogueStuff/DialogicCharacter/zBroly/": "green",
+"res://source/scenes/DialogueStuff/DialogicText/": "pink",
 "res://source/scenes/characters/myoso/": "blue",
 "res://source/scenes/characters/zBrolyNpcTester/": "blue"
 }

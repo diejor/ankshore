@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1769209688
+::res://::1769228470
 export_presets.cfg::TextFile::-1::1769208520::0::1::::<><><>0<>0<><>::
 ::res://addons/::1769208776
 ::res://addons/dialogic/::1769208782
@@ -560,12 +560,12 @@ event_text.gd::GDScript::3617468992738089322::1743953962::0::1::::DialogicTextEv
 icon.svg::CompressedTexture2D::9151163472776694991::1743953962::1769208783::1::::<><><>0<>0<>0fe1b3b3cf3733ead1d66ddc5726114c<>res://.godot/imported/icon.svg-e2501ddcdef01c7f2c3538940f5abfc1.ctex::
 index.gd::GDScript::9160016294209533423::1743953962::0::1::::<>DialogicIndexer<><>0<>1<><>::
 manual_advance.gd::GDScript::4926761109474343172::1743953962::0::1::::DialogicManualAdvance<>RefCounted<><>0<>0<><>::
-node_dialog_text.gd::GDScript::6376735315687162703::1743953962::0::1::::DialogicNode_DialogText<>RichTextLabel<>res://addons/dialogic/Modules/Text/node_dialog_text_icon.svg<>0<>0<><>::
+node_dialog_text.gd::GDScript::6376735315687162703::1743953962::0::1::::DialogicNode_DialogText<>RichTextLabel<><>0<>0<><>::
 node_dialog_text_icon.svg::CompressedTexture2D::4044689466443943908::1743953962::1769208783::1::::<><><>0<>0<>0854d1eb256c2d7e9186a18e71c67bd8<>res://.godot/imported/node_dialog_text_icon.svg-3cf845e99d76137d8156865c09f39e3e.ctex::
 node_input.gd::GDScript::8174428323832702510::1743953962::0::1::::DialogicNode_Input<>Control<><>0<>0<><>::
-node_name_label.gd::GDScript::3717927163788826902::1743953962::0::1::::DialogicNode_NameLabel<>Label<>res://addons/dialogic/Modules/Text/node_name_label_icon.svg<>0<>0<><>::
+node_name_label.gd::GDScript::3717927163788826902::1743953962::0::1::::DialogicNode_NameLabel<>Label<><>0<>0<><>::
 node_name_label_icon.svg::CompressedTexture2D::753910208124862534::1743953962::1769208783::1::::<><><>0<>0<>a4c8bf4be7c45d309f0f460f60daff16<>res://.godot/imported/node_name_label_icon.svg-d482939b74b41ec2da6edc97e41c8bf8.ctex::
-node_next_indicator.gd::GDScript::4252030043232007526::1743953962::0::1::::DialogicNode_NextIndicator<>Control<>res://addons/dialogic/Modules/Text/node_next_indicator_icon.svg<>0<>0<><>::
+node_next_indicator.gd::GDScript::4252030043232007526::1743953962::0::1::::DialogicNode_NextIndicator<>Control<><>0<>0<><>::
 node_next_indicator_icon.svg::CompressedTexture2D::302873534409359568::1743953962::1769208783::1::::<><><>0<>0<>b19c8f494620393de69e28f29117e8d0<>res://.godot/imported/node_next_indicator_icon.svg-06167a3b3e290941c1c34386ebd60af8.ctex::
 node_type_sound.gd::GDScript::3898018383782855619::1743953962::0::1::::DialogicNode_TypeSounds<>AudioStreamPlayer<><>0<>1<><>::
 settings_text.gd::GDScript::53168216638719926::1743953962::0::1::::<>DialogicSettingsPage<><>0<>1<><>::
@@ -645,17 +645,17 @@ multiline_tab_container.gd::GDScript::826788674424172162::1769208520::0::1::::<>
 multiline_tab_container.tscn::PackedScene::1493773027729435784::1769208520::0::1::::<><><>0<>0<><>::uid://l1rdargfn67o::::res://addons/script-ide/tabbar/multiline_tab_container.gd
 ::res://addons/webrtc/::1769208520
 webrtc.gdextension::GDExtension::1302179412406105170::1769208520::0::1::::<><><>0<>0<><>::
-::res://addons/webrtc/lib/::1769209676
+::res://addons/webrtc/lib/::1769226605
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_debug.universal.framework/::1769208523
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_debug.universal.framework/Resources/::1769208520
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_release.universal.framework/::1769208524
 ::res://addons/webrtc/lib/libwebrtc_native.macos.template_release.universal.framework/Resources/::1769208520
 ::res://saves/::1769209178
 ::res://saves/players/::1769209178
-Dreww.tres::Resource/DictionarySave::-1::1769209530::0::1::::<><><>0<>0<><>::res://source/components/persistent/dictionary_save.gd
+Dreww.tres::Resource/DictionarySave::-1::1769228440::0::1::::<><><>0<>0<><>::res://source/components/persistent/dictionary_save.gd
 ::res://singletons/::1769208520
 SignalBusDialogue.gd::GDScript::6370491640813165577::1769208520::0::1::::<>Node<><>0<>0<><>::
-::res://source/::1769208874
+::res://source/::1769226858
 ::res://source/combat/::1769208520
 CombatScene.tscn::PackedScene::6522231107873980260::1769208520::0::1::::<><><>0<>0<><>::uid://s1mui0tp3mrq::::res://source/combat/combat_scene_(Controller).gd<>uid://dluyp6q3bojhm::::res://source/combat/assets/guiltymapPlaceholder.jpg
 combat_scene_(Controller).gd::GDScript::1317837786572777202::1769208520::0::1::::<>Node2D<><>0<>0<><>::
@@ -697,8 +697,6 @@ save_synchronizer.gd::GDScript::980250279077011732::1769208520::0::1::::SaveSync
 ::res://source/components/signals/::1769208520
 AutoloadSignals.tscn::PackedScene::657172840663154522::1769208520::0::1::::<><><>0<>0<><>::uid://b45nyqhksohxg::::res://source/components/signals/autoload_signals.gd
 autoload_signals.gd::GDScript::4484661513443715648::1769208520::0::1::::AutoloadSignals<>Node<><>0<>0<><>::
-::res://source/DialogicText/::1769209655
-testTimeline.dtl::Resource/DialogicTimeline::6068714767157583399::1769209655::0::1::::<><><>0<>0<><>::
 ::res://source/networking/::1769208520
 Network.tscn::PackedScene::8822292267150795658::1769208520::0::1::::<><><>0<>0<><>::uid://bgg6a75ednv0l::::res://source/networking/server/network.gd<>uid://buo380mj8eweh::::res://source/networking/client/webrtc_loopback_backend.gd<>uid://b4x6usceefd6p::::res://source/networking/server/webrtc_loopback_backend.gd
 webrtc_loopback_session.gd::GDScript::2240529083386485108::1769208520::0::1::::WebRTCLoopbackSession<>Resource<><>0<>0<><>::
@@ -720,8 +718,8 @@ AreaTest1.tscn::PackedScene::8494454407359399065::1769208520::0::1::::<><><>0<>0
 Winter.tscn::PackedScene::1635493982676199203::1769208520::0::1::::<><><>0<>0<><>::uid://bxpx2n4hugojx::::res://source/scenes/characters/myoso/Myoso.tscn<>uid://dfdmdo8f0q07p::::res://source/scenes/areas/tp/AreaTP.tscn<>uid://h637lr7t1rs1::::res://source/scenes/areas/resources/winter_tileset.tres
 ::res://source/scenes/areas/assets/::1769208560
 seasonal sample (winter).png::CompressedTexture2D::5498382678577912403::1769208527::1769208560::1::::<><><>0<>0<>bc58cf60a475ebf27169e025ad318e5c<>res://.godot/imported/seasonal sample (winter).png-e4e4b6da5d7e6889035b7607b45a7b20.ctex::
-::res://source/scenes/areas/resources/::1769209170
-winter_tileset.tres::TileSet::557075442543390210::1769209170::0::1::::<><><>0<>0<><>::uid://cklptawmhtnp0::::res://source/scenes/areas/assets/seasonal sample (winter).png
+::res://source/scenes/areas/resources/::1769226891
+winter_tileset.tres::TileSet::557075442543390210::1769226891::0::1::::<><><>0<>0<><>::uid://cklptawmhtnp0::::res://source/scenes/areas/assets/seasonal sample (winter).png
 ::res://source/scenes/areas/scene/::1769208520
 SceneManager.tscn::PackedScene::9124963552015808691::1769208520::0::1::::<><><>0<>0<><>::uid://lb7h272e5fhb::::res://source/scenes/areas/scene/scene_manager.gd<>uid://cm2g07mnst7ig::::res://source/scenes/DialogueStuff/blueskything.jpg
 SceneSpawner.tscn::PackedScene::5847346391526018002::1769208520::0::1::::<><><>0<>0<><>::
@@ -750,18 +748,29 @@ input_component.gd::GDScript::6329353928440800437::1769208520::0::1::::MyosoInpu
 ::res://source/scenes/characters/myoso/resources/::1769208520
 myoso_actions.gd::GDScript::2051663220231128494::1769208520::0::1::::PlayerActions<>ActionsResource<><>0<>0<><>::
 myoso_actions.tres::Resource/PlayerActions::3798719675702986444::1769208520::0::1::::<><><>0<>0<><>::uid://4h3ugcl8pu1c::::res://source/scenes/characters/myoso/resources/myoso_actions.gd
-::res://source/scenes/characters/zBrolyNpcTester/::1769209170
-ZBrolyNpc.tscn::PackedScene::7374607021693156391::1769209170::0::1::::<><><>0<>0<><>::uid://de21e330cnf3u::::res://source/scenes/characters/zBrolyNpcTester/assets/zbrolytemplate.png<>uid://c6ldibx17a3tk::::res://source/scenes/DialogueStuff/DialogueArea.tscn
+::res://source/scenes/characters/zBrolyNpcTester/::1769226891
+ZBrolyNpc.tscn::PackedScene::7374607021693156391::1769226891::0::1::::<><><>0<>0<><>::uid://de21e330cnf3u::::res://source/scenes/characters/zBrolyNpcTester/assets/zbrolytemplate.png<>uid://c6ldibx17a3tk::::res://source/scenes/DialogueStuff/DialogueArea.tscn
 ::res://source/scenes/characters/zBrolyNpcTester/assets/::1769208560
 zbrolytemplate.png::CompressedTexture2D::7497342925025997960::1769208527::1769208560::1::::<><><>0<>0<>5aa2a93e4505b84f6d24c5117194058b<>res://.godot/imported/zbrolytemplate.png-f7a8b9d6fbf8818c73279883ea8fafd3.ctex::
-::res://source/scenes/DialogueStuff/::1769209401
+::res://source/scenes/DialogueStuff/::1769228116
 blueskything.jpg::CompressedTexture2D::5671256337106782062::1769208527::1769208559::1::::<><><>0<>0<>4776e19d9a8ce0c7db55a2426c71ad67<>res://.godot/imported/blueskything.jpg-9a2a26444685df1446c278cb88c85160.ctex::
-CanvasLayer.tscn::PackedScene::1528836186509494770::1769208520::0::1::::<><><>0<>0<><>::uid://pcnibf5imxfb::::res://source/scenes/DialogueStuff/dialogTester.gd<>uid://cm2g07mnst7ig::::res://source/scenes/DialogueStuff/blueskything.jpg
-dialogTester.gd::GDScript::1057765078957432551::1769208520::0::1::::<>CanvasLayer<><>0<>0<><>::
-DialogueArea.tscn::PackedScene::6971600202067370624::1769208520::0::1::::<><><>0<>0<><>::uid://buc6gbxo4hb2e::::res://source/scenes/DialogueStuff/dialogue_area.gd
-dialogue_area.gd::GDScript::3796219342230036646::1769209401::0::1::::<>Area2D<><>0<>0<><>::
+::res://source/scenes/DialogueStuff/DialogicCharacter/::1769228121
+::res://source/scenes/DialogueStuff/DialogicCharacter/MyosoChar/::1769228560
+MyosoANK.png::CompressedTexture2D::785262852056307334::1769228306::1769228306::1::::<><><>0<>0<>a3709d77eec094c54df5c0f87460aa95<>res://.godot/imported/MyosoANK.png-eaecfe939b6d8b3ff920f81485ac450d.ctex::
+MyosoDialogic.dch::Resource/DialogicCharacter::4454699941930783405::1769228447::0::1::::<><><>0<>0<><>::
+MyosoPlaceH.png::CompressedTexture2D::7686156717671544361::1769228560::1769228560::1::::<><><>0<>0<>fc3605031c80f4448cc79616436c45af<>res://.godot/imported/MyosoPlaceH.png-2b20dab05d8f0a7baa94a7cf59ef7fc0.ctex::
+::res://source/scenes/DialogueStuff/DialogicCharacter/zBroly/::1769228237
+zBroly.dch::Resource/DialogicCharacter::1189910329804952613::1769228237::0::1::::<><><>0<>0<><>::
+zbrolytemplate.png::CompressedTexture2D::3743746536791335554::1769227711::1769227712::1::::<><><>0<>0<>4e8c42746bb725e6f7ea820cfb20047f<>res://.godot/imported/zbrolytemplate.png-eec725616650da925f5f2ed9e00004ee.ctex::
+::res://source/scenes/DialogueStuff/DialogicText/::1769228470
+testTimeline.dtl::Resource/DialogicTimeline::6068714767157583399::1769228470::0::1::::<><><>0<>0<><>::
 ::res://source/scenes/DialogueStuff/dialogue text Stuff/::1769208520
 zBrolyNPCDialogue.json::JSON::-1::1769208520::0::1::::<><><>0<>0<><>::
+::res://source/scenes/DialogueStuff/oldOutdatedStuff/::1769226895
+CanvasLayer.tscn::PackedScene::1528836186509494770::1769226889::0::1::::<><><>0<>0<><>::uid://pcnibf5imxfb::::res://source/scenes/DialogueStuff/oldOutdatedStuff/dialogTester.gd<>uid://cm2g07mnst7ig::::res://source/scenes/DialogueStuff/blueskything.jpg
+dialogTester.gd::GDScript::1057765078957432551::1769208520::0::1::::<>CanvasLayer<><>0<>0<><>::
+DialogueArea.tscn::PackedScene::6971600202067370624::1769226895::0::1::::<><><>0<>0<><>::uid://buc6gbxo4hb2e::::res://source/scenes/DialogueStuff/oldOutdatedStuff/dialogue_area.gd
+dialogue_area.gd::GDScript::3796219342230036646::1769209401::0::1::::<>Area2D<><>0<>0<><>::
 ::res://source/scenes/menus/::1769208520
 button.gd::GDScript::956714504373858589::1769208520::0::1::::<>Button<><>0<>0<><>::
 Empty.tscn::PackedScene::5053946236012219922::1769208520::0::1::::<><><>0<>0<><>::
