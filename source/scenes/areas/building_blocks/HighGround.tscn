@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://buaphgk2sh8yg"]
+
+[ext_resource type="TileSet" uid="uid://dpuapp14t444" path="res://source/scenes/areas/resources/winter_tileset_no_navigation.tres" id="1_6x2cy"]
+
+[node name="HighGround" type="TileMapLayer" unique_id=151401403]
+z_index = -1
+tile_set = ExtResource("1_6x2cy")
+navigation_enabled = false
+metadata/_edit_lock_ = true

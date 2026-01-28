@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bxpx2n4hugojx"]
+[gd_scene format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
@@ -13,12 +13,12 @@
 [ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="10_7n34x"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="12_7n34x"]
 
-[sub_resource type="Resource" id="Resource_3el0l"]
+[sub_resource type="Resource" id="Resource_7n34x"]
 resource_local_to_scene = true
 script = ExtResource("8_xdvvs")
 metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7n34x"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3el0l"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
@@ -33,45 +33,45 @@ properties/2/replication_mode = 2
 radius = 2.0
 height = 16.0
 
-[node name="MyosoSpawner" type="CharacterBody2D"]
+[node name="MyosoSpawner" type="CharacterBody2D" unique_id=1318206444]
 motion_mode = 1
 script = ExtResource("1_jpx56")
 sprint_speed = 96.0
 
-[node name="Components" type="Node" parent="."]
+[node name="Components" type="Node" parent="." unique_id=236184257]
 script = ExtResource("3_a6gmg")
 
-[node name="TPComponent" type="Node" parent="Components"]
+[node name="TPComponent" type="Node" parent="Components" unique_id=479005211]
 unique_name_in_owner = true
 script = ExtResource("2_ko57k")
 starting_scene_path = "uid://xkil2cmplfcd"
 
-[node name="ClientComponent" parent="Components" instance=ExtResource("4_1j2t1")]
+[node name="ClientComponent" parent="Components" unique_id=1537594692 instance=ExtResource("4_1j2t1")]
 unique_name_in_owner = true
 
-[node name="SaveComponent" parent="Components" instance=ExtResource("6_7n34x")]
+[node name="SaveComponent" parent="Components" unique_id=1265632519 instance=ExtResource("6_7n34x")]
 unique_name_in_owner = true
-save_container = SubResource("Resource_3el0l")
+save_container = SubResource("Resource_7n34x")
 
-[node name="InputComponent" type="Node" parent="Components"]
+[node name="InputComponent" type="Node" parent="Components" unique_id=813433517]
 unique_name_in_owner = true
 script = ExtResource("9_7n34x")
 _actions = ExtResource("2_a6gmg")
 
-[node name="StateSynchronizer" parent="." instance=ExtResource("9_3el0l")]
+[node name="StateSynchronizer" parent="." unique_id=1010839060 instance=ExtResource("9_3el0l")]
 unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_7n34x")
+replication_config = SubResource("SceneReplicationConfig_3el0l")
 
-[node name="Icon" type="Sprite2D" parent="."]
+[node name="Icon" type="Sprite2D" parent="." unique_id=1730210634]
 position = Vector2(7.748604e-07, -12.999999)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("10_7n34x")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1410285114]
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_wo7us")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1578845037]
 unique_name_in_owner = true
 process_mode = 3
 zoom = Vector2(3, 3)
@@ -84,7 +84,7 @@ drag_bottom_margin = 0.1
 script = ExtResource("3_cmaps")
 metadata/_edit_lock_ = true
 
-[node name="ClientHUD" parent="." instance=ExtResource("12_7n34x")]
+[node name="ClientHUD" parent="." unique_id=2082256598 instance=ExtResource("12_7n34x")]
 unique_name_in_owner = true
 visible = false
 

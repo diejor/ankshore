@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://dfvoo60p3ut6n"]
+[gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/components/signals/AutoloadSignals.tscn" id="1_88ca0"]
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
@@ -6,11 +6,11 @@
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 
-[node name="Control" type="CanvasLayer"]
+[node name="Control" type="CanvasLayer" unique_id=2144035492]
 
-[node name="AutoloadSignals" parent="." instance=ExtResource("1_88ca0")]
+[node name="AutoloadSignals" parent="." unique_id=794412569 instance=ExtResource("1_88ca0")]
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=533036486]
 offset_left = 409.0
 offset_top = 307.0
 offset_right = 724.0
@@ -18,7 +18,7 @@ offset_bottom = 437.0
 script = ExtResource("1_uubjt")
 winterScene = ExtResource("2_5yleq")
 
-[node name="PlayGame" type="Label" parent="Button"]
+[node name="PlayGame" type="Label" parent="Button" unique_id=1431192076]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,7 +30,7 @@ text = "play game!!!!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Loading" type="Label" parent="Button"]
+[node name="Loading" type="Label" parent="Button" unique_id=105086266]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -45,7 +45,7 @@ text = "Loading..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Label" type="Label" parent="."]
+[node name="Label" type="Label" parent="." unique_id=1876916828]
 offset_left = 332.0
 offset_top = 105.0
 offset_right = 803.0
@@ -56,7 +56,7 @@ text = "ANKSHORE!!!!!!"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="UsernameEdit" type="LineEdit" parent="."]
+[node name="UsernameEdit" type="LineEdit" parent="." unique_id=1164204733]
 unique_name_in_owner = true
 visible = false
 offset_left = 451.0

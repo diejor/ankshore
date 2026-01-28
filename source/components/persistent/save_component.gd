@@ -23,7 +23,7 @@ var _save_synchronizer: SaveSynchronizer:
 		
 		var client: ClientComponent = owner.get_node_or_null("%ClientComponent")
 		var base: String
-		if client:
+		if client and not client.username.is_empty():
 			base = client.username
 		else:
 			base = owner.name
@@ -38,6 +38,14 @@ func _ready() -> void:
 	assert(save_container)
 	assert(_save_synchronizer)
 	assert(_save_synchronizer.save_container == save_container)
+	
+	if SaveManager:
+		SaveManager.register(self)
+
+
+func _exit_tree() -> void:
+	if SaveManager:
+		SaveManager.unregister(self)
 
 
 func _prepare_save_dir() -> void:

@@ -24,7 +24,6 @@ func _ready() -> void:
 		setup()
 	
 	set_visibility_for(MultiplayerPeer.TARGET_PEER_SERVER, true)
-	set_visibility_for(get_multiplayer_authority(), true)
 
 
 func setup() -> void:
