@@ -16,11 +16,11 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="Ankshore"
 run/main_scene="uid://dfvoo60p3ut6n"
-config/features=PackedStringArray("4.5", "GL Compatibility")
+config/features=PackedStringArray("4.6", "GL Compatibility")
 run/low_processor_mode_sleep_usec=6434
+boot_splash/stretch_mode=0
 boot_splash/image="uid://by0tw5rc8fns8"
 config/icon="uid://by0tw5rc8fns8"
-boot_splash/stretch_mode=0
 
 [autoload]
 
@@ -29,7 +29,7 @@ Server="*res://source/networking/server/server.gd"
 Client="*res://source/networking/client/client.gd"
 SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
 SceneManager="*res://source/scenes/areas/scene/scene_manager_autoload.gd"
-Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
+Dialogic="*uid://ds2q0uclmolvu"
 
 [debug]
 

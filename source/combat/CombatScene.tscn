@@ -1,12 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cy6ogtu3s0p7a"]
+[gd_scene format=3 uid="uid://cy6ogtu3s0p7a"]
 
 [ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/combat_scene_(Controller).gd" id="1_1axjk"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="1_4m4xd"]
+[ext_resource type="Script" uid="uid://doqnlxdo5ybk4" path="res://source/components/node_component.gd" id="3_y4ux6"]
 
-[node name="Combat Set" type="Node2D"]
+[node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_1axjk")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=957020404]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,7 +15,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="Control"]
+[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1518636395]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,6 +24,8 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_4m4xd")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="NodeComponent" type="Node" parent="." unique_id=1747603604]
+script = ExtResource("3_y4ux6")
+metadata/_custom_type_script = "uid://doqnlxdo5ybk4"

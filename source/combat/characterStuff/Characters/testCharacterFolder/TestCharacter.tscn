@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dro050gfjn0ih"]
+
+[ext_resource type="Script" uid="uid://chii7i4pej4km" path="res://source/combat/characterStuff/Characters/testCharacterFolder/character_statsTest.gd" id="1_3jvxb"]
+[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7uwtj"]
+
+[node name="testCharacter" type="Node2D" unique_id=867888316]
+script = ExtResource("1_7uwtj")
+
+[node name="CharacterStats" type="Node" parent="." unique_id=1429258526]
+script = ExtResource("1_3jvxb")
