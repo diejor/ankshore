@@ -1,3 +1,4 @@
+@tool
 class_name AreaTP
 extends Area2D
 
