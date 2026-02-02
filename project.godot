@@ -30,7 +30,6 @@ Client="*res://source/networking/client/client.gd"
 SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
 SceneManager="*res://source/scenes/areas/scene/scene_manager_autoload.gd"
 Dialogic="*uid://ds2q0uclmolvu"
-SaveManager="*uid://b8lsum2e7v0xg"
 
 [debug]
 

@@ -2,7 +2,9 @@
 
 [ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/combat_scene_(Controller).gd" id="1_1axjk"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="1_4m4xd"]
-[ext_resource type="Script" uid="uid://doqnlxdo5ybk4" path="res://source/components/node_component.gd" id="3_y4ux6"]
+[ext_resource type="Script" uid="uid://16dok1pv4kkv" path="res://source/combat/ally_team.gd" id="3_kadmy"]
+[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="4_pad4c"]
+[ext_resource type="Script" uid="uid://cghmnddt68tth" path="res://source/combat/enemy_team.gd" id="5_g6unm"]
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_1axjk")
@@ -26,6 +28,12 @@ texture = ExtResource("1_4m4xd")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
-[node name="NodeComponent" type="Node" parent="." unique_id=1747603604]
-script = ExtResource("3_y4ux6")
-metadata/_custom_type_script = "uid://doqnlxdo5ybk4"
+[node name="AllyTeam" type="Node" parent="." unique_id=2125211180]
+script = ExtResource("3_kadmy")
+
+[node name="testCharacter" parent="AllyTeam" unique_id=867888316 instance=ExtResource("4_pad4c")]
+
+[node name="EnemyTeam" type="Node" parent="." unique_id=1825500626]
+script = ExtResource("5_g6unm")
+
+[node name="testCharacter2" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("4_pad4c")]
