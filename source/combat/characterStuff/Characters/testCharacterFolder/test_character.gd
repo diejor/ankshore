@@ -1,7 +1,13 @@
 class_name testCharacter extends Node2D
 
-@onready var character_Stats: CharacterStats = %CharacterStats
+
 @export var stats: charStats
+signal health_depleted
+
+func _init() -> void:
+	
+		
+	pass
 
 
 #main brain of testCharacter
