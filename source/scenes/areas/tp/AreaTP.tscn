@@ -23,11 +23,12 @@ func _ready() -> void:
 		area = area_tp.scene_name,
 		id = area_tp.target_tp_id
 	}
-	text = \"from: {area}
-			to: {id}\".format(data)
+	text = \"scene: {area}
+			tp_id: {id}\".format(data)
 "
 
 [node name="AreaTP" type="Area2D" unique_id=883035420]
+unique_name_in_owner = true
 y_sort_enabled = true
 script = ExtResource("1_y0507")
 
@@ -45,8 +46,8 @@ shape = SubResource("RectangleShape2D_qeccu")
 position = Vector2(21, 32)
 
 [node name="DebugLabel" parent="." unique_id=131477118 instance=ExtResource("3_7oqul")]
-text = "from: {area}
-to: {id}"
+text = "from: 
+			to: "
 script = SubResource("GDScript_7oqul")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

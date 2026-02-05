@@ -17,16 +17,16 @@ func flip_labels() -> void:
 
 
 func _on_pressed() -> void:	
-	var username: String
-	if username_edit.text.is_empty():
-		username = Client.username
-	else:
-		username = username_edit.text
+	var username: String = username_edit.text
+	if username.is_empty():
+		var candidate := OS.get_environment("USERNAME")
+		if candidate.is_empty():
+			candidate = "player"
+		username = candidate
 	
 	var client_data: Dictionary = {
 		username = username,
-		peer_id = Client.uid,
-		scene = MYOSO.resource_path
+		scene_path = MYOSO.resource_path
 	}
 	
 	SceneManager.connect_player(client_data)

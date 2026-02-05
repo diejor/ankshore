@@ -129,3 +129,18 @@ func instantiate() -> void:
 	_save_synchronizer.setup()
 	assert(_save_synchronizer._initialized)
 	instantiated.emit()
+
+
+func spawn(caller: Node) -> void:
+	instantiate()
+	
+	var load_err: Error = load_state()
+	assert(load_err == OK or load_err == ERR_FILE_NOT_FOUND, 
+		"Something failed while trying to load player. 
+		Error: %s." % error_string(load_err))
+	
+	
+	if load_err == ERR_FILE_NOT_FOUND:
+		push_warning("Loading data from spawner.")
+		var spawner_save: SaveComponent = caller.get_node("%SaveComponent")
+		deserialize_scene(spawner_save.serialize_scene())

@@ -6,7 +6,7 @@ signal peer_connected(peer_id: int)
 signal peer_disconnected(peer_id: int)
 
 
-var backend: MultiplayerServerBackend
+@export var backend: MultiplayerServerBackend
 
 const SCENE_MANAGER: PackedScene = preload("uid://d3ag2052swfwd")
 @onready var scene_manager: LobbyManager = SCENE_MANAGER.instantiate()

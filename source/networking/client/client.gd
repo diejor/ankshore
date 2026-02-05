@@ -19,7 +19,7 @@ var uid: int:
 	get: return multiplayer_api.get_unique_id()
 	set(value): push_warning("Client UID should not be set directly.")
 
-var backend: MultiplayerClientBackend
+@export var backend: MultiplayerClientBackend
 
 var username: String = "":
 	get:
@@ -38,7 +38,7 @@ func _ready() -> void:
 	multiplayer_api.peer_disconnected.connect(on_peer_disconnected)
 	multiplayer_api.connected_to_server.connect(on_connected_to_server)
 	
-	var client_err: Error = await Client.connect_client("localhost", Client.username)
+	var client_err: Error = await connect_client("localhost", username)
 	if client_err != OK:
 		push_warning(
 			"Local client failed: %s" % error_string(client_err))

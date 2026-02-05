@@ -8,7 +8,8 @@ class_name CombatSet extends Node2D
 @onready var test_character_2: testCharacter = $EnemyTeam/testCharacter2
 
 
-func turnStart():
-	if test_character_2.
-	
-	return
+func turnStart() -> void:
+	#if test_character_2
+	#
+	#return
+	pass

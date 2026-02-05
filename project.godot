@@ -24,9 +24,8 @@ config/icon="uid://by0tw5rc8fns8"
 
 [autoload]
 
-Network="res://source/networking/Network.tscn"
-Server="*res://source/networking/server/server.gd"
-Client="*res://source/networking/client/client.gd"
+Server="*uid://1ir31esioska"
+Client="*uid://bsscrhcky6uyk"
 SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
 SceneManager="*res://source/scenes/areas/scene/scene_manager_autoload.gd"
 Dialogic="*uid://ds2q0uclmolvu"
@@ -118,6 +117,7 @@ folder_colors={
 [global_group]
 
 persistent=""
+clients="Handle signals from the Client on player events"
 
 [input]
 

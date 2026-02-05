@@ -15,6 +15,7 @@ func _ready() -> void:
 	assert(root_path == get_path_to(owner))
 	add_visibility_filter(scene_visibility_filter)
 	spawn_sync.add_visibility_filter(scene_visibility_filter)
+	update_visibility()
 
 
 func only_server() -> void:
@@ -22,6 +23,7 @@ func only_server() -> void:
 	spawn_sync.set_visibility_for(0, false)
 	set_visibility_for(MultiplayerPeer.TARGET_PEER_SERVER, true)
 	spawn_sync.set_visibility_for(MultiplayerPeer.TARGET_PEER_SERVER, true)
+	update_visibility()
 
 
 func update(peer_id: int = 0) -> void:
