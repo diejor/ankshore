@@ -2,12 +2,16 @@
 
 [ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/combat_scene_(Controller).gd" id="1_1axjk"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="1_4m4xd"]
+[ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/turn_manager.gd" id="2_g6unm"]
 [ext_resource type="Script" uid="uid://16dok1pv4kkv" path="res://source/combat/ally_team.gd" id="3_kadmy"]
 [ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="4_pad4c"]
 [ext_resource type="Script" uid="uid://cghmnddt68tth" path="res://source/combat/enemy_team.gd" id="5_g6unm"]
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_1axjk")
+
+[node name="TurnManager" type="Node" parent="." unique_id=1147908716]
+script = ExtResource("2_g6unm")
 
 [node name="Control" type="Control" parent="." unique_id=957020404]
 layout_mode = 3
@@ -37,3 +41,5 @@ script = ExtResource("3_kadmy")
 script = ExtResource("5_g6unm")
 
 [node name="testCharacter2" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("4_pad4c")]
+
+[connection signal="turnEnded" from="TurnManager" to="." method="_on_turn_manager_turn_ended"]
