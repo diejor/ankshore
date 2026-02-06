@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bxpx2n4hugojx" path="res://source/scenes/characters/myoso/Myoso.tscn" id="1_kwkoe"]
 [ext_resource type="PackedScene" uid="uid://buaphgk2sh8yg" path="res://source/scenes/areas/building_blocks/HighGround.tscn" id="2_my8le"]
-[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/tp/AreaTP.tscn" id="3_4lfof"]
+[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://addons/networked/components/tp/AreaTP.tscn" id="3_4lfof"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="4_xy03w"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_my8le"]

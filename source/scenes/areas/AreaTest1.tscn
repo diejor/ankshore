@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://dta1ona6odgmr"]
 
-[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://source/scenes/areas/tp/AreaTP.tscn" id="1_6x6co"]
+[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://addons/networked/components/tp/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="1_suw44"]
 [ext_resource type="PackedScene" uid="uid://buaphgk2sh8yg" path="res://source/scenes/areas/building_blocks/HighGround.tscn" id="2_xbm22"]
 [ext_resource type="PackedScene" uid="uid://ddckx2o2oy5mx" path="res://source/scenes/characters/zBrolyNpcTester/ZBrolyNpc.tscn" id="4_adjto"]

@@ -27,7 +27,7 @@ config/icon="uid://by0tw5rc8fns8"
 Server="*uid://1ir31esioska"
 Client="*uid://bsscrhcky6uyk"
 SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
-SceneManager="*res://source/scenes/areas/scene/scene_manager_autoload.gd"
+SceneManager="*res://addons/networked/components/scene/scene_manager_autoload.gd"
 Dialogic="*uid://ds2q0uclmolvu"
 SaveManager="*uid://b8lsum2e7v0xg"
 
@@ -105,7 +105,6 @@ enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/scri
 folder_colors={
 "res://source/combat/": "blue",
 "res://source/components/": "orange",
-"res://source/networking/": "purple",
 "res://source/scenes/": "teal",
 "res://source/scenes/DialogueStuff/DialogicCharacter/": "yellow",
 "res://source/scenes/DialogueStuff/DialogicCharacter/zBroly/": "green",

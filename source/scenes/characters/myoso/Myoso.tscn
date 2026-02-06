@@ -2,16 +2,16 @@
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
-[ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://source/components/tp_component.gd" id="2_ko57k"]
+[ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://addons/networked/components/tp/tp_component.gd" id="2_ko57k"]
 [ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
-[ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://source/components/client/ClientComponent.tscn" id="4_1j2t1"]
-[ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://source/components/persistent/SaveComponent.tscn" id="6_7n34x"]
-[ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://source/components/persistent/dictionary_save.gd" id="8_xdvvs"]
-[ext_resource type="PackedScene" uid="uid://1q6d5gvkg84r" path="res://source/components/StateSynchronizer.tscn" id="9_3el0l"]
+[ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://addons/networked/components/client/ClientComponent.tscn" id="4_1j2t1"]
+[ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://addons/networked/components/persistent/SaveComponent.tscn" id="6_7n34x"]
+[ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://addons/networked/components/persistent/dictionary_save.gd" id="8_xdvvs"]
+[ext_resource type="PackedScene" uid="uid://1q6d5gvkg84r" path="res://addons/networked/components/StateSynchronizer.tscn" id="9_3el0l"]
 [ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://source/scenes/characters/myoso/components/input_component.gd" id="9_7n34x"]
 [ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="10_7n34x"]
-[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://source/components/client/PlayerHud.tscn" id="12_7n34x"]
+[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://addons/networked/components/client/PlayerHud.tscn" id="12_7n34x"]
 
 [sub_resource type="Resource" id="Resource_7n34x"]
 resource_local_to_scene = true
