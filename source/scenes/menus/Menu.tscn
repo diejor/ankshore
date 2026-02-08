@@ -1,14 +1,11 @@
 [gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
-[ext_resource type="PackedScene" uid="uid://jmlsnas47wdm" path="res://source/components/signals/AutoloadSignals.tscn" id="1_88ca0"]
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="PackedScene" uid="uid://xkil2cmplfcd" path="res://source/scenes/areas/Winter.tscn" id="2_5yleq"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 
 [node name="Control" type="CanvasLayer" unique_id=2144035492]
-
-[node name="AutoloadSignals" parent="." unique_id=794412569 instance=ExtResource("1_88ca0")]
 
 [node name="Button" type="Button" parent="." unique_id=533036486]
 offset_left = 409.0
@@ -65,5 +62,4 @@ offset_right = 674.0
 offset_bottom = 280.0
 placeholder_text = "Enter Username"
 
-[connection signal="connected_to_server" from="AutoloadSignals" to="Button" method="_on_connected_to_server"]
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]

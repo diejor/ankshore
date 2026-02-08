@@ -10,6 +10,7 @@ const MYOSO: PackedScene = preload("uid://bxpx2n4hugojx")
 func _ready() -> void:
 	disabled = true
 	flip_labels()
+	Client.connected_to_server.connect(_on_connected_to_server)
 
 func flip_labels() -> void:
 	play_game.visible = not play_game.visible

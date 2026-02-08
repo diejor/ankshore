@@ -24,12 +24,11 @@ config/icon="uid://by0tw5rc8fns8"
 
 [autoload]
 
-Server="*uid://1ir31esioska"
-Client="*uid://bsscrhcky6uyk"
 SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
-SceneManager="*res://addons/networked/components/scene/scene_manager_autoload.gd"
 Dialogic="*uid://ds2q0uclmolvu"
-SaveManager="*uid://b8lsum2e7v0xg"
+Client="*uid://bsscrhcky6uyk"
+Server="*uid://1ir31esioska"
+SceneManager="*uid://cp3iio7elpvbf"
 
 [debug]
 
@@ -98,7 +97,7 @@ naming/scene_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/script-ide/plugin.cfg")
 
 [file_customization]
 
