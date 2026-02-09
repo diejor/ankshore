@@ -14,6 +14,7 @@ offset_right = 724.0
 offset_bottom = 437.0
 script = ExtResource("1_uubjt")
 winterScene = ExtResource("2_5yleq")
+network_scene = "uid://d22m36luwr2a"
 
 [node name="PlayGame" type="Label" parent="Button" unique_id=1431192076]
 layout_mode = 1

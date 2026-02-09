@@ -26,9 +26,6 @@ config/icon="uid://by0tw5rc8fns8"
 
 SignalBusDialogue="*res://source/singletons/SignalBusDialogue.gd"
 Dialogic="*uid://ds2q0uclmolvu"
-Client="*uid://bsscrhcky6uyk"
-Server="*uid://1ir31esioska"
-SceneManager="*uid://cp3iio7elpvbf"
 
 [debug]
 
