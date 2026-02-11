@@ -1,27 +1,26 @@
 extends Button
-@export var winterScene: PackedScene
-@export_file var network_scene: String
+
+@export var network: Network
+@export_file var player_scene: String
 
 @onready var play_game: Label = $PlayGame
-@onready var connecting: Label = $Loading
 @onready var username_edit: LineEdit = %UsernameEdit
 
-func _ready() -> void:
-	#disabled = true
-	#flip_labels()
-	pass
-	
 
-func flip_labels() -> void:
-	play_game.visible = not play_game.visible
-	connecting.visible = not play_game.visible
-
+var username: String:
+	get:
+		if username.is_empty():
+			var candidate := OS.get_environment("USERNAME")
+			if candidate.is_empty():
+				candidate = "player"
+			username = candidate
+		return username
 
 func _on_pressed() -> void:
-	flip_labels()
+	var client_data := {
+		username = username,
+		scene_path = player_scene,
+	}
 	
-	get_tree().change_scene_to_file(network_scene)
-
-func _on_connected_to_server() -> void:
-	disabled = false
-	flip_labels()
+	network.configure(client_data)
+	get_tree().change_scene_to_node.call_deferred(network)

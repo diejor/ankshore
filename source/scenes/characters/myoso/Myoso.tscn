@@ -51,6 +51,7 @@ unique_name_in_owner = true
 
 [node name="SaveComponent" parent="Components" unique_id=1265632519 instance=ExtResource("6_7n34x")]
 unique_name_in_owner = true
+save_extension = ".tdict"
 save_container = SubResource("Resource_7n34x")
 
 [node name="InputComponent" type="Node" parent="Components" unique_id=813433517]
