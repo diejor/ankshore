@@ -16,7 +16,7 @@ signal health_changed(health: int, max_health: int) #tells current health change
 @export var base_will := 100 
 #defense reduces damage taken
 @export var base_Defense := 50
-#defense (usually heightened) when a successful block occurs
+#defense (usually heightened) when a successful block occurs. 
 @export var base_blockingDefense := 70
 #courage is a stat that determines how much status effect damage one takes
 @export var base_courage := 50 
@@ -53,6 +53,8 @@ func set_health(newHealth: int) -> void:
 	health = newHealth
 	
 
+
+#used after buffs, debuffs, whenever necessary
 func recalculateStats()-> void:
 	
 	
@@ -68,7 +70,19 @@ func change_health(changeValue: int) -> void: #damage is negative | health is po
 		health_depleted.emit()
 	health_changed.emit(health, current_max_health)
 
+#getters
+func getDamageStat() -> int:
+	return level
+
+
 #each attack within an attack string will read if the attack has been blocked or not
 func damageTaken(dmg: int, blocked: bool) -> int:
-	
-	return 0
+	if !blocked:
+		var dmgCalc = dmg * (100/(100+defense)) # im using league of legends armor calculation lol
+		return dmg
+	else:
+		#this is blocking dmg calculation for now
+		var dmgCalc = dmg * (blockingDefense/100)
+		if dmgCalc > 0:
+			return dmgCalc
+		return 0

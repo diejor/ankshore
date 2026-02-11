@@ -42,4 +42,7 @@ script = ExtResource("5_g6unm")
 
 [node name="testCharacter2" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("4_pad4c")]
 
+[connection signal="matchStart" from="TurnManager" to="." method="_on_turn_manager_match_start"]
 [connection signal="turnEnded" from="TurnManager" to="." method="_on_turn_manager_turn_ended"]
+[connection signal="turnStart" from="TurnManager" to="." method="_on_turn_manager_turn_start"]
+[connection signal="health_depleted" from="AllyTeam/testCharacter" to="AllyTeam" method="_on_test_character_health_depleted"]
