@@ -155,6 +155,10 @@ dialogic_default_action={
 ]
 }
 
+[networked]
+
+config="res://networked_config.tres"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
