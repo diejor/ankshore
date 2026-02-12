@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@onready var input: MyosoInputComponent = %InputComponent
+@onready var input: MoveInputComponent = %InputComponent
 
 @export var walk_speed := 64.0
 @export var sprint_speed := 80.0
