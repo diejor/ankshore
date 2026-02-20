@@ -1,53 +1,16 @@
 [gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
-[ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
-[ext_resource type="PackedScene" uid="uid://d22m36luwr2a" path="res://addons/networked/core/Network.tscn" id="3_88ca0"]
+[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7c3vv"]
+[ext_resource type="Script" uid="uid://djn27uduf3ami" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_attack_move_1.gd" id="2_88ca0"]
 
-[sub_resource type="Theme" id="Theme_5yleq"]
+[node name="testCharacter" type="Node2D" unique_id=867888316]
+script = ExtResource("1_7c3vv")
 
-[node name="Control" type="CanvasLayer" unique_id=2144035492]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
 
-[node name="Button" type="Button" parent="." unique_id=533036486 node_paths=PackedStringArray("network")]
-offset_left = 409.0
-offset_top = 307.0
-offset_right = 724.0
-offset_bottom = 437.0
-script = ExtResource("1_uubjt")
-network = NodePath("../Network")
-player_scene = "uid://bxpx2n4hugojx"
+[node name="TestAttackMove1" type="Node" parent="." unique_id=2983615]
+script = ExtResource("2_88ca0")
 
-[node name="PlayGame" type="Label" parent="Button" unique_id=1431192076]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 32
-text = "play game!!!!"
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="TestEmptyMove1" type="Node" parent="." unique_id=844174307]
 
-[node name="Label" type="Label" parent="." unique_id=1876916828]
-offset_left = 332.0
-offset_top = 105.0
-offset_right = 803.0
-offset_bottom = 220.3179
-theme = SubResource("Theme_5yleq")
-theme_override_font_sizes/font_size = 67
-text = "ANKSHORE!!!!!!"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="UsernameEdit" type="LineEdit" parent="." unique_id=1164204733]
-unique_name_in_owner = true
-visible = false
-offset_left = 451.0
-offset_top = 235.0
-offset_right = 674.0
-offset_bottom = 280.0
-placeholder_text = "Enter Username"
-
-[node name="Network" parent="." unique_id=1214160271 instance=ExtResource("3_88ca0")]
-
-[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
+[connection signal="transferStats" from="." to="TestAttackMove1" method="_on_test_character_transfer_stats"]

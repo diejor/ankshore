@@ -38,6 +38,12 @@ var defense := 50
 var blockingDefense := 70
 var courage := 50 
 
+#health
+#damageStat
+#will
+#defense 
+#blockingDefense
+#courage
 
 
 #assigning functions----------------------------
@@ -72,7 +78,7 @@ func change_health(changeValue: int) -> void: #damage is negative | health is po
 
 #getters
 func getDamageStat() -> int:
-	return level
+	return damageStat
 
 
 #each attack within an attack string will read if the attack has been blocked or not
