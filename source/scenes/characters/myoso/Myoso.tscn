@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
-[ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://source/scenes/characters/myoso/resources/myoso_actions.tres" id="2_a6gmg"]
+[ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://addons/networked/components/input/move_actions.tres" id="2_a6gmg"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://addons/networked/components/tp/tp_component.gd" id="2_ko57k"]
 [ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://addons/networked/components/persistent/SaveComponent.tscn" id="6_7n34x"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://addons/networked/components/persistent/dictionary_save.gd" id="8_xdvvs"]
 [ext_resource type="PackedScene" uid="uid://1q6d5gvkg84r" path="res://addons/networked/components/StateSynchronizer.tscn" id="9_3el0l"]
-[ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://source/scenes/characters/myoso/components/input_component.gd" id="9_7n34x"]
+[ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://addons/networked/components/input/move_input_component.gd" id="9_7n34x"]
 [ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="10_7n34x"]
 [ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://addons/networked/components/client/PlayerHud.tscn" id="12_7n34x"]
 
