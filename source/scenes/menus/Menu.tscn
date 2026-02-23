@@ -1,9 +1,18 @@
 [gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
-[ext_resource type="PackedScene" uid="uid://d22m36luwr2a" path="res://addons/networked/core/Network.tscn" id="3_88ca0"]
+[ext_resource type="Script" uid="uid://xwxgwpe3rp8c" path="res://addons/networked/core/network/network.gd" id="2_88ca0"]
+[ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/core/peer/multiplayer_tree.gd" id="3_1iwnb"]
+[ext_resource type="Script" uid="uid://cgyucu72xh732" path="res://addons/networked/core/peer/backends/websocket.gd" id="4_f7egp"]
+[ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/components/lobby/lobby_manager.gd" id="5_xc8cl"]
+[ext_resource type="PackedScene" uid="uid://bs4ebh48fcoxt" path="res://addons/networked/components/tp/TPCanvasLayer.tscn" id="6_f7egp"]
+[ext_resource type="PackedScene" uid="uid://4rqj7gr6xifw" path="res://addons/networked/core/peer/client/ConnectToServer.tscn" id="7_akpqa"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]
+
+[sub_resource type="Resource" id="Resource_akpqa"]
+script = ExtResource("4_f7egp")
+metadata/_custom_type_script = "uid://cgyucu72xh732"
 
 [node name="Control" type="CanvasLayer" unique_id=2144035492]
 
@@ -13,7 +22,7 @@ offset_top = 307.0
 offset_right = 724.0
 offset_bottom = 437.0
 script = ExtResource("1_uubjt")
-network = NodePath("../Network")
+network = NodePath("../MultiplayerNetwork")
 player_scene = "uid://bxpx2n4hugojx"
 
 [node name="PlayGame" type="Label" parent="Button" unique_id=1431192076]
@@ -48,6 +57,28 @@ offset_right = 674.0
 offset_bottom = 280.0
 placeholder_text = "Enter Username"
 
-[node name="Network" parent="." unique_id=1214160271 instance=ExtResource("3_88ca0")]
+[node name="MultiplayerNetwork" type="Node" parent="." unique_id=153187542 node_paths=PackedStringArray("client")]
+script = ExtResource("2_88ca0")
+client = NodePath("Client")
+metadata/_custom_type_script = "uid://xwxgwpe3rp8c"
+
+[node name="Client" type="Node" parent="MultiplayerNetwork" unique_id=1939008143 node_paths=PackedStringArray("lobby_manager")]
+script = ExtResource("3_1iwnb")
+backend = SubResource("Resource_akpqa")
+lobby_manager = NodePath("MultiplayerLobbyManager")
+metadata/_custom_type_script = "uid://c3yabfbvm8gyo"
+
+[node name="MultiplayerLobbyManager" type="MultiplayerSpawner" parent="MultiplayerNetwork/Client" unique_id=953236085 node_paths=PackedStringArray("tp_layer")]
+_spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr")
+spawn_path = NodePath(".")
+script = ExtResource("5_xc8cl")
+tp_layer = NodePath("TPCanvasLayer")
+metadata/_custom_type_script = "uid://lb7h272e5fhb"
+
+[node name="TPCanvasLayer" parent="MultiplayerNetwork/Client/MultiplayerLobbyManager" unique_id=1002194750 instance=ExtResource("6_f7egp")]
+
+[node name="Connect To Server" parent="." unique_id=628941669 instance=ExtResource("7_akpqa")]
+player_scene = "uid://bxpx2n4hugojx"
 
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
+[connection signal="connect_player" from="Connect To Server" to="MultiplayerNetwork" method="connect_player"]

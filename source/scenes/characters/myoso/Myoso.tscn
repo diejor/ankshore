@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://addons/networked/components/input/move_actions.tres" id="2_a6gmg"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://addons/networked/components/tp/tp_component.gd" id="2_ko57k"]
-[ext_resource type="Script" uid="uid://epumm5e7aa5c" path="res://source/components/components.gd" id="3_a6gmg"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
 [ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://addons/networked/components/client/ClientComponent.tscn" id="4_1j2t1"]
 [ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://addons/networked/components/persistent/SaveComponent.tscn" id="6_7n34x"]
@@ -11,57 +10,59 @@
 [ext_resource type="PackedScene" uid="uid://1q6d5gvkg84r" path="res://addons/networked/components/StateSynchronizer.tscn" id="9_3el0l"]
 [ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://addons/networked/components/input/move_input_component.gd" id="9_7n34x"]
 [ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="10_7n34x"]
-[ext_resource type="PackedScene" uid="uid://s3msqppyuw2j" path="res://addons/networked/components/client/PlayerHud.tscn" id="12_7n34x"]
 
-[sub_resource type="Resource" id="Resource_7n34x"]
-resource_local_to_scene = true
-script = ExtResource("8_xdvvs")
-metadata/_custom_type_script = "uid://d1mnum02gn0c0"
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3el0l"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_m41ox"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
 properties/0/replication_mode = 2
-properties/1/path = NodePath("Components/TPComponent:current_scene")
+properties/1/path = NodePath("ClientComponent:username")
 properties/1/spawn = true
 properties/1/replication_mode = 2
-properties/2/path = NodePath("Components/ClientComponent:username")
+properties/2/path = NodePath("TPComponent:current_scene")
 properties/2/spawn = true
-properties/2/replication_mode = 0
+properties/2/replication_mode = 2
+
+[sub_resource type="Resource" id="Resource_1j2t1"]
+resource_local_to_scene = true
+script = ExtResource("8_xdvvs")
+metadata/_custom_type_script = "uid://d1mnum02gn0c0"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_wo7us"]
 radius = 2.0
 height = 16.0
 
-[node name="MyosoSpawner" type="CharacterBody2D" unique_id=1318206444]
+[node name="Myoso" type="CharacterBody2D" unique_id=1318206444]
 motion_mode = 1
 script = ExtResource("1_jpx56")
 sprint_speed = 96.0
 
-[node name="Components" type="Node" parent="." unique_id=236184257]
-script = ExtResource("3_a6gmg")
+[node name="StateSynchronizer" parent="." unique_id=1010839060 instance=ExtResource("9_3el0l")]
+replication_config = SubResource("SceneReplicationConfig_m41ox")
 
-[node name="TPComponent" type="Node" parent="Components" unique_id=479005211]
-unique_name_in_owner = true
-script = ExtResource("2_ko57k")
-starting_scene_path = "uid://xkil2cmplfcd"
-
-[node name="ClientComponent" parent="Components" unique_id=1537594692 instance=ExtResource("4_1j2t1")]
+[node name="ClientComponent" parent="." unique_id=1537594692 instance=ExtResource("4_1j2t1")]
 unique_name_in_owner = true
 
-[node name="SaveComponent" parent="Components" unique_id=1265632519 instance=ExtResource("6_7n34x")]
+[node name="DebugClientLabel" parent="ClientComponent" index="0" unique_id=530562393]
+offset_left = -2.0
+offset_top = -50.0
+offset_right = 26.0
+offset_bottom = -1.0
+scale = Vector2(0.15, 0.15)
+
+[node name="SaveComponent" parent="." unique_id=1265632519 instance=ExtResource("6_7n34x")]
 unique_name_in_owner = true
 save_extension = ".tdict"
-save_container = SubResource("Resource_7n34x")
+save_container = SubResource("Resource_1j2t1")
 
-[node name="InputComponent" type="Node" parent="Components" unique_id=813433517]
+[node name="InputComponent" type="Node" parent="." unique_id=813433517]
 unique_name_in_owner = true
 script = ExtResource("9_7n34x")
 _actions = ExtResource("2_a6gmg")
 
-[node name="StateSynchronizer" parent="." unique_id=1010839060 instance=ExtResource("9_3el0l")]
+[node name="TPComponent" type="Node" parent="." unique_id=479005211]
 unique_name_in_owner = true
-replication_config = SubResource("SceneReplicationConfig_3el0l")
+script = ExtResource("2_ko57k")
+starting_scene_path = "uid://xkil2cmplfcd"
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1730210634]
 position = Vector2(7.748604e-07, -12.999999)
@@ -85,8 +86,6 @@ drag_bottom_margin = 0.1
 script = ExtResource("3_cmaps")
 metadata/_edit_lock_ = true
 
-[node name="ClientHUD" parent="." unique_id=2082256598 instance=ExtResource("12_7n34x")]
-unique_name_in_owner = true
-visible = false
+[connection signal="tree_entered" from="." to="ClientComponent" method="_on_owner_tree_entered"]
 
-[connection signal="tree_entered" from="." to="Components/ClientComponent" method="_on_owner_tree_entered"]
+[editable path="ClientComponent"]

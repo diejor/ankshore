@@ -113,6 +113,7 @@ folder_colors={
 
 persistent=""
 clients="Handle signals from the Client on player events"
+lobby_managers=""
 
 [input]
 
