@@ -1,32 +1,50 @@
 class_name testCharacter extends Node2D
 
 
-@export var stats: Resource = preload("res://source/combat/characterStuff/anatomy/charStats.gd")
 
-var baseCharDmg = stats.getDamageStat()
 
-var testTransfer = 42
+@export var stats: charStats = charStats.new()
 
+#fuck
+var moveList: Array[charAction] = []
+#moveList.push_front(test_attack_move_1) #doesnt work
 
 signal health_depleted
 signal will_depleted
 signal courage_depleted
+signal transferStats(health: int, dmg: int, will: int, defense: int, blockingDefense: int, courage: int)
+#transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
+#signal transferStats(dmg: int)
+#health
+#damageStat
+#will
+#defense 
+#blockingDefense
+#courage
 
-signal transferStats(dmg: int)
 
 
-func getBaseCharDmg() -> int:
-	return baseCharDmg
+### gameplay Stuff
+func recalculateMoves() -> void:
+	transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
 	
+func takeDmg(rawDamage: int, blocked: bool) -> void:
+	stats.damageTaken(rawDamage, blocked)
 	
+	pass
+	
+###other
 func _ready() -> void:
-	transferStats.emit(baseCharDmg)
-	print("sup")
-	print(stats.getDamageStat())
+	transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
+	print("testCharacter node is ready")
+	
+###
 func _init() -> void:
 	
 		
 	pass
 
-
-#main brain of testCharacter
+###testing Stuff
+#func getBaseCharDmg() -> int:
+	#return baseCharDmg
+	#

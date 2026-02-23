@@ -10,6 +10,15 @@ class_name CombatSet extends Node2D
 
 
 
+#more signals
+func testInteraction() -> void:
+	
+	pass
+	
+
+
+
+
 func _on_turn_manager_turn_ended() -> void:
 	pass # Replace with function body.
 
