@@ -43,10 +43,8 @@ replication_config = SubResource("SceneReplicationConfig_m41ox")
 unique_name_in_owner = true
 
 [node name="DebugClientLabel" parent="ClientComponent" index="0" unique_id=530562393]
-offset_left = -2.0
-offset_top = -50.0
-offset_right = 26.0
-offset_bottom = -1.0
+offset_top = -69.0
+offset_bottom = -20.0
 scale = Vector2(0.15, 0.15)
 
 [node name="SaveComponent" parent="." unique_id=1265632519 instance=ExtResource("6_7n34x")]
