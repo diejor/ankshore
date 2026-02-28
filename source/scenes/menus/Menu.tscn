@@ -1,16 +1,84 @@
 [gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
-[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7c3vv"]
-[ext_resource type="Script" uid="uid://djn27uduf3ami" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_attack_move_1.gd" id="2_88ca0"]
+[ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
+[ext_resource type="Script" uid="uid://xwxgwpe3rp8c" path="res://addons/networked/core/network/network.gd" id="2_88ca0"]
+[ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/core/peer/multiplayer_tree.gd" id="3_1iwnb"]
+[ext_resource type="Script" uid="uid://dqd358q7xpmeq" path="res://addons/networked/core/peer/backends/enet.gd" id="4_akpqa"]
+[ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/components/lobby/lobby_manager.gd" id="5_xc8cl"]
+[ext_resource type="PackedScene" uid="uid://bs4ebh48fcoxt" path="res://addons/networked/components/tp/TPLayer.tscn" id="6_f7egp"]
+[ext_resource type="PackedScene" uid="uid://4rqj7gr6xifw" path="res://addons/networked/core/peer/client/ConnectToServer.tscn" id="7_akpqa"]
 
-[node name="testCharacter" type="Node2D" unique_id=867888316]
-script = ExtResource("1_7c3vv")
+[sub_resource type="Theme" id="Theme_5yleq"]
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
+[sub_resource type="Resource" id="Resource_pulmy"]
+script = ExtResource("4_akpqa")
+metadata/_custom_type_script = "uid://dqd358q7xpmeq"
 
-[node name="TestAttackMove1" type="Node" parent="." unique_id=2983615]
+[node name="Control" type="CanvasLayer" unique_id=2144035492]
+
+[node name="Button" type="Button" parent="." unique_id=533036486 node_paths=PackedStringArray("network")]
+offset_left = 409.0
+offset_top = 307.0
+offset_right = 724.0
+offset_bottom = 437.0
+script = ExtResource("1_uubjt")
+network = NodePath("../MultiplayerNetwork")
+player_scene = "uid://bxpx2n4hugojx"
+
+[node name="PlayGame" type="Label" parent="Button" unique_id=1431192076]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "play game!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="." unique_id=1876916828]
+offset_left = 332.0
+offset_top = 105.0
+offset_right = 803.0
+offset_bottom = 220.3179
+theme = SubResource("Theme_5yleq")
+theme_override_font_sizes/font_size = 67
+text = "ANKSHORE!!!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UsernameEdit" type="LineEdit" parent="." unique_id=1164204733]
+unique_name_in_owner = true
+visible = false
+offset_left = 451.0
+offset_top = 235.0
+offset_right = 674.0
+offset_bottom = 280.0
+placeholder_text = "Enter Username"
+
+[node name="MultiplayerNetwork" type="Node" parent="." unique_id=153187542 node_paths=PackedStringArray("client")]
 script = ExtResource("2_88ca0")
+client = NodePath("Client")
+metadata/_custom_type_script = "uid://xwxgwpe3rp8c"
 
-[node name="TestEmptyMove1" type="Node" parent="." unique_id=844174307]
+[node name="Client" type="Node" parent="MultiplayerNetwork" unique_id=1939008143 node_paths=PackedStringArray("lobby_manager")]
+script = ExtResource("3_1iwnb")
+backend = SubResource("Resource_pulmy")
+lobby_manager = NodePath("MultiplayerLobbyManager")
+metadata/_custom_type_script = "uid://c3yabfbvm8gyo"
 
-[connection signal="transferStats" from="." to="TestAttackMove1" method="_on_test_character_transfer_stats"]
+[node name="MultiplayerLobbyManager" type="MultiplayerSpawner" parent="MultiplayerNetwork/Client" unique_id=953236085 node_paths=PackedStringArray("tp_layer")]
+_spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr")
+spawn_path = NodePath(".")
+script = ExtResource("5_xc8cl")
+tp_layer = NodePath("TPLayer")
+metadata/_custom_type_script = "uid://lb7h272e5fhb"
+
+[node name="TPLayer" parent="MultiplayerNetwork/Client/MultiplayerLobbyManager" unique_id=1002194750 instance=ExtResource("6_f7egp")]
+
+[node name="Connect To Server" parent="." unique_id=628941669 instance=ExtResource("7_akpqa")]
+player_scene = "uid://bxpx2n4hugojx"
+
+[connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
+[connection signal="connect_player" from="Connect To Server" to="MultiplayerNetwork" method="connect_player"]

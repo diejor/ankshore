@@ -1,6 +1,6 @@
 extends Button
 
-@export var network: Network
+@export var network: MultiplayerNetwork
 @export_file var player_scene: String
 
 @onready var play_game: Label = $PlayGame
@@ -17,9 +17,8 @@ var username: String:
 		return username
 
 func _on_pressed() -> void:
-	var client_data: ClientData = ClientData.new()
+	var client_data := MultiplayerClientData.new()
 	client_data.username = username
 	client_data.scene_path = player_scene
 	
-	network.configure(client_data)
-	get_tree().change_scene_to_node.call_deferred(network)
+	network.connect_player(client_data)
