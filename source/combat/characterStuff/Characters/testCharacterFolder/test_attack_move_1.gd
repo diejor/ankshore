@@ -1,14 +1,14 @@
-extends Node
+extends charAttack
 
 @export var baseMove: Resource = preload("res://source/combat/characterStuff/anatomy/charAttack.gd")
 
 var baseMoveDmg = 10
 var dmgAdder = 0
 
-var testParent = get_parent()
+#var testParent = get_parent()
 
-@onready var test2 = get_parent().testTransfer
-
+#@onready var test2 = get_parent().testTransfer
+#^^^^ tf?????
 
 func _init() -> void:
 	pass

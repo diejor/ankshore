@@ -7,6 +7,7 @@ class_name testCharacter extends Node2D
 
 #fuck
 var moveList: Array[charAction] = []
+#have set of moves instatiated here
 #moveList.push_front(test_attack_move_1) #doesnt work
 
 signal health_depleted
@@ -33,6 +34,11 @@ func takeDmg(rawDamage: int, blocked: bool) -> void:
 	
 	pass
 	
+func blockingChance() -> void: #???
+	pass
+
+
+
 ###other
 func _ready() -> void:
 	transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
