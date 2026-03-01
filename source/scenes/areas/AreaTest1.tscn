@@ -37,7 +37,7 @@ position = Vector2(280, 136)
 scene_path = "uid://xkil2cmplfcd"
 target_tp_id = "AreaTPWinter"
 
-[node name="Sprite2D" type="Sprite2D" parent="HighGround/AreaTP1" unique_id=1701253479]
+[node name="Sprite2D2" type="Sprite2D" parent="HighGround/AreaTP1" unique_id=1701253479]
 texture = SubResource("AtlasTexture_msqkd")
 
 [node name="ZBrolyNPC" parent="." unique_id=1322858650 instance=ExtResource("4_adjto")]
