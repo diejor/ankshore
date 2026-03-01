@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://16dok1pv4kkv" path="res://source/combat/ally_team.gd" id="3_kadmy"]
 [ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="4_pad4c"]
 [ext_resource type="Script" uid="uid://cghmnddt68tth" path="res://source/combat/enemy_team.gd" id="5_g6unm"]
+[ext_resource type="Script" uid="uid://dhjjyyacsq0l6" path="res://addons/networked/components/debug/ui/debug_label.gd" id="6_yna4e"]
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_1axjk")
@@ -21,7 +22,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="TextureRect" type="TextureRect" parent="Control" unique_id=1518636395]
+[node name="Background" type="TextureRect" parent="Control" unique_id=1518636395]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -34,18 +35,49 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_4m4xd")
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
-visible = false
+[node name="TurnLabel" type="Label" parent="Control" unique_id=350854843]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = -108.0
+offset_top = -244.0
+offset_right = 131.0
+offset_bottom = -199.0
+theme_override_font_sizes/font_size = 32
+text = "Turn: Ally Team"
+script = ExtResource("6_yna4e")
+metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
-[node name="AllyTeam" type="Node" parent="." unique_id=2125211180]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
+
+[node name="AllyTeam" type="Node2D" parent="." unique_id=2087230887]
+position = Vector2(-367, 8)
 script = ExtResource("3_kadmy")
 
 [node name="testCharacter" parent="AllyTeam" unique_id=867888316 instance=ExtResource("4_pad4c")]
 
-[node name="EnemyTeam" type="Node" parent="." unique_id=1825500626]
+[node name="DebugLabel" type="Label" parent="AllyTeam" unique_id=2005404988]
+offset_left = 9.0
+offset_top = -153.0
+offset_right = 93.0
+offset_bottom = -130.0
+text = "Ally Team"
+script = ExtResource("6_yna4e")
+metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
+
+[node name="EnemyTeam" type="Node2D" parent="." unique_id=50320470]
+position = Vector2(348, 27)
 script = ExtResource("5_g6unm")
 
 [node name="testCharacter2" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("4_pad4c")]
+
+[node name="DebugLabel" type="Label" parent="EnemyTeam" unique_id=643452884]
+offset_left = -36.0
+offset_top = -157.0
+offset_right = 64.0
+offset_bottom = -134.0
+text = "Enemy Team"
+script = ExtResource("6_yna4e")
+metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
 [connection signal="matchStart" from="TurnManager" to="." method="_on_turn_manager_match_start"]
 [connection signal="turnEnded" from="TurnManager" to="." method="_on_turn_manager_turn_ended"]

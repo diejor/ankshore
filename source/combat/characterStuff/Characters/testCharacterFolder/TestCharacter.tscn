@@ -1,16 +1,19 @@
 [gd_scene format=3 uid="uid://dro050gfjn0ih"]
 
 [ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7uwtj"]
-[ext_resource type="Script" uid="uid://djn27uduf3ami" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_attack_move_1.gd" id="3_i0f4w"]
+[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="2_7hw02"]
+[ext_resource type="Script" uid="uid://dusoo1uvlltvt" path="res://source/combat/characterStuff/anatomy/charAttack.gd" id="2_bqoor"]
+[ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="2_i0f4w"]
+[ext_resource type="Script" uid="uid://c8rohd0cygvym" path="res://source/combat/characterStuff/anatomy/charStats.gd" id="3_7hw02"]
+
+[sub_resource type="Resource" id="Resource_2wkij"]
+script = ExtResource("2_bqoor")
+metadata/_custom_type_script = "uid://dusoo1uvlltvt"
 
 [node name="testCharacter" type="Node2D" unique_id=867888316]
 script = ExtResource("1_7uwtj")
+moveList = Array[ExtResource("2_7hw02")]([SubResource("Resource_2wkij"), null])
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
-
-[node name="TestAttackMove1" type="Node" parent="." unique_id=2983615]
-script = ExtResource("3_i0f4w")
-
-[node name="TestEmptyMove1" type="Node" parent="." unique_id=844174307]
-
-[connection signal="transferStats" from="." to="TestAttackMove1" method="_on_test_character_transfer_stats"]
+scale = Vector2(0.50268096, 0.50268096)
+texture = ExtResource("2_i0f4w")
