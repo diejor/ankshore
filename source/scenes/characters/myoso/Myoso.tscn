@@ -25,7 +25,7 @@ properties/2/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3el0l"]
 
-[sub_resource type="Resource" id="Resource_y8aqg"]
+[sub_resource type="Resource" id="Resource_1j2t1"]
 resource_local_to_scene = true
 script = ExtResource("8_xdvvs")
 metadata/_custom_type_script = "uid://d1mnum02gn0c0"
@@ -40,7 +40,6 @@ script = ExtResource("1_jpx56")
 sprint_speed = 96.0
 
 [node name="StateSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1010839060 node_paths=PackedStringArray("spawn_sync")]
-unique_name_in_owner = true
 replication_config = SubResource("SceneReplicationConfig_m41ox")
 visibility_update_mode = 2
 script = ExtResource("2_1j2t1")
@@ -56,6 +55,7 @@ metadata/_custom_type_script = "uid://dto01lioh1gb3"
 
 [node name="ClientComponent" parent="." unique_id=1537594692 instance=ExtResource("4_1j2t1")]
 unique_name_in_owner = true
+username = null
 
 [node name="DebugClientLabel" parent="ClientComponent" index="0" unique_id=530562393]
 offset_top = -69.0
@@ -65,7 +65,7 @@ scale = Vector2(0.15, 0.15)
 [node name="SaveComponent" parent="." unique_id=1265632519 instance=ExtResource("6_7n34x")]
 unique_name_in_owner = true
 save_extension = ".tdict"
-save_container = SubResource("Resource_y8aqg")
+save_container = SubResource("Resource_1j2t1")
 
 [node name="InputComponent" type="Node" parent="." unique_id=813433517]
 unique_name_in_owner = true
