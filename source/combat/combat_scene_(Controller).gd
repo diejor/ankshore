@@ -19,13 +19,13 @@ func testInteraction() -> void:
 
 
 
-func _on_turn_manager_turn_ended() -> void:
+func _on_turn_manager_turn_ended(_team: turnManager.Team) -> void:
 	pass # Replace with function body.
 
 
-func _on_turn_manager_match_start() -> void:
+func _on_turn_manager_match_start(_team: turnManager.Team) -> void:
 	pass # Replace with function body.
 
 
-func _on_turn_manager_turn_start() -> void:
+func _on_turn_manager_turn_start(_team: turnManager.Team) -> void:
 	pass # Replace with function body.

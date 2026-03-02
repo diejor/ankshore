@@ -78,14 +78,11 @@ script = ExtResource("3_kadmy")
 [node name="DebugLabel" type="Label" parent="AllyTeam" unique_id=2005404988]
 offset_left = 9.0
 offset_top = -153.0
-offset_right = 93.0
+offset_right = 85.0
 offset_bottom = -130.0
 text = "Ally Team"
 script = ExtResource("6_yna4e")
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
-
-[node name="Marker2D" type="Marker2D" parent="AllyTeam" unique_id=722793649]
-position = Vector2(-8, 142)
 
 [node name="EnemyTeam" type="Node2D" parent="." unique_id=50320470]
 position = Vector2(348, 27)

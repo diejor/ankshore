@@ -1,17 +1,15 @@
 class_name turnManager extends Node
-@warning_ignore("unused_signal")
-signal turnEnded(team: Teams)
-@warning_ignore("unused_signal")
-signal turnStart(team: Teams)
-@warning_ignore("unused_signal")
-signal matchStart(team: Teams)
 
-enum Teams {
+signal turnEnded(team: Team)
+signal turnStart(team: Team)
+signal matchStart(team: Team)
+
+enum Team {
 	Ally,
 	Enemy
 }
 
-var current_team: Teams = Teams.Ally
+var current_team: Team = Team.Ally
 
 @onready var turn_label: DebugLabel = %TurnLabel
 @onready var turn_timer: Timer = %TurnTimer
@@ -25,9 +23,9 @@ func _ready() -> void:
 func update_turn_label() -> void:
 	var team_string: String
 	
-	if current_team == Teams.Ally:
+	if current_team == Team.Ally:
 		team_string = "Ally"
-	elif current_team == Teams.Enemy:
+	elif current_team == Team.Enemy:
 		team_string = "Enemy"
 	
 	turn_label.text = "Turn: %s" % team_string
@@ -45,10 +43,10 @@ func update_timer_label() -> void:
 func next_turn() -> void:
 	turnEnded.emit(current_team)
 	
-	if current_team == Teams.Ally:
-		current_team = Teams.Enemy
-	elif current_team == Teams.Enemy:
-		current_team = Teams.Ally
+	if current_team == Team.Ally:
+		current_team = Team.Enemy
+	elif current_team == Team.Enemy:
+		current_team = Team.Ally
 	
 	turnStart.emit(current_team)
 	update_turn_label()
@@ -58,7 +56,7 @@ func _on_seconds_beat() -> void:
 	update_timer_label()
 
 
-func _on_turn_start(_team: turnManager.Teams) -> void:
+func _on_turn_start(_team: turnManager.Team) -> void:
 	turn_timer.start()
 
 
