@@ -11,22 +11,15 @@
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_1axjk")
 
-[node name="TurnManager" type="Node" parent="." unique_id=1147908716]
-script = ExtResource("2_g6unm")
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1190960819]
+layer = -1
 
-[node name="Control" type="Control" parent="." unique_id=957020404]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Background" type="TextureRect" parent="Control" unique_id=1518636395]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+[node name="Background" type="TextureRect" parent="CanvasLayer" unique_id=1518636395]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 offset_left = -750.0
 offset_top = -422.0
 offset_right = 750.0
@@ -35,17 +28,44 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_4m4xd")
 
-[node name="TurnLabel" type="Label" parent="Control" unique_id=350854843]
+[node name="TurnLabel" type="Label" parent="CanvasLayer" unique_id=350854843]
 unique_name_in_owner = true
-layout_mode = 0
-offset_left = -108.0
-offset_top = -244.0
-offset_right = 131.0
-offset_bottom = -199.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -84.0
+offset_top = 49.0
+offset_right = 155.0
+offset_bottom = 94.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 32
-text = "Turn: Ally Team"
+text = "Turn: Ally"
 script = ExtResource("6_yna4e")
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
+
+[node name="TurnTimerLabel" type="Label" parent="CanvasLayer" unique_id=1425836954]
+unique_name_in_owner = true
+offset_left = 49.0
+offset_top = 45.0
+offset_right = 262.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 32
+text = "Time Left: 10s"
+script = ExtResource("6_yna4e")
+metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
+
+[node name="TurnTimer" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=2071835503]
+unique_name_in_owner = true
+wait_time = 10.0
+autostart = true
+
+[node name="SecondsBeat" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=1718539369]
+unique_name_in_owner = true
+process_callback = 0
+autostart = true
+
+[node name="TurnManager" type="Node" parent="." unique_id=1147908716]
+script = ExtResource("2_g6unm")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
@@ -64,6 +84,9 @@ text = "Ally Team"
 script = ExtResource("6_yna4e")
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
+[node name="Marker2D" type="Marker2D" parent="AllyTeam" unique_id=722793649]
+position = Vector2(-8, 142)
+
 [node name="EnemyTeam" type="Node2D" parent="." unique_id=50320470]
 position = Vector2(348, 27)
 script = ExtResource("5_g6unm")
@@ -79,7 +102,10 @@ text = "Enemy Team"
 script = ExtResource("6_yna4e")
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
+[connection signal="timeout" from="CanvasLayer/TurnTimerLabel/TurnTimer" to="TurnManager" method="_on_turn_timer_timeout"]
+[connection signal="timeout" from="CanvasLayer/TurnTimerLabel/SecondsBeat" to="TurnManager" method="_on_seconds_beat"]
 [connection signal="matchStart" from="TurnManager" to="." method="_on_turn_manager_match_start"]
 [connection signal="turnEnded" from="TurnManager" to="." method="_on_turn_manager_turn_ended"]
 [connection signal="turnStart" from="TurnManager" to="." method="_on_turn_manager_turn_start"]
+[connection signal="turnStart" from="TurnManager" to="TurnManager" method="_on_turn_start"]
 [connection signal="health_depleted" from="AllyTeam/testCharacter" to="AllyTeam" method="_on_test_character_health_depleted"]
