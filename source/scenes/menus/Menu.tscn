@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="Script" uid="uid://xwxgwpe3rp8c" path="res://addons/networked/core/network/network.gd" id="2_88ca0"]
 [ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/core/peer/multiplayer_tree.gd" id="3_1iwnb"]
-[ext_resource type="Script" uid="uid://dqd358q7xpmeq" path="res://addons/networked/core/peer/backends/enet.gd" id="4_akpqa"]
+[ext_resource type="Script" uid="uid://cgyucu72xh732" path="res://addons/networked/core/peer/backends/websocket.gd" id="4_akpqa"]
 [ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/components/lobby/lobby_manager.gd" id="5_xc8cl"]
 [ext_resource type="PackedScene" uid="uid://bs4ebh48fcoxt" path="res://addons/networked/components/tp/TPLayer.tscn" id="6_f7egp"]
 [ext_resource type="PackedScene" uid="uid://4rqj7gr6xifw" path="res://addons/networked/core/peer/client/ConnectToServer.tscn" id="7_akpqa"]
@@ -12,7 +12,7 @@
 
 [sub_resource type="Resource" id="Resource_pulmy"]
 script = ExtResource("4_akpqa")
-metadata/_custom_type_script = "uid://dqd358q7xpmeq"
+metadata/_custom_type_script = "uid://cgyucu72xh732"
 
 [node name="Control" type="CanvasLayer" unique_id=2144035492]
 
