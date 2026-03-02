@@ -55,7 +55,6 @@ metadata/_custom_type_script = "uid://dto01lioh1gb3"
 
 [node name="ClientComponent" parent="." unique_id=1537594692 instance=ExtResource("4_1j2t1")]
 unique_name_in_owner = true
-username = null
 
 [node name="DebugClientLabel" parent="ClientComponent" index="0" unique_id=530562393]
 offset_top = -69.0
