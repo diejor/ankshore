@@ -4,9 +4,33 @@
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="1_4m4xd"]
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/turn_manager.gd" id="2_g6unm"]
 [ext_resource type="Script" uid="uid://16dok1pv4kkv" path="res://source/combat/ally_team.gd" id="3_kadmy"]
+[ext_resource type="Script" uid="uid://dym7b2y2anpw1" path="res://source/combat/Components/CountDown/countdown.gd" id="4_d17co"]
 [ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="4_pad4c"]
 [ext_resource type="Script" uid="uid://cghmnddt68tth" path="res://source/combat/enemy_team.gd" id="5_g6unm"]
 [ext_resource type="Script" uid="uid://dhjjyyacsq0l6" path="res://addons/networked/components/debug/ui/debug_label.gd" id="6_yna4e"]
+
+[sub_resource type="GDScript" id="GDScript_xf5m4"]
+script/source = "extends Label
+
+func update_turn_label(team: turnManager.Team) -> void:
+	var team_string: String
+	
+	if team == turnManager.Team.Ally:
+		team_string = \"Ally\"
+	elif team == turnManager.Team.Enemy:
+		team_string = \"Enemy\"
+	
+	text = \"Turn: %s\" % team_string
+"
+
+[sub_resource type="GDScript" id="GDScript_d17co"]
+script/source = "extends Label
+
+
+
+func _on_count_down_frame(time_left: float) -> void:
+	text = \"Time Left: %ss\" % str(int(time_left))
+"
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_1axjk")
@@ -28,7 +52,7 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("1_4m4xd")
 
-[node name="TurnLabel" type="Label" parent="CanvasLayer" unique_id=350854843]
+[node name="TurnLabel" type="Label" parent="CanvasLayer" unique_id=1191763933]
 unique_name_in_owner = true
 anchors_preset = 5
 anchor_left = 0.5
@@ -40,10 +64,9 @@ offset_bottom = 94.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 32
 text = "Turn: Ally"
-script = ExtResource("6_yna4e")
-metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
+script = SubResource("GDScript_xf5m4")
 
-[node name="TurnTimerLabel" type="Label" parent="CanvasLayer" unique_id=1425836954]
+[node name="TurnTimerLabel" type="Label" parent="CanvasLayer" unique_id=1621586334]
 unique_name_in_owner = true
 offset_left = 49.0
 offset_top = 45.0
@@ -51,21 +74,20 @@ offset_right = 262.0
 offset_bottom = 90.0
 theme_override_font_sizes/font_size = 32
 text = "Time Left: 10s"
-script = ExtResource("6_yna4e")
-metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
-
-[node name="TurnTimer" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=2071835503]
-unique_name_in_owner = true
-wait_time = 10.0
-autostart = true
-
-[node name="SecondsBeat" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=1718539369]
-unique_name_in_owner = true
-process_callback = 0
-autostart = true
+script = SubResource("GDScript_d17co")
 
 [node name="TurnManager" type="Node" parent="." unique_id=1147908716]
 script = ExtResource("2_g6unm")
+
+[node name="CountDown" type="Node" parent="TurnManager" unique_id=1971742610 node_paths=PackedStringArray("turn_timer")]
+script = ExtResource("4_d17co")
+turn_timer = NodePath("TurnTimer")
+metadata/_custom_type_script = "uid://dym7b2y2anpw1"
+
+[node name="TurnTimer" type="Timer" parent="TurnManager/CountDown" unique_id=1072356144]
+unique_name_in_owner = true
+wait_time = 10.0
+autostart = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
@@ -99,10 +121,11 @@ text = "Enemy Team"
 script = ExtResource("6_yna4e")
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
-[connection signal="timeout" from="CanvasLayer/TurnTimerLabel/TurnTimer" to="TurnManager" method="_on_turn_timer_timeout"]
-[connection signal="timeout" from="CanvasLayer/TurnTimerLabel/SecondsBeat" to="TurnManager" method="_on_seconds_beat"]
 [connection signal="matchStart" from="TurnManager" to="." method="_on_turn_manager_match_start"]
 [connection signal="turnEnded" from="TurnManager" to="." method="_on_turn_manager_turn_ended"]
 [connection signal="turnStart" from="TurnManager" to="." method="_on_turn_manager_turn_start"]
-[connection signal="turnStart" from="TurnManager" to="TurnManager" method="_on_turn_start"]
+[connection signal="turnStart" from="TurnManager" to="CanvasLayer/TurnLabel" method="update_turn_label"]
+[connection signal="turnStart" from="TurnManager" to="TurnManager/CountDown" method="start" unbinds=1]
+[connection signal="frame" from="TurnManager/CountDown" to="CanvasLayer/TurnTimerLabel" method="_on_count_down_frame"]
+[connection signal="timeout" from="TurnManager/CountDown" to="TurnManager" method="_on_turn_timer_timeout"]
 [connection signal="health_depleted" from="AllyTeam/testCharacter" to="AllyTeam" method="_on_test_character_health_depleted"]

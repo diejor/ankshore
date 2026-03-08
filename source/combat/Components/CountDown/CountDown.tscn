@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dipe1lbo235jd"]
+
+[ext_resource type="Script" uid="uid://dym7b2y2anpw1" path="res://source/combat/Components/CountDown/countdown.gd" id="1_m0m4b"]
+
+[node name="CountDownController" type="Control" unique_id=947122161]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_m0m4b")
