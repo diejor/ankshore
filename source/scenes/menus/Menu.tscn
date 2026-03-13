@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
-[ext_resource type="Script" uid="uid://xwxgwpe3rp8c" path="res://addons/networked/core/network/network.gd" id="2_88ca0"]
-[ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/core/peer/multiplayer_tree.gd" id="3_1iwnb"]
-[ext_resource type="Script" uid="uid://cuy32orx2wjfo" path="res://addons/networked/core/peer/backends/tube/tube_backend.gd" id="4_evmps"]
+[ext_resource type="Script" uid="uid://xwxgwpe3rp8c" path="res://addons/networked/core/network.gd" id="2_88ca0"]
+[ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/core/multiplayer_tree.gd" id="3_1iwnb"]
+[ext_resource type="Script" uid="uid://lcvr56cpru8b" path="res://addons/networked/core/backends/tube/tube_backend.gd" id="4_evmps"]
 [ext_resource type="Script" uid="uid://cy006uvidc4y" path="res://addons/tube/tube_client.gd" id="5_evmps"]
-[ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/components/lobby/lobby_manager.gd" id="5_xc8cl"]
+[ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/core/lobby/lobby_manager.gd" id="5_xc8cl"]
 [ext_resource type="PackedScene" uid="uid://vj1s4e7rbmsn" path="res://addons/networked/components/tp/TPLayer.tscn" id="6_f7egp"]
 [ext_resource type="Script" uid="uid://t4pe7yqc3pnt" path="res://addons/tube/tube_context.gd" id="6_ut644"]
-[ext_resource type="PackedScene" uid="uid://4rqj7gr6xifw" path="res://addons/networked/core/peer/client/ConnectToServer.tscn" id="7_akpqa"]
+[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://addons/networked/components/client/ConnectServerUI.tscn" id="9_evmps"]
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 
@@ -85,12 +85,10 @@ _spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr
 spawn_path = NodePath(".")
 script = ExtResource("5_xc8cl")
 tp_layer = NodePath("TPLayer")
-metadata/_custom_type_script = "uid://lb7h272e5fhb"
 
 [node name="TPLayer" parent="MultiplayerNetwork/Client/MultiplayerLobbyManager" unique_id=1002194750 instance=ExtResource("6_f7egp")]
 
-[node name="Connect To Server" parent="." unique_id=628941669 instance=ExtResource("7_akpqa")]
-player_scene = "uid://bxpx2n4hugojx"
+[node name="ConnectServerUI" parent="." unique_id=99213129 instance=ExtResource("9_evmps")]
 
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
-[connection signal="connect_player" from="Connect To Server" to="MultiplayerNetwork" method="connect_player"]
+[connection signal="connect_player" from="ConnectServerUI" to="MultiplayerNetwork" method="connect_player"]
