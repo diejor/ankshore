@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bxpx2n4hugojx"]
 
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
-[ext_resource type="Resource" uid="uid://bueemf6fbwhei" path="res://addons/networked/components/input/move_actions.tres" id="2_a6gmg"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://addons/networked/components/tp/tp_component.gd" id="2_ko57k"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
+[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/scene_node_path.gd" id="3_wwq54"]
 [ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://addons/networked/components/client/ClientComponent.tscn" id="4_1j2t1"]
 [ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://addons/networked/components/persistent/SaveComponent.tscn" id="6_7n34x"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://addons/networked/components/persistent/dictionary_save.gd" id="8_xdvvs"]
@@ -22,6 +22,11 @@ properties/2/spawn = true
 properties/2/replication_mode = 2
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_m41ox"]
+
+[sub_resource type="Resource" id="Resource_m41ox"]
+script = ExtResource("3_wwq54")
+scene_path = "uid://xkil2cmplfcd"
+node_path = "%Myoso/%ClientComponent"
 
 [sub_resource type="Resource" id="Resource_wwq54"]
 resource_local_to_scene = true
@@ -51,6 +56,9 @@ offset_top = -69.0
 offset_bottom = -20.0
 scale = Vector2(0.15, 0.15)
 
+[node name="ConnectServerUI" parent="ClientComponent" index="2" unique_id=685856177]
+spawner_node = SubResource("Resource_m41ox")
+
 [node name="TPComponent" type="Node" parent="." unique_id=479005211]
 unique_name_in_owner = true
 script = ExtResource("2_ko57k")
@@ -64,7 +72,6 @@ save_container = SubResource("Resource_wwq54")
 [node name="InputComponent" type="Node" parent="." unique_id=813433517]
 unique_name_in_owner = true
 script = ExtResource("9_7n34x")
-_actions = ExtResource("2_a6gmg")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1730210634]
 position = Vector2(7.748604e-07, -12.999999)

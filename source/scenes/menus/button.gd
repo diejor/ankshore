@@ -1,7 +1,8 @@
 extends Button
 
 @export var network: MultiplayerNetwork
-@export_file var player_scene: String
+@export_custom(PROPERTY_HINT_RESOURCE_TYPE, "SceneNodePath:ClientComponent")
+var spawner_path: SceneNodePath
 
 @onready var play_game: Label = $PlayGame
 @onready var username_edit: LineEdit = %UsernameEdit
@@ -19,6 +20,6 @@ var username: String:
 func _on_pressed() -> void:
 	var client_data := MultiplayerClientData.new()
 	client_data.username = username
-	client_data.scene_path = player_scene
+	client_data.spawner_path = spawner_path
 	
 	network.connect_player(client_data)

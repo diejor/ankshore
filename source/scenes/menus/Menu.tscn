@@ -3,23 +3,27 @@
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="Script" uid="uid://xwxgwpe3rp8c" path="res://addons/networked/core/network.gd" id="2_88ca0"]
 [ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/core/multiplayer_tree.gd" id="3_1iwnb"]
-[ext_resource type="Script" uid="uid://lcvr56cpru8b" path="res://addons/networked/core/backends/tube/tube_backend.gd" id="4_evmps"]
-[ext_resource type="Script" uid="uid://cy006uvidc4y" path="res://addons/tube/tube_client.gd" id="5_evmps"]
+[ext_resource type="Script" uid="uid://cgyucu72xh732" path="res://addons/networked/core/backends/websocket_backend.gd" id="5_pulmy"]
 [ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/core/lobby/lobby_manager.gd" id="5_xc8cl"]
 [ext_resource type="PackedScene" uid="uid://vj1s4e7rbmsn" path="res://addons/networked/components/tp/TPLayer.tscn" id="6_f7egp"]
-[ext_resource type="Script" uid="uid://t4pe7yqc3pnt" path="res://addons/tube/tube_context.gd" id="6_ut644"]
+[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/scene_node_path.gd" id="8_pulmy"]
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://addons/networked/components/client/ConnectServerUI.tscn" id="9_evmps"]
+
+[sub_resource type="Resource" id="Resource_pulmy"]
+script = ExtResource("8_pulmy")
+scene_path = "uid://xkil2cmplfcd"
+node_path = "%Myoso/%ClientComponent"
 
 [sub_resource type="Theme" id="Theme_5yleq"]
 
 [sub_resource type="Resource" id="Resource_6rjpa"]
-script = ExtResource("4_evmps")
-tube_client_path = NodePath("TubeClient")
+script = ExtResource("5_pulmy")
+metadata/_custom_type_script = "uid://cgyucu72xh732"
 
-[sub_resource type="Resource" id="Resource_ocmta"]
-script = ExtResource("6_ut644")
-app_id = "Q)5w}%0T)_R3n$}"
-metadata/_custom_type_script = "uid://t4pe7yqc3pnt"
+[sub_resource type="Resource" id="Resource_evmps"]
+script = ExtResource("8_pulmy")
+scene_path = "uid://xkil2cmplfcd"
+node_path = "%Myoso/%ClientComponent"
 
 [node name="Control" type="CanvasLayer" unique_id=2144035492]
 
@@ -30,7 +34,7 @@ offset_right = 724.0
 offset_bottom = 437.0
 script = ExtResource("1_uubjt")
 network = NodePath("../MultiplayerNetwork")
-player_scene = "uid://bxpx2n4hugojx"
+spawner_path = SubResource("Resource_pulmy")
 
 [node name="PlayGame" type="Label" parent="Button" unique_id=1431192076]
 layout_mode = 1
@@ -75,11 +79,6 @@ backend = SubResource("Resource_6rjpa")
 lobby_manager = NodePath("MultiplayerLobbyManager")
 metadata/_custom_type_script = "uid://c3yabfbvm8gyo"
 
-[node name="TubeClient" type="Node" parent="MultiplayerNetwork/Client" unique_id=428156969]
-script = ExtResource("5_evmps")
-context = SubResource("Resource_ocmta")
-metadata/_custom_type_script = "uid://cy006uvidc4y"
-
 [node name="MultiplayerLobbyManager" type="MultiplayerSpawner" parent="MultiplayerNetwork/Client" unique_id=953236085 node_paths=PackedStringArray("tp_layer")]
 _spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr")
 spawn_path = NodePath(".")
@@ -89,6 +88,7 @@ tp_layer = NodePath("TPLayer")
 [node name="TPLayer" parent="MultiplayerNetwork/Client/MultiplayerLobbyManager" unique_id=1002194750 instance=ExtResource("6_f7egp")]
 
 [node name="ConnectServerUI" parent="." unique_id=99213129 instance=ExtResource("9_evmps")]
+spawner_node = SubResource("Resource_evmps")
 
 [connection signal="pressed" from="Button" to="Button" method="_on_pressed"]
 [connection signal="connect_player" from="ConnectServerUI" to="MultiplayerNetwork" method="connect_player"]
