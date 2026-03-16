@@ -94,7 +94,7 @@ naming/scene_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/scene_node_path/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/tube/plugin.cfg")
 
 [file_customization]
 
