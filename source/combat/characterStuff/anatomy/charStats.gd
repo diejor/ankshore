@@ -38,12 +38,7 @@ var defense := 50
 var blockingDefense := 70
 var courage := 50 
 
-#health
-#damageStat
-#will
-#defense 
-#blockingDefense
-#courage
+
 
 
 #assigning functions----------------------------
@@ -59,7 +54,11 @@ func set_health(newHealth: int) -> void:
 	health = newHealth
 	
 
+func statsBuffer() -> void:
+	pass
 
+func statsDebuffer() -> void:
+	pass
 #used after buffs, debuffs, whenever necessary
 func recalculateStats()-> void:
 	

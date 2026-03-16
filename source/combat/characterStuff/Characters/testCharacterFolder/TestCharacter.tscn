@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dro050gfjn0ih"]
 
-[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7uwtj"]
-[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="2_7hw02"]
-[ext_resource type="Script" uid="uid://dusoo1uvlltvt" path="res://source/combat/characterStuff/anatomy/charAttack.gd" id="2_bqoor"]
+[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/CharacterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7uwtj"]
+[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/CharacterStuff/anatomy/charAction.gd" id="2_7hw02"]
+[ext_resource type="Script" uid="uid://dusoo1uvlltvt" path="res://source/combat/CharacterStuff/anatomy/charAttack.gd" id="2_bqoor"]
 [ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="2_i0f4w"]
-[ext_resource type="Script" uid="uid://c8rohd0cygvym" path="res://source/combat/characterStuff/anatomy/charStats.gd" id="3_7hw02"]
+[ext_resource type="Script" uid="uid://c8rohd0cygvym" path="res://source/combat/CharacterStuff/anatomy/charStats.gd" id="3_7hw02"]
 
 [sub_resource type="Resource" id="Resource_2wkij"]
 script = ExtResource("2_bqoor")
