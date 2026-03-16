@@ -1,1 +1,1 @@
-class_name enemyTeam extends Node
+class_name enemyTeam extends TeamManager

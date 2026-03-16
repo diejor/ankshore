@@ -1,6 +1,4 @@
-class_name allyTeam extends Node
-
-
+class_name allyTeam extends TeamManager
 
 #have to test different characters with this signal
 func _on_test_character_health_depleted() -> void:

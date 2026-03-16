@@ -6,6 +6,9 @@ class_name charStats
 signal health_depleted #decomissioned char
 signal health_changed(health: int, max_health: int) #tells current health change
 
+var buffsHolder: Array[baseBuff]
+var stats: baseBuff.Stats = baseBuff.Stats.HEALTH
+
 #base_ stuff-----------------------------------------------
 #some characters may change max health
 @export var level = 1
@@ -31,10 +34,19 @@ var current_blockingDefense := 70
 var current_courage := 50 
 
 #actual stuff----------------------------------
-var health := 500
-var damageStat := 10
+enum Stats{
+	HEALTH,
+	DAMAGESTAT,
+	WILL,
+	DEFENSE,
+	BLOCKINGDEFENSE,
+	COURAGE,
+}
+
+var health := 500 #HEALTH
+var damageStat := 10 #1
 var will := 100 
-var defense := 50
+var defense := 50 
 var blockingDefense := 70
 var courage := 50 
 
@@ -60,10 +72,23 @@ func statsBuffer() -> void:
 func statsDebuffer() -> void:
 	pass
 #used after buffs, debuffs, whenever necessary
+
+
+
 func recalculateStats()-> void:
-	
+	for buff in buffsHolder:
+		print("hello")
+		#if(buff.turn = 0){
+			#
+		#}
+		buff.get
 	
 	pass
+
+
+
+
+
 
 #other/gameplay functions (?)---------------------------
 func change_health(changeValue: int) -> void: #damage is negative | health is positive

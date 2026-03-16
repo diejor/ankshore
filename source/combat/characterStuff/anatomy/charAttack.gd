@@ -12,9 +12,9 @@ var baseAttackDmg = 10
 #var directionAtk = 0; # 0 = overhead/low || 1 = left/right
 
 
-func recalculateStats(buff: int):
-	baseAttackDmg += buff
-	pass
+#func recalculateStats(buff: int):
+	#baseAttackDmg += buff
+	#pass
 
 func attack() -> int:
 	return baseAttackDmg

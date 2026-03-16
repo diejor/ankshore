@@ -1,16 +1,12 @@
 class_name turnManager extends Node
 
-signal turnEnded(team: Team)
-signal turnStart(team: Team)
-signal matchStart(team: Team)
-
-enum Team {
-	Ally,
-	Enemy
-}
+signal turnEnded(team: TeamManager.Team)
+signal turnStart(team: TeamManager.Team)
+signal matchStart(team: TeamManager.Team)
 
 
-var current_team: Team = Team.Ally:
+
+var current_team: TeamManager.Team = TeamManager.Team.Ally:
 	set(team):
 		current_team = team
 
@@ -28,10 +24,10 @@ func _process(_delta: float) -> void:
 func next_turn() -> void:
 	turnEnded.emit(current_team)
 	
-	if current_team == Team.Ally:
-		current_team = Team.Enemy
-	elif current_team == Team.Enemy:
-		current_team = Team.Ally
+	if current_team == TeamManager.Team.Ally:
+		current_team = TeamManager.Team.Enemy
+	elif current_team == TeamManager.Team.Enemy:
+		current_team = TeamManager.Team.Ally
 	
 	turnStart.emit(current_team)
 

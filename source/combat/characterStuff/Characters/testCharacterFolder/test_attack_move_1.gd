@@ -1,7 +1,5 @@
 extends charAttack
-
-@export var baseMove: Resource = preload("res://source/combat/characterStuff/anatomy/charAttack.gd")
-
+ 
 var baseMoveDmg = 10
 var dmgAdder = 0
 
