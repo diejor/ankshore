@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://dblrpix74ip0"]
+
+[ext_resource type="Script" uid="uid://dpokufhqiu4rj" path="res://addons/networked/components/tp/area_tp.gd" id="1_c607x"]
+[ext_resource type="Script" uid="uid://dhjjyyacsq0l6" path="res://addons/networked/components/debug/ui/debug_label.gd" id="4_60m10"]
+[ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://source/scenes/areas/assets/seasonal sample (winter).png" id="4_c607x"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qeccu"]
+size = Vector2(32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r1dxi"]
+atlas = ExtResource("4_c607x")
+region = Rect2(176, 112, 80, 80)
+
+[sub_resource type="GDScript" id="GDScript_ffavr"]
+script/source = "@tool
+extends Node
+
+@onready var area_tp: AreaTP = $\"../..\"
+@onready var debug_label: DebugLabel = $\"..\"
+
+func _ready() -> void:
+	if not (area_tp.target_tp and area_tp.target_tp.is_valid()):
+		return
+	
+	var data := {
+		area = area_tp.target_tp.get_scene_name(),
+		id = area_tp.target_tp.get_node_name(1)
+	}
+	debug_label.text = \"scene: {area}
+			tp: {id}\".format(data)
+"
+
+[node name="Teleporter" type="Area2D" unique_id=967989261]
+unique_name_in_owner = true
+y_sort_enabled = true
+script = ExtResource("1_c607x")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=830996858]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_qeccu")
+
+[node name="TPPoint" type="Marker2D" parent="." unique_id=1294329952]
+position = Vector2(21, 32)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=305075863]
+texture = SubResource("AtlasTexture_r1dxi")
+
+[node name="DebugLabel" type="Label" parent="." unique_id=912196744]
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -26.5
+offset_top = -24.5
+offset_right = 26.5
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+text = "scene:
+			tp:"
+script = ExtResource("4_60m10")
+metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
+
+[node name="Node" type="Node" parent="DebugLabel" unique_id=1486846057]
+script = SubResource("GDScript_ffavr")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

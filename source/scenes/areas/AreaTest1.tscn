@@ -1,14 +1,15 @@
 [gd_scene format=4 uid="uid://dta1ona6odgmr"]
 
-[ext_resource type="PackedScene" uid="uid://dfdmdo8f0q07p" path="res://addons/networked/components/tp/AreaTP.tscn" id="1_6x6co"]
 [ext_resource type="TileSet" uid="uid://h637lr7t1rs1" path="res://source/scenes/areas/resources/winter_tileset.tres" id="1_suw44"]
 [ext_resource type="PackedScene" uid="uid://buaphgk2sh8yg" path="res://source/scenes/areas/building_blocks/HighGround.tscn" id="2_xbm22"]
+[ext_resource type="PackedScene" uid="uid://dblrpix74ip0" path="res://source/components/Teleporter.tscn" id="3_adjto"]
 [ext_resource type="PackedScene" uid="uid://ddckx2o2oy5mx" path="res://source/scenes/characters/zBrolyNpcTester/ZBrolyNpc.tscn" id="4_adjto"]
-[ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://source/scenes/areas/assets/seasonal sample (winter).png" id="4_xbm22"]
+[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/scene_node_path.gd" id="4_msqkd"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_msqkd"]
-atlas = ExtResource("4_xbm22")
-region = Rect2(176, 112, 80, 80)
+[sub_resource type="Resource" id="Resource_xbm22"]
+script = ExtResource("4_msqkd")
+scene_path = "uid://xkil2cmplfcd"
+node_path = "%AreaTPWinter/TPPoint"
 
 [node name="AreaTest1" type="Node2D" unique_id=1337225467]
 y_sort_enabled = true
@@ -32,13 +33,10 @@ metadata/_edit_lock_ = true
 
 [node name="HighGround" parent="." unique_id=151401403 instance=ExtResource("2_xbm22")]
 
-[node name="AreaTP1" parent="HighGround" unique_id=1588063590 instance=ExtResource("1_6x6co")]
-position = Vector2(280, 136)
-scene_path = "uid://xkil2cmplfcd"
-target_tp_id = "AreaTPWinter"
-
-[node name="Sprite2D2" type="Sprite2D" parent="HighGround/AreaTP1" unique_id=1701253479]
-texture = SubResource("AtlasTexture_msqkd")
+[node name="AreaTest1TP" parent="." unique_id=967989261 instance=ExtResource("3_adjto")]
+unique_name_in_owner = true
+position = Vector2(280, 248)
+target_tp = SubResource("Resource_xbm22")
 
 [node name="ZBrolyNPC" parent="." unique_id=1322858650 instance=ExtResource("4_adjto")]
 position = Vector2(656, 393.99997)

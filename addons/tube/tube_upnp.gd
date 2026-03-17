@@ -14,7 +14,7 @@ var mapped_ports: Dictionary[int, int] = {}
 var mapped_times: Dictionary[int, float] = {}
 
 var task_ids: Array[int] = []
-var upnp := UPNP.new()
+var upnp: UPNP
 
 var is_port_mapping_ready := false
 var mutex := Mutex.new()
@@ -27,8 +27,11 @@ func raise_warning(message: String):
 
 
 func _init() -> void:
-	if OS.get_name() == "Web":
+	if OS.get_name() == "Web" or OS.has_feature("web"):
+		push_warning("TubeUPNP: Skipping UPNP initialization on Web export.")
 		return
+	
+	upnp = UPNP.new()
 	
 	port_mapping_ready.connect(_on_port_mapping_ready)
 	task_ids.append(WorkerThreadPool.add_task(_upnp_init_task))
