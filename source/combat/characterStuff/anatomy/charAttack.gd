@@ -18,6 +18,9 @@ var baseAttackDmg = 10
 
 func attack() -> int:
 	return baseAttackDmg
+	
+func attackScale(damageScale: int) -> int:
+	return baseAttackDmg + damageScale
 func effects() -> int:
 	
 	return 5

@@ -1,6 +1,6 @@
 extends charAttack
  
-var baseMoveDmg = 10
+
 var dmgAdder = 0
 
 #var testParent = get_parent()
@@ -11,11 +11,15 @@ var dmgAdder = 0
 func _init() -> void:
 	pass
 func _ready() -> void: #doesnt load the parent
+	baseAttackDmg = 50
 	pass
 
 func attack() -> int:
-	return baseMoveDmg + dmgAdder
+	return baseAttackDmg
 
+
+func attackScale(damageScale: int) -> int:
+	return baseAttackDmg + damageScale
 
 
 func _on_test_character_transfer_stats(health: int, dmg: int, will: int, defense: int, blockingDefense: int, courage: int) -> void:

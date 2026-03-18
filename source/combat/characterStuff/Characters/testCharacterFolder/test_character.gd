@@ -52,7 +52,7 @@ func start_action() -> charAction:
 func applyAction(action: charAction) -> void:
 	match action:
 		charAttack:
-			stats.damageTaken(2, true)
+			stats.damageTaken(action.attackScale(stats.damageStat), true) #needs to figure out blocking later
 			pass
 		charSupport:
 			pass
