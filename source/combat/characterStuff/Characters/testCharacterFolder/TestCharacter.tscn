@@ -1,19 +1,20 @@
 [gd_scene format=3 uid="uid://dro050gfjn0ih"]
 
-[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/CharacterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7uwtj"]
+[ext_resource type="Script" uid="uid://bm4481mqdeoxe" path="res://source/combat/characterStuff/Characters/testCharacterFolder/test_character.gd" id="1_7uwtj"]
 [ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="2_i0f4w"]
 
 [node name="testCharacter" type="Node2D" unique_id=867888316]
 script = ExtResource("1_7uwtj")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
+position = Vector2(7, -92)
 scale = Vector2(0.50268096, 0.50268096)
 texture = ExtResource("2_i0f4w")
 
 [node name="ActionLabel" type="Label" parent="." unique_id=422375864]
 unique_name_in_owner = true
-offset_left = -96.0
-offset_top = -118.0
-offset_right = -56.0
-offset_bottom = -95.0
+offset_left = -92.0
+offset_top = -211.0
+offset_right = -1.0
+offset_bottom = -188.0
 text = "ActionLabel"

@@ -17,6 +17,10 @@ var username: String:
 			username = candidate
 		return username
 
+func _init() -> void:
+	var node := Node.new()
+	add_child(node)
+
 func _on_pressed() -> void:
 	var client_data := MultiplayerClientData.new()
 	client_data.username = username

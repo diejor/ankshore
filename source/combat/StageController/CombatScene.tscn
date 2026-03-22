@@ -4,34 +4,44 @@
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/StageController/turn_manager.gd" id="3_vk3fy"]
 [ext_resource type="Script" uid="uid://16dok1pv4kkv" path="res://source/combat/StageController/ally_team.gd" id="4_iu84r"]
-[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/CharacterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="5_rbr45"]
+[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="5_rbr45"]
 [ext_resource type="Script" uid="uid://cghmnddt68tth" path="res://source/combat/StageController/enemy_team.gd" id="6_igmag"]
-[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/CharacterStuff/anatomy/charAction.gd" id="6_v1j44"]
+[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="6_v1j44"]
+[ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/characterStuff/Characters/testCharacterFolder/SelectionSlot.tscn" id="6_vk3fy"]
 
 [sub_resource type="GDScript" id="GDScript_m7umq"]
 script/source = "extends Label
 
-func _on_turn_start(team: TeamManager.Team) -> void:
-	var team_str: String
-	if team == TeamManager.Team.Ally:
-		team_str = \"Ally\"
-	else:
-		team_str = \"Enemy\"
-	
-	text = team_str
+@onready var unfmt_text: String = text
+
+func _on_turn_start(team: TeamManager) -> void:
+	text = unfmt_text % team.team_str
+"
+
+[sub_resource type="GDScript" id="GDScript_vk3fy"]
+script/source = "extends Label
+
+@onready var turn_manager: TurnManager = %TurnManager
+@onready var unfmt_text: String = text
+
+func _on_turn_manager_turn_start(_team: TeamManager) -> void:
+	text = unfmt_text % turn_manager.current_turn
 "
 
 [sub_resource type="GDScript" id="GDScript_v1j44"]
 script/source = "extends Label
 
 @onready var turn_timer: Timer = %TurnTimer
+@onready var unfmt_text: String = text
 
+func _ready() -> void:
+	text = unfmt_text % (int(turn_timer.time_left))
 
 func _on_seconds_beat_timeout() -> void:
-	text = \"Time Left: %ss\" % (int(turn_timer.time_left))
+	text = unfmt_text % (int(turn_timer.time_left))
 
 
-func _on_turn_manager_turn_start(team: TeamManager.Team) -> void:
+func _on_turn_manager_turn_start(_team: TeamManager) -> void:
 	turn_timer.start()
 "
 
@@ -39,21 +49,6 @@ func _on_turn_manager_turn_start(team: TeamManager.Team) -> void:
 script = ExtResource("1_m7umq")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1190960819]
-layer = -1
-
-[node name="Background" type="TextureRect" parent="CanvasLayer" unique_id=1518636395]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -750.0
-offset_top = -422.0
-offset_right = 750.0
-offset_bottom = 422.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("2_v1j44")
 
 [node name="TurnLabel" type="Label" parent="CanvasLayer" unique_id=916242494]
 unique_name_in_owner = true
@@ -66,17 +61,26 @@ offset_right = 155.0
 offset_bottom = 94.0
 grow_horizontal = 2
 theme_override_font_sizes/font_size = 32
-text = "Turn: Ally"
+text = "Turn: %s"
 script = SubResource("GDScript_m7umq")
+
+[node name="TurnNumber" type="Label" parent="CanvasLayer" unique_id=489810226]
+unique_name_in_owner = true
+offset_left = 537.0
+offset_top = 27.0
+offset_right = 604.0
+offset_bottom = 50.0
+text = "# %s"
+script = SubResource("GDScript_vk3fy")
 
 [node name="TurnTimerLabel" type="Label" parent="CanvasLayer" unique_id=1620141512]
 unique_name_in_owner = true
 offset_left = 49.0
 offset_top = 45.0
-offset_right = 262.0
+offset_right = 269.0
 offset_bottom = 90.0
 theme_override_font_sizes/font_size = 32
-text = "Time Left: 10s"
+text = "Time Left: %ss"
 script = SubResource("GDScript_v1j44")
 
 [node name="TurnTimer" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=2071835503]
@@ -89,28 +93,82 @@ unique_name_in_owner = true
 process_callback = 0
 autostart = true
 
-[node name="TurnManager" type="Node" parent="." unique_id=1147908716]
+[node name="Background" type="TextureRect" parent="." unique_id=1518636395]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_v1j44")
+
+[node name="TurnManager" type="Node" parent="." unique_id=1147908716 node_paths=PackedStringArray("current_team", "teams")]
 unique_name_in_owner = true
 script = ExtResource("3_vk3fy")
+current_team = NodePath("../AllyTeam")
+teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
-[node name="AllyTeam" type="Node2D" parent="." unique_id=2087230887]
+[node name="AllyTeam" type="Node2D" parent="." unique_id=2087230887 node_paths=PackedStringArray("slots")]
 position = Vector2(-367, 8)
 script = ExtResource("4_iu84r")
+slots = [NodePath("SelectionSlot1"), NodePath("SelectionSlot2"), NodePath("SelectionSlot3")]
 
-[node name="testCharacter" parent="AllyTeam" unique_id=867888316 instance=ExtResource("5_rbr45")]
+[node name="AllyTestCharacter" parent="AllyTeam" unique_id=867888316 node_paths=PackedStringArray("moveList") instance=ExtResource("5_rbr45")]
+unique_name_in_owner = true
+position = Vector2(-170, -179)
+moveList = [null, null, null]
 
-[node name="charAction" type="Node" parent="AllyTeam/testCharacter" unique_id=998254031 node_paths=PackedStringArray("target")]
+[node name="charAction" type="Node" parent="AllyTeam/AllyTestCharacter" unique_id=998254031 node_paths=PackedStringArray("target")]
 script = ExtResource("6_v1j44")
-target = [NodePath("../../../EnemyTeam/testCharacter2")]
+target = [NodePath("../../../EnemyTeam/EnemyTestCharacter")]
 metadata/_custom_type_script = "uid://cimbbxcr07s7n"
 
-[node name="DebugLabel" type="Label" parent="AllyTeam" unique_id=2005404988]
-offset_left = 9.0
-offset_top = -153.0
-offset_right = 85.0
-offset_bottom = -130.0
+[node name="SelectionSlot1" parent="AllyTeam" unique_id=363571634 instance=ExtResource("6_vk3fy")]
+modulate = Color(1, 1, 1, 0.75)
+offset_left = -57.0
+offset_top = 19.0
+offset_right = -57.0
+offset_bottom = 19.0
+focus_neighbor_left = NodePath("../SelectionSlot3")
+focus_neighbor_top = NodePath("../SelectionSlot3")
+focus_neighbor_right = NodePath("../SelectionSlot2")
+focus_neighbor_bottom = NodePath("../SelectionSlot2")
+focus_next = NodePath("../SelectionSlot2")
+focus_previous = NodePath("../SelectionSlot3")
+focus_on_ready = true
+
+[node name="SelectionSlot2" parent="AllyTeam" unique_id=259006654 instance=ExtResource("6_vk3fy")]
+modulate = Color(1, 1, 1, 0.75)
+offset_left = 178.0
+offset_top = 118.0
+offset_right = 178.0
+offset_bottom = 118.0
+focus_neighbor_left = NodePath("../SelectionSlot1")
+focus_neighbor_top = NodePath("../SelectionSlot1")
+focus_neighbor_right = NodePath("../SelectionSlot3")
+focus_neighbor_bottom = NodePath("../SelectionSlot3")
+focus_next = NodePath("../SelectionSlot3")
+focus_previous = NodePath("../SelectionSlot1")
+
+[node name="SelectionSlot3" parent="AllyTeam" unique_id=833664602 instance=ExtResource("6_vk3fy")]
+modulate = Color(1, 1, 1, 0.75)
+offset_left = -49.0
+offset_top = 210.0
+offset_right = -49.0
+offset_bottom = 210.0
+focus_neighbor_left = NodePath("../SelectionSlot2")
+focus_neighbor_top = NodePath("../SelectionSlot2")
+focus_neighbor_right = NodePath("../SelectionSlot1")
+focus_neighbor_bottom = NodePath("../SelectionSlot1")
+focus_next = NodePath("../SelectionSlot1")
+focus_previous = NodePath("../SelectionSlot2")
+
+[node name="Label" type="Label" parent="AllyTeam" unique_id=2005404988]
+offset_left = 146.0
+offset_top = -230.0
+offset_right = 222.0
+offset_bottom = -207.0
 text = "Ally Team"
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
@@ -119,17 +177,19 @@ position = Vector2(348, 27)
 script = ExtResource("6_igmag")
 team = 1
 
-[node name="testCharacter2" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("5_rbr45")]
+[node name="EnemyTestCharacter" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("5_rbr45")]
+unique_name_in_owner = true
 
-[node name="DebugLabel" type="Label" parent="EnemyTeam" unique_id=643452884]
-offset_left = -36.0
-offset_top = -157.0
-offset_right = 64.0
-offset_bottom = -134.0
+[node name="Label" type="Label" parent="EnemyTeam" unique_id=643452884]
+offset_left = -253.0
+offset_top = -244.0
+offset_right = -153.0
+offset_bottom = -221.0
 text = "Enemy Team"
 metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
 [connection signal="timeout" from="CanvasLayer/TurnTimerLabel/TurnTimer" to="TurnManager" method="_on_turn_timer_timeout"]
 [connection signal="timeout" from="CanvasLayer/TurnTimerLabel/SecondsBeat" to="CanvasLayer/TurnTimerLabel" method="_on_seconds_beat_timeout"]
-[connection signal="turnStart" from="TurnManager" to="CanvasLayer/TurnLabel" method="_on_turn_start"]
-[connection signal="turnStart" from="TurnManager" to="CanvasLayer/TurnTimerLabel" method="_on_turn_manager_turn_start"]
+[connection signal="turn_start" from="TurnManager" to="CanvasLayer/TurnLabel" method="_on_turn_start"]
+[connection signal="turn_start" from="TurnManager" to="CanvasLayer/TurnNumber" method="_on_turn_manager_turn_start"]
+[connection signal="turn_start" from="TurnManager" to="CanvasLayer/TurnTimerLabel" method="_on_turn_manager_turn_start"]

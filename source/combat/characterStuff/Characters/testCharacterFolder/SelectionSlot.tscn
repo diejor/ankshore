@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://bvhruhjarrpeq"]
+
+[ext_resource type="Script" uid="uid://ccwl7smsvehmy" path="res://source/combat/characterStuff/Characters/testCharacterFolder/selection_slot.gd" id="1_htq0a"]
+[ext_resource type="Script" uid="uid://b08yfe6toasy1" path="res://source/combat/characterStuff/Characters/testCharacterFolder/selectable.gd" id="2_qehak"]
+
+[sub_resource type="Gradient" id="Gradient_v1j44"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.69902915)
+colors = PackedColorArray(0.8039216, 0.24705882, 0.28627452, 0.7254902, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cpuq4"]
+gradient = SubResource("Gradient_v1j44")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="SelectionSlot" type="Control" unique_id=833664602]
+show_behind_parent = true
+layout_mode = 3
+anchors_preset = 0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+focus_mode = 2
+script = ExtResource("1_htq0a")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1903118332]
+scale = Vector2(1, 0.5)
+texture = SubResource("GradientTexture2D_cpuq4")
+script = ExtResource("2_qehak")
+
+[connection signal="child_entered_tree" from="." to="." method="_on_child_entered"]
+[connection signal="focus_entered" from="." to="Sprite2D" method="_on_focus_entered"]
+[connection signal="focus_exited" from="." to="Sprite2D" method="_on_focus_exited"]

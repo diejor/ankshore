@@ -1,43 +1,59 @@
 class_name TeamManager
 extends Node
 
-@export var team: Team
-@onready var turn_manager: turnManager = %TurnManager
-
-var ongoing_turn: Turn
-
 enum Team {
 	Ally,
 	Enemy
 }
 
+signal actions_finished(actions: Array[charAction])
 
-func _ready() -> void:
-	turn_manager.turnStart.connect(_on_turn_start)
+@export var team: Team
+@export var slots: Array[SelectionSlot]
 
-func is_test_character(node: Node) -> bool:
-	return node is testCharacter
+@onready var turn_manager: TurnManager = %TurnManager
 
-func get_test_characters() -> Array[testCharacter]:
-	var character_children: Array[testCharacter]
-	character_children.assign(get_children().filter(is_test_character))
-	return character_children
+var team_str: String:
+	get:
+		return Team.find_key(team)
 
-func _on_turn_start(team_playing: Team) -> void:
-	var turn := Turn.new()
-	turn.team_playing = team_playing
-	
+var tracked_characters: Array[testCharacter]
+
+func _init() -> void:
+	child_entered_tree.connect(_on_child_entered)
+
+func _organize_character(character: testCharacter) -> void:
+	for slot in slots:
+		if not slot.selected:
+			slot.selected = character
+			return
+
+func _on_child_entered(node: Node) -> void:
+	if node is testCharacter:
+		tracked_characters.append(node)
+		_organize_character(node as testCharacter)
+
+
+func _on_turn_start(team_playing: TeamManager) -> void:
 	# if not the same team return
-	if team_playing != team:
+	if team_playing != self:
 		return
 	
-	# iterate through all the test characters inside a team to build actionsaaaa
-	for character in get_test_characters():
+	var actions: Array[charAction]
+	# iterate through all the test characters inside a team to build actions
+	for character in tracked_characters:
 		var action := await character.start_action()
-		turn.actions.append(action)
+		actions.append(action)
 	
-	print("Actions from %s: %s." % [team_playing, turn.actions])
+	print("Actions from %s: %s." % [team_playing.name, actions])
 	
 	# at the end execute the actions
-	for action in turn.actions:
+	for action in actions:
 		action.execute()
+
+	actions_finished.emit(actions)
+	turn_manager.turn_ended.emit(team_playing)
+
+
+func _on_turn_ended(_team_playing: TeamManager) -> void:
+	pass

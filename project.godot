@@ -94,7 +94,7 @@ naming/scene_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/tube/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/gdUnit4/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/tube/plugin.cfg")
 
 [file_customization]
 
@@ -109,10 +109,12 @@ folder_colors={
 "res://source/scenes/characters/zBrolyNpcTester/": "blue"
 }
 
+[gdunit4]
+
+ui/inspector/tree_view_mode=1
+
 [global_group]
 
-persistent=""
-clients="Handle signals from the Client on player events"
 lobby_managers=""
 
 [input]
