@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bp5djy82cenim" path="res://source/scenes/characters/myoso/character_body_2d.gd" id="1_jpx56"]
 [ext_resource type="Script" uid="uid://c4gt8tvkmcals" path="res://addons/networked/components/tp/tp_component.gd" id="2_ko57k"]
 [ext_resource type="Script" uid="uid://6x6qybix5loo" path="res://source/scenes/characters/myoso/camera_2d.gd" id="3_cmaps"]
-[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/scene_node_path.gd" id="3_wwq54"]
+[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/source/scene_node_path.gd" id="3_wwq54"]
 [ext_resource type="PackedScene" uid="uid://8dmbjqnbp0rn" path="res://addons/networked/components/client/ClientComponent.tscn" id="4_1j2t1"]
 [ext_resource type="PackedScene" uid="uid://b25ufiuigcd5" path="res://addons/networked/components/persistent/SaveComponent.tscn" id="6_7n34x"]
 [ext_resource type="Script" uid="uid://d1mnum02gn0c0" path="res://addons/networked/components/persistent/dictionary_save.gd" id="8_xdvvs"]

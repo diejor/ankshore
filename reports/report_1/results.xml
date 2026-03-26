@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites id="2026-03-21" name="report_1" tests="18" failures="0" skipped="0" flaky="0" time="0.000">
-	<testsuite id="0" name="test_scene_node_path" package="addons/networked/addons/scene_node_path/tests" timestamp="2026-03-22T00:30:20" hostname="localhost" tests="18" failures="0" errors="0" skipped="0" flaky="0" time="0.776">
-		<testcase name="test_init_parsing:0 (&apos;res://fake.tscn::Player&apos;, &apos;res://fake.tscn&apos;, &apos;Player&apos;)" classname="test_scene_node_path" time="0.051">
+<testsuites id="2026-03-22" name="report_1" tests="18" failures="0" skipped="0" flaky="0" time="0.000">
+	<testsuite id="0" name="test_scene_node_path" package="addons/networked/addons/scene_node_path/tests" timestamp="2026-03-22T10:19:18" hostname="localhost" tests="18" failures="0" errors="0" skipped="0" flaky="0" time="0.780">
+		<testcase name="test_init_parsing:0 (&apos;res://fake.tscn::Player&apos;, &apos;res://fake.tscn&apos;, &apos;Player&apos;)" classname="test_scene_node_path" time="0.054">
 		</testcase>
-		<testcase name="test_init_parsing:1 (&apos;uid://fake_uid::Level/Boss&apos;, &apos;uid://fake_uid&apos;, &apos;Level/Boss&apos;)" classname="test_scene_node_path" time="0.037">
+		<testcase name="test_init_parsing:1 (&apos;uid://fake_uid::Level/Boss&apos;, &apos;uid://fake_uid&apos;, &apos;Level/Boss&apos;)" classname="test_scene_node_path" time="0.039">
 		</testcase>
-		<testcase name="test_validation_checks:0 (LEVEL_SCENE, &apos;Player/Hitbox&apos;, true, true)" classname="test_scene_node_path" time="0.038">
+		<testcase name="test_validation_checks:0 (LEVEL_SCENE, &apos;Player/Hitbox&apos;, true, true)" classname="test_scene_node_path" time="0.039">
 		</testcase>
-		<testcase name="test_validation_checks:1 (LEVEL_SCENE, &apos;.&apos;, true, true)" classname="test_scene_node_path" time="0.040">
+		<testcase name="test_validation_checks:1 (LEVEL_SCENE, &apos;.&apos;, true, true)" classname="test_scene_node_path" time="0.042">
 		</testcase>
-		<testcase name="test_validation_checks:2 (LEVEL_SCENE, &apos;FakeNode&apos;, true, false)" classname="test_scene_node_path" time="0.042">
+		<testcase name="test_validation_checks:2 (LEVEL_SCENE, &apos;FakeNode&apos;, true, false)" classname="test_scene_node_path" time="0.041">
 		</testcase>
-		<testcase name="test_validation_checks:3 (&apos;res://missing.tscn&apos;, &apos;Hitbox&apos;, false, false)" classname="test_scene_node_path" time="0.039">
+		<testcase name="test_validation_checks:3 (&apos;res://missing.tscn&apos;, &apos;Hitbox&apos;, false, false)" classname="test_scene_node_path" time="0.036">
 		</testcase>
-		<testcase name="test_validation_checks:4 (LEVEL_SCENE, &apos;&apos;, false, false)" classname="test_scene_node_path" time="0.038">
+		<testcase name="test_validation_checks:4 (LEVEL_SCENE, &apos;&apos;, false, false)" classname="test_scene_node_path" time="0.041">
 		</testcase>
-		<testcase name="test_state_inspector_basic_properties" classname="test_scene_node_path" time="0.026">
+		<testcase name="test_state_inspector_basic_properties" classname="test_scene_node_path" time="0.023">
 		</testcase>
-		<testcase name="test_state_inspector_reads_subscene_properties_recursively" classname="test_scene_node_path" time="0.018">
+		<testcase name="test_state_inspector_reads_subscene_properties_recursively" classname="test_scene_node_path" time="0.017">
 		</testcase>
-		<testcase name="test_state_inspector_reads_connections" classname="test_scene_node_path" time="0.017">
+		<testcase name="test_state_inspector_reads_connections" classname="test_scene_node_path" time="0.016">
 		</testcase>
 		<testcase name="test_state_inspector_identifies_instances" classname="test_scene_node_path" time="0.017">
 		</testcase>
-		<testcase name="test_unwrap_into_tags_absolute_root" classname="test_scene_node_path" time="0.017">
+		<testcase name="test_unwrap_into_tags_absolute_root" classname="test_scene_node_path" time="0.019">
 		</testcase>
 		<testcase name="test_unwrap_into_or_null_handles_failures_safely" classname="test_scene_node_path" time="0.017">
 		</testcase>
-		<testcase name="test_extract_isolates_nested_node_and_frees_parents" classname="test_scene_node_path" time="0.016">
+		<testcase name="test_extract_isolates_nested_node_and_frees_parents" classname="test_scene_node_path" time="0.017">
 		</testcase>
-		<testcase name="test_extract_root_node_returns_intact_scene" classname="test_scene_node_path" time="0.017">
+		<testcase name="test_extract_root_node_returns_intact_scene" classname="test_scene_node_path" time="0.015">
 		</testcase>
 		<testcase name="test_extract_or_null_safe_failures:0 (LEVEL_SCENE, &apos;FakeNode&apos;)" classname="test_scene_node_path" time="0.039">
 		</testcase>
 		<testcase name="test_extract_or_null_safe_failures:1 (&apos;res://missing.tscn&apos;, &apos;Hitbox&apos;)" classname="test_scene_node_path" time="0.036">
 		</testcase>
-		<testcase name="test_extract_or_null_safe_failures:2 (LEVEL_SCENE, &apos;&apos;)" classname="test_scene_node_path" time="0.036">
+		<testcase name="test_extract_or_null_safe_failures:2 (LEVEL_SCENE, &apos;&apos;)" classname="test_scene_node_path" time="0.039">
 		</testcase>
 	</testsuite>
 </testsuites>

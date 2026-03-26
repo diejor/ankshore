@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://buaphgk2sh8yg" path="res://source/scenes/areas/building_blocks/HighGround.tscn" id="2_xbm22"]
 [ext_resource type="PackedScene" uid="uid://dblrpix74ip0" path="res://source/components/Teleporter.tscn" id="3_adjto"]
 [ext_resource type="PackedScene" uid="uid://ddckx2o2oy5mx" path="res://source/scenes/characters/zBrolyNpcTester/ZBrolyNpc.tscn" id="4_adjto"]
-[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/scene_node_path.gd" id="4_msqkd"]
+[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/source/scene_node_path.gd" id="4_msqkd"]
 
 [sub_resource type="Resource" id="Resource_xbm22"]
 script = ExtResource("4_msqkd")

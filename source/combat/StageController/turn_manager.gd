@@ -57,4 +57,4 @@ func next_turn() -> void:
 
 
 func _on_turn_timer_timeout() -> void:
-	turn_ended.emit()
+	turn_ended.emit(current_team)

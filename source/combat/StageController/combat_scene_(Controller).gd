@@ -1,13 +1,6 @@
 class_name CombatSet extends Node2D
 #the brain lol
 
-@onready var ally_team: allyTeam = $AllyTeam
-@onready var test_character: testCharacter = %AllyTestCharacter
-
-
-@onready var enemy_team: enemyTeam = $EnemyTeam
-@onready var test_character_2: testCharacter = %EnemyTestCharacter
-
 
 
 #more signals

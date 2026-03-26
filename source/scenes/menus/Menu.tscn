@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://cy006uvidc4y" path="res://addons/tube/tube_client.gd" id="6_6rjpa"]
 [ext_resource type="PackedScene" uid="uid://vj1s4e7rbmsn" path="res://addons/networked/components/tp/TPLayer.tscn" id="6_f7egp"]
 [ext_resource type="Script" uid="uid://t4pe7yqc3pnt" path="res://addons/tube/tube_context.gd" id="7_ut644"]
-[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/scene_node_path.gd" id="8_pulmy"]
+[ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/source/scene_node_path.gd" id="8_pulmy"]
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://addons/networked/components/client/ConnectServerUI.tscn" id="9_evmps"]
 
 [sub_resource type="Resource" id="Resource_pulmy"]

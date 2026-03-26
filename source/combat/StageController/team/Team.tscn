@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://bflqs45vkku68"]
+
+[ext_resource type="Script" uid="uid://c4wvd1tkk57as" path="res://source/combat/StageController/team/team_manager.gd" id="1_buy7b"]
+[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="2_d1obe"]
+[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="3_2l3xt"]
+[ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/characterStuff/Characters/testCharacterFolder/SelectionSlot.tscn" id="4_5xetp"]
+
+[node name="Team" type="Node2D" unique_id=1953363629 node_paths=PackedStringArray("slots") groups=["mirror"]]
+script = ExtResource("1_buy7b")
+slots = [NodePath("SelectionSlot1"), NodePath("SelectionSlot2"), NodePath("SelectionSlot3")]
+
+[node name="AllyTestCharacter" parent="." unique_id=867888316 node_paths=PackedStringArray("moveList") instance=ExtResource("2_d1obe")]
+unique_name_in_owner = true
+position = Vector2(-119, -120)
+moveList = [null, null, null]
+
+[node name="charAction" type="Node" parent="AllyTestCharacter" unique_id=2137647855 node_paths=PackedStringArray("target")]
+script = ExtResource("3_2l3xt")
+target = [null]
+metadata/_custom_type_script = "uid://cimbbxcr07s7n"
+
+[node name="SelectionSlot1" parent="." unique_id=833664602 instance=ExtResource("4_5xetp")]
+offset_left = -57.0
+offset_top = 19.0
+offset_right = -57.0
+offset_bottom = 19.0
+focus_neighbor_left = NodePath("../SelectionSlot3")
+focus_neighbor_top = NodePath("../SelectionSlot3")
+focus_neighbor_right = NodePath("../SelectionSlot2")
+focus_neighbor_bottom = NodePath("../SelectionSlot2")
+focus_next = NodePath("../SelectionSlot2")
+focus_previous = NodePath("../SelectionSlot3")
+focus_on_ready = true
+
+[node name="SelectionSlot2" parent="." unique_id=335587062 instance=ExtResource("4_5xetp")]
+offset_left = 178.0
+offset_top = 118.0
+offset_right = 178.0
+offset_bottom = 118.0
+focus_neighbor_left = NodePath("../SelectionSlot1")
+focus_neighbor_top = NodePath("../SelectionSlot1")
+focus_neighbor_right = NodePath("../SelectionSlot3")
+focus_neighbor_bottom = NodePath("../SelectionSlot3")
+focus_next = NodePath("../SelectionSlot3")
+focus_previous = NodePath("../SelectionSlot1")
+
+[node name="SelectionSlot3" parent="." unique_id=1769271849 instance=ExtResource("4_5xetp")]
+offset_left = -49.0
+offset_top = 210.0
+offset_right = -49.0
+offset_bottom = 210.0
+focus_neighbor_left = NodePath("../SelectionSlot2")
+focus_neighbor_top = NodePath("../SelectionSlot2")
+focus_neighbor_right = NodePath("../SelectionSlot1")
+focus_neighbor_bottom = NodePath("../SelectionSlot1")
+focus_next = NodePath("../SelectionSlot1")
+focus_previous = NodePath("../SelectionSlot2")
+
+[node name="Label" type="Label" parent="." unique_id=236511226 groups=["mirror"]]
+offset_left = 146.0
+offset_top = -230.0
+offset_right = 222.0
+offset_bottom = -207.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "Ally Team"
+
+[node name="Line2D" type="Line2D" parent="." unique_id=274688949]

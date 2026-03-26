@@ -3,11 +3,7 @@
 [ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/StageController/combat_scene_(Controller).gd" id="1_m7umq"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/StageController/turn_manager.gd" id="3_vk3fy"]
-[ext_resource type="Script" uid="uid://16dok1pv4kkv" path="res://source/combat/StageController/ally_team.gd" id="4_iu84r"]
-[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="5_rbr45"]
-[ext_resource type="Script" uid="uid://cghmnddt68tth" path="res://source/combat/StageController/enemy_team.gd" id="6_igmag"]
-[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="6_v1j44"]
-[ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/characterStuff/Characters/testCharacterFolder/SelectionSlot.tscn" id="6_vk3fy"]
+[ext_resource type="PackedScene" uid="uid://bflqs45vkku68" path="res://source/combat/StageController/team/Team.tscn" id="4_ywd5h"]
 
 [sub_resource type="GDScript" id="GDScript_m7umq"]
 script/source = "extends Label
@@ -109,84 +105,12 @@ teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
-[node name="AllyTeam" type="Node2D" parent="." unique_id=2087230887 node_paths=PackedStringArray("slots")]
-position = Vector2(-367, 8)
-script = ExtResource("4_iu84r")
-slots = [NodePath("SelectionSlot1"), NodePath("SelectionSlot2"), NodePath("SelectionSlot3")]
+[node name="AllyTeam" parent="." unique_id=1953363629 instance=ExtResource("4_ywd5h")]
+position = Vector2(-330, 0)
 
-[node name="AllyTestCharacter" parent="AllyTeam" unique_id=867888316 node_paths=PackedStringArray("moveList") instance=ExtResource("5_rbr45")]
-unique_name_in_owner = true
-position = Vector2(-170, -179)
-moveList = [null, null, null]
-
-[node name="charAction" type="Node" parent="AllyTeam/AllyTestCharacter" unique_id=998254031 node_paths=PackedStringArray("target")]
-script = ExtResource("6_v1j44")
-target = [NodePath("../../../EnemyTeam/EnemyTestCharacter")]
-metadata/_custom_type_script = "uid://cimbbxcr07s7n"
-
-[node name="SelectionSlot1" parent="AllyTeam" unique_id=363571634 instance=ExtResource("6_vk3fy")]
-modulate = Color(1, 1, 1, 0.75)
-offset_left = -57.0
-offset_top = 19.0
-offset_right = -57.0
-offset_bottom = 19.0
-focus_neighbor_left = NodePath("../SelectionSlot3")
-focus_neighbor_top = NodePath("../SelectionSlot3")
-focus_neighbor_right = NodePath("../SelectionSlot2")
-focus_neighbor_bottom = NodePath("../SelectionSlot2")
-focus_next = NodePath("../SelectionSlot2")
-focus_previous = NodePath("../SelectionSlot3")
-focus_on_ready = true
-
-[node name="SelectionSlot2" parent="AllyTeam" unique_id=259006654 instance=ExtResource("6_vk3fy")]
-modulate = Color(1, 1, 1, 0.75)
-offset_left = 178.0
-offset_top = 118.0
-offset_right = 178.0
-offset_bottom = 118.0
-focus_neighbor_left = NodePath("../SelectionSlot1")
-focus_neighbor_top = NodePath("../SelectionSlot1")
-focus_neighbor_right = NodePath("../SelectionSlot3")
-focus_neighbor_bottom = NodePath("../SelectionSlot3")
-focus_next = NodePath("../SelectionSlot3")
-focus_previous = NodePath("../SelectionSlot1")
-
-[node name="SelectionSlot3" parent="AllyTeam" unique_id=833664602 instance=ExtResource("6_vk3fy")]
-modulate = Color(1, 1, 1, 0.75)
-offset_left = -49.0
-offset_top = 210.0
-offset_right = -49.0
-offset_bottom = 210.0
-focus_neighbor_left = NodePath("../SelectionSlot2")
-focus_neighbor_top = NodePath("../SelectionSlot2")
-focus_neighbor_right = NodePath("../SelectionSlot1")
-focus_neighbor_bottom = NodePath("../SelectionSlot1")
-focus_next = NodePath("../SelectionSlot1")
-focus_previous = NodePath("../SelectionSlot2")
-
-[node name="Label" type="Label" parent="AllyTeam" unique_id=2005404988]
-offset_left = 146.0
-offset_top = -230.0
-offset_right = 222.0
-offset_bottom = -207.0
-text = "Ally Team"
-metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
-
-[node name="EnemyTeam" type="Node2D" parent="." unique_id=50320470]
-position = Vector2(348, 27)
-script = ExtResource("6_igmag")
+[node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
+position = Vector2(338, 4)
 team = 1
-
-[node name="EnemyTestCharacter" parent="EnemyTeam" unique_id=1999038153 instance=ExtResource("5_rbr45")]
-unique_name_in_owner = true
-
-[node name="Label" type="Label" parent="EnemyTeam" unique_id=643452884]
-offset_left = -253.0
-offset_top = -244.0
-offset_right = -153.0
-offset_bottom = -221.0
-text = "Enemy Team"
-metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
 [connection signal="timeout" from="CanvasLayer/TurnTimerLabel/TurnTimer" to="TurnManager" method="_on_turn_timer_timeout"]
 [connection signal="timeout" from="CanvasLayer/TurnTimerLabel/SecondsBeat" to="CanvasLayer/TurnTimerLabel" method="_on_seconds_beat_timeout"]
