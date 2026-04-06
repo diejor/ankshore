@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bflqs45vkku68"]
 
 [ext_resource type="Script" uid="uid://c4wvd1tkk57as" path="res://source/combat/StageController/team/team_manager.gd" id="1_buy7b"]
-[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="2_d1obe"]
-[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="3_2l3xt"]
-[ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/characterStuff/Characters/testCharacterFolder/SelectionSlot.tscn" id="4_5xetp"]
+[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/CharacterStuff/Characters/testCharacterFolder/TestCharacter.tscn" id="2_d1obe"]
+[ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/CharacterStuff/anatomy/charAction.gd" id="3_2l3xt"]
+[ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/CharacterStuff/Characters/testCharacterFolder/SelectionSlot.tscn" id="4_5xetp"]
 
 [node name="Team" type="Node2D" unique_id=1953363629 node_paths=PackedStringArray("slots") groups=["mirror"]]
 script = ExtResource("1_buy7b")

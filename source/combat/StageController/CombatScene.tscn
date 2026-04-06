@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/StageController/turn_manager.gd" id="3_vk3fy"]
 [ext_resource type="PackedScene" uid="uid://bflqs45vkku68" path="res://source/combat/StageController/team/Team.tscn" id="4_ywd5h"]
+[ext_resource type="Resource" uid="uid://yyby634trdkb" path="res://source/combat/CharacterStuff/Characters/MyosoStats/MyosoCharStats.tres" id="5_ywd5h"]
 
 [sub_resource type="GDScript" id="GDScript_m7umq"]
 script/source = "extends Label
@@ -108,6 +109,9 @@ teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 [node name="AllyTeam" parent="." unique_id=1953363629 instance=ExtResource("4_ywd5h")]
 position = Vector2(-330, 0)
 
+[node name="AllyTestCharacter" parent="AllyTeam" index="0" unique_id=867888316]
+stats = ExtResource("5_ywd5h")
+
 [node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
 position = Vector2(338, 4)
 team = 1
@@ -117,3 +121,6 @@ team = 1
 [connection signal="turn_start" from="TurnManager" to="CanvasLayer/TurnLabel" method="_on_turn_start"]
 [connection signal="turn_start" from="TurnManager" to="CanvasLayer/TurnNumber" method="_on_turn_manager_turn_start"]
 [connection signal="turn_start" from="TurnManager" to="CanvasLayer/TurnTimerLabel" method="_on_turn_manager_turn_start"]
+
+[editable path="AllyTeam"]
+[editable path="EnemyTeam"]

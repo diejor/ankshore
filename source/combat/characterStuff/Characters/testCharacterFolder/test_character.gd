@@ -19,6 +19,12 @@ signal transferStats(stats: charStats)
 #transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
 
 @onready var action_label: Label = %ActionLabel
+@onready var health_label: Label = %HealthLabel
+@onready var will_label: Label = %WillLabel
+@onready var title_label: Label = %TitleLabel
+
+
+
 
 func get_attacks() -> Array:
 	var filter_attacks := func(action: charAction) -> bool:
@@ -49,10 +55,11 @@ func start_action() -> charAction:
 
 	return charAction.new()
 
-func applyAction(action: charAction) -> void:
+func applyAction(action: charAction) -> void: #actions done to this character
 	match action:
 		charAttack:
 			stats.damageTaken(action.attackScale(stats.damageStat), true) #needs to figure out blocking later
+			
 			pass
 		charSupport:
 			pass
@@ -62,8 +69,12 @@ func applyAction(action: charAction) -> void:
 
 ###other
 func _ready() -> void:
+	title_label.text = stats.title
+	health_label.text = str(stats.health)
+	will_label.text = str(stats.will)
 	var team_manager: TeamManager = owner as TeamManager
-	if team_manager.team == TeamManager.Team.Enemy:
+	if team_manager and team_manager.team == TeamManager.Team.Enemy:
+		
 		scale.x *= -1.0
 	
 	transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
