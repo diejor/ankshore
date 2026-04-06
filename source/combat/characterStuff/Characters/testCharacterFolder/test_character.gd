@@ -63,7 +63,7 @@ func applyAction(action: charAction) -> void:
 ###other
 func _ready() -> void:
 	var team_manager: TeamManager = owner as TeamManager
-	if team_manager.team == TeamManager.Team.Enemy:
+	if team_manager and team_manager.team == TeamManager.Team.Enemy:
 		scale.x *= -1.0
 	
 	transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
