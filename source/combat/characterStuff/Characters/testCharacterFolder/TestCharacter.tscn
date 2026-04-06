@@ -35,5 +35,3 @@ offset_right = -3.0
 offset_bottom = -217.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 text = "ActionLabel"
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=765483529]

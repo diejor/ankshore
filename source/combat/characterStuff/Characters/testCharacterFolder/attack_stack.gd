@@ -2,6 +2,11 @@ extends Label
 
 signal attack_appended(attack: String)
 
+@export var max_attacks: int = 6
+
+@onready var character: testCharacter:
+	get: return owner
+
 var attacks: Array[String]:
 	set(attack):
 		print(attack)
@@ -17,6 +22,8 @@ func _on_attack_appended(_attack: String) -> void:
 	text = out
 
 func _process(_delta: float) -> void:
+	if attacks.size() > max_attacks:
+		return
 	if Input.is_action_just_pressed("move_down"):
 		add_attack("↓")
 	if Input.is_action_just_pressed("move_left"):

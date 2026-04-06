@@ -13,6 +13,17 @@ var selected: Node:
 		
 		selected.reparent.call_deferred(self)
 
+func _init() -> void:
+	process_mode = Node.PROCESS_MODE_DISABLED
+	focus_entered.connect(_on_focus_entered)
+	focus_exited.connect(_on_focus_exited)
+
+func _on_focus_entered() -> void:
+	process_mode = Node.PROCESS_MODE_INHERIT
+
+func _on_focus_exited() -> void:
+	process_mode = Node.PROCESS_MODE_DISABLED
+
 func _ready() -> void:
 	if focus_on_ready:
 		grab_focus.call_deferred()

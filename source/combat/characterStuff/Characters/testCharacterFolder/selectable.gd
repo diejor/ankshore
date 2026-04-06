@@ -24,6 +24,5 @@ func _ready() -> void:
 func _on_focus_entered() -> void:
 	select()
 
-
 func _on_focus_exited() -> void:
 	deselect()

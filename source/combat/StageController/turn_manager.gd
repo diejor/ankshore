@@ -42,6 +42,12 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("next_turn"):
 		next_turn()
 
+func get_other_team(team: TeamManager) -> TeamManager:
+	for ateam in teams:
+		if ateam == team:
+			continue
+		return ateam
+	return null
 
 func next_turn() -> void:
 	if _turn_mutex.is_locked():

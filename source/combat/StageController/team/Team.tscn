@@ -19,7 +19,18 @@ script = ExtResource("3_2l3xt")
 target = [null]
 metadata/_custom_type_script = "uid://cimbbxcr07s7n"
 
+[node name="AllyTestCharacter2" parent="." unique_id=968921343 node_paths=PackedStringArray("moveList") instance=ExtResource("2_d1obe")]
+unique_name_in_owner = true
+position = Vector2(99, -123)
+moveList = [null, null, null]
+
+[node name="charAction" type="Node" parent="AllyTestCharacter2" unique_id=767532921 node_paths=PackedStringArray("target")]
+script = ExtResource("3_2l3xt")
+target = [null]
+metadata/_custom_type_script = "uid://cimbbxcr07s7n"
+
 [node name="SelectionSlot1" parent="." unique_id=833664602 instance=ExtResource("4_5xetp")]
+process_mode = 4
 offset_left = -57.0
 offset_top = 19.0
 offset_right = -57.0

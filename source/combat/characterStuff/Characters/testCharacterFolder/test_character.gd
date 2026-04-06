@@ -20,6 +20,9 @@ signal transferStats(stats: charStats)
 
 @onready var action_label: Label = %ActionLabel
 
+@onready var team_manager: TeamManager:
+	get: return owner
+
 func get_attacks() -> Array:
 	var filter_attacks := func(action: charAction) -> bool:
 		return action is charAttack
@@ -59,6 +62,11 @@ func applyAction(action: charAction) -> void:
 		charItemUse:
 			pass
 
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("next"):
+		var other_team: TeamManager = team_manager.get_other_team()
+		other_team.slots[0].grab_focus.call_deferred()
+		
 
 ###other
 func _ready() -> void:

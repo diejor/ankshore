@@ -39,6 +39,8 @@ func mirror_team(mirror: int) -> void:
 			@warning_ignore("unsafe_property_access")
 			to_mirror.scale.x *= mirror
 
+func get_other_team() -> TeamManager:
+	return turn_manager.get_other_team(self)
 
 func _organize_character(character: testCharacter) -> void:
 	if Engine.is_editor_hint():
