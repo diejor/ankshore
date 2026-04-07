@@ -1,6 +1,6 @@
 extends Button
 
-@export var network: MultiplayerNetwork
+@export var network: NetworkSession
 @export_custom(PROPERTY_HINT_RESOURCE_TYPE, "SceneNodePath:ClientComponent")
 var spawner_path: SceneNodePath
 

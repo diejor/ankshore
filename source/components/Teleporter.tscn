@@ -68,5 +68,3 @@ metadata/_custom_type_script = "uid://dhjjyyacsq0l6"
 
 [node name="Node" type="Node" parent="DebugLabel" unique_id=1486846057]
 script = SubResource("GDScript_ffavr")
-
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
