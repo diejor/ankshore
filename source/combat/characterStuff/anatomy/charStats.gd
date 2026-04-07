@@ -2,7 +2,9 @@ extends Resource
 class_name charStats
 #unsure on how to continue with levels
 
-
+#Title of Char---------------------------
+@export var title = "TestCharacter"
+#--------------------------------------
 signal health_depleted #decomissioned char
 signal health_changed(health: int, max_health: int) #tells current health change
 
@@ -16,7 +18,7 @@ var stats: baseBuff.Stats = baseBuff.Stats.HEALTH
 #damage lol
 @export var base_damageStat := 10
 #'stamina/mana' bar
-@export var base_will := 100 
+@export var base_max_will := 100 
 #defense reduces damage taken
 @export var base_Defense := 50
 #defense (usually heightened) when a successful block occurs. 
@@ -26,12 +28,12 @@ var stats: baseBuff.Stats = baseBuff.Stats.HEALTH
 
 #current_max_ stuff------------------------------
 
-var current_max_health := 500
-var current_damageStat := 10
-var current_max_will := 100 
-var current_defense := 50
-var current_blockingDefense := 70
-var current_courage := 50 
+var current_max_health := base_max_health
+var current_damageStat := base_damageStat
+var current_max_will := base_max_will
+var current_defense := base_Defense
+var current_blockingDefense := base_blockingDefense
+var current_courage := base_courage 
 
 #actual stuff----------------------------------
 enum Stats{
@@ -43,12 +45,13 @@ enum Stats{
 	COURAGE,
 }
 
-var health := 500 #HEALTH
-var damageStat := 10 #1
-var will := 100 
-var defense := 50 
-var blockingDefense := 70
-var courage := 50 
+#initial values 
+var health := current_max_health #HEALTH
+var damageStat := current_damageStat #1
+var will := current_max_will 
+var defense := current_defense 
+var blockingDefense := current_blockingDefense
+var courage := current_courage 
 
 
 

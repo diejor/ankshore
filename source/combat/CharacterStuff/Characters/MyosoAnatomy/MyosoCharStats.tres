@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="charStats" format=3 uid="uid://yyby634trdkb"]
+
+[ext_resource type="Script" uid="uid://c8rohd0cygvym" path="res://source/combat/CharacterStuff/anatomy/charStats.gd" id="1_om5kx"]
+
+[resource]
+script = ExtResource("1_om5kx")
+title = "Myoso"
+metadata/_custom_type_script = "uid://c8rohd0cygvym"

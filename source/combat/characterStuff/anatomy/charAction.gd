@@ -7,7 +7,7 @@ func itemUse() -> void:
 	pass
 
 func _to_string() -> String:
-	return "charAction"
+	return "charAction" 
 
 func attack() -> int:
 	
