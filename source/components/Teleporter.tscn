@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dblrpix74ip0"]
 
-[ext_resource type="Script" uid="uid://dpokufhqiu4rj" path="res://addons/networked/components/tp/area_tp.gd" id="1_c607x"]
-[ext_resource type="Script" uid="uid://dhjjyyacsq0l6" path="res://addons/networked/components/debug/ui/debug_label.gd" id="4_60m10"]
+[ext_resource type="Script" uid="uid://dpokufhqiu4rj" path="res://addons/networked/nodes/tp/area_tp.gd" id="1_c607x"]
+[ext_resource type="Script" uid="uid://dhjjyyacsq0l6" path="res://addons/networked/debug/ui/debug_label.gd" id="4_60m10"]
 [ext_resource type="Texture2D" uid="uid://cklptawmhtnp0" path="res://source/scenes/areas/assets/seasonal sample (winter).png" id="4_c607x"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qeccu"]
@@ -15,7 +15,7 @@ region = Rect2(176, 112, 80, 80)
 script/source = "@tool
 extends Node
 
-@onready var area_tp: AreaTP = $\"../..\"
+@onready var area_tp: AreaTP2D = $\"../..\"
 @onready var debug_label: DebugLabel = $\"..\"
 
 func _ready() -> void:

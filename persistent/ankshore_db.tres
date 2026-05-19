@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="NetwDatabase" format=3 uid="uid://dbpkxuglahaaf"]
+
+[ext_resource type="Script" uid="uid://dlsdsleg37hm1" path="res://addons/networked/sync/database/backends/file_system.gd" id="1_wfvpj"]
+[ext_resource type="Script" uid="uid://icayc7hx72vn" path="res://addons/networked/sync/database/database.gd" id="2_tb1nr"]
+
+[sub_resource type="Resource" id="Resource_2ge1l"]
+script = ExtResource("1_wfvpj")
+base_dir = "res://persistent/saves"
+use_text_format = true
+metadata/_custom_type_script = "uid://dlsdsleg37hm1"
+
+[resource]
+script = ExtResource("2_tb1nr")
+backend = SubResource("Resource_2ge1l")
+metadata/_custom_type_script = "uid://icayc7hx72vn"

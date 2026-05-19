@@ -1,12 +1,13 @@
 extends Button
 
-@export var network: NetworkSession
-@export_custom(PROPERTY_HINT_RESOURCE_TYPE, "SceneNodePath:ClientComponent")
-var spawner_path: SceneNodePath
-
 @onready var play_game: Label = $PlayGame
 @onready var username_edit: LineEdit = %UsernameEdit
+@onready var client: MultiplayerTree = %Client
+@onready var menu_ui: Control = %MenuUI
 
+
+@onready var _ctx := Netw.ctx(client)
+@export var join_payload: JoinPayload
 
 var username: String:
 	get:
@@ -17,13 +18,13 @@ var username: String:
 			username = candidate
 		return username
 
-func _init() -> void:
-	var node := Node.new()
-	add_child(node)
+func _ready() -> void:
+	_ctx.tree.connected_to_server.connect(_on_connected_to_server)
+
+func _on_connected_to_server() -> void:
+	menu_ui.visible = false
 
 func _on_pressed() -> void:
-	var client_data := MultiplayerClientData.new()
-	client_data.username = username
-	client_data.spawner_path = spawner_path
-	
-	network.connect_player(client_data)
+	disabled = true
+	join_payload.username = username
+	client.connect_player(join_payload)
