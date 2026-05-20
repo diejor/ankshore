@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/StageController/turn_manager.gd" id="3_vk3fy"]
 [ext_resource type="PackedScene" uid="uid://bflqs45vkku68" path="res://source/combat/StageController/team/Team.tscn" id="4_ywd5h"]
 [ext_resource type="Resource" uid="uid://yyby634trdkb" path="res://source/combat/CharacterStuff/Characters/MyosoAnatomy/MyosoCharStats.tres" id="5_ywd5h"]
+[ext_resource type="Script" uid="uid://dusoo1uvlltvt" path="res://source/combat/CharacterStuff/anatomy/charAttack.gd" id="6_m7umq"]
 
 [sub_resource type="GDScript" id="GDScript_m7umq"]
 script/source = "extends Label
@@ -111,6 +112,10 @@ position = Vector2(-330, 0)
 
 [node name="AllyTestCharacter" parent="AllyTeam" index="0" unique_id=867888316]
 stats = ExtResource("5_ywd5h")
+
+[node name="charAttack" type="Node" parent="AllyTeam/AllyTestCharacter" index="4" unique_id=273652385]
+script = ExtResource("6_m7umq")
+metadata/_custom_type_script = "uid://dusoo1uvlltvt"
 
 [node name="SelectionSlot2" parent="AllyTeam" index="3" unique_id=335587062]
 process_mode = 4

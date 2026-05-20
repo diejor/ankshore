@@ -42,6 +42,7 @@ func mirror_team(mirror: int) -> void:
 func get_other_team() -> TeamManager:
 	return turn_manager.get_other_team(self)
 
+
 func _organize_character(character: testCharacter) -> void:
 	if Engine.is_editor_hint():
 		return
@@ -60,6 +61,7 @@ func _on_child_entered(node: Node) -> void:
 		_organize_character(node as testCharacter)
 
 
+# activates on turn start, finds actions of each character from the team and adds them to a list, then parses through list to execute
 func _on_turn_start(team_playing: TeamManager) -> void:
 	assert(not tracked_characters.is_empty(), "Team is playing with no players.")
 	# if not the same team return

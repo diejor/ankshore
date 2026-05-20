@@ -9,6 +9,7 @@ var current_turn: int = 0
 @export var current_team: TeamManager
 @export var teams: Array[TeamManager]
 
+#turn lock
 var _turn_mutex := AsyncMutex.new()
 
 func _init() -> void:
