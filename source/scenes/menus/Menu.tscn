@@ -3,10 +3,13 @@
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
 [ext_resource type="Script" uid="uid://bu4t1igemybop" path="res://addons/networked/session/join_payload.gd" id="2_ut644"]
 [ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/session/multiplayer_tree.gd" id="3_1iwnb"]
-[ext_resource type="Script" uid="uid://cgyucu72xh732" path="res://addons/networked/transport/websocket_backend.gd" id="5_6rjpa"]
+[ext_resource type="Script" uid="uid://lcvr56cpru8b" path="res://addons/networked/transport/tube/tube_backend.gd" id="5_6rjpa"]
 [ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/session/multiplayer_scene/scene_manager.gd" id="5_xc8cl"]
+[ext_resource type="Script" uid="uid://cy006uvidc4y" path="res://addons/tube/tube_client.gd" id="8_6rjpa"]
 [ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/source/scene_node_path.gd" id="8_pulmy"]
 [ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://addons/networked/nodes/client/ConnectServerUI.tscn" id="9_evmps"]
+[ext_resource type="Script" uid="uid://t4pe7yqc3pnt" path="res://addons/tube/tube_context.gd" id="9_ut644"]
+[ext_resource type="Script" uid="uid://dfoggo64snch3" path="res://addons/networked/session/multiplayer_scene/active_scene_view.gd" id="10_ut644"]
 [ext_resource type="Script" uid="uid://domi8t23qrsdh" path="res://addons/networked/sync/clock/network_clock.gd" id="11_tbyx2"]
 
 [sub_resource type="Resource" id="Resource_ocmta"]
@@ -23,7 +26,13 @@ metadata/_custom_type_script = "uid://bu4t1igemybop"
 
 [sub_resource type="Resource" id="Resource_ut644"]
 script = ExtResource("5_6rjpa")
-metadata/_custom_type_script = "uid://cgyucu72xh732"
+tube_client_path = NodePath("TubeClient")
+metadata/_custom_type_script = "uid://lcvr56cpru8b"
+
+[sub_resource type="Resource" id="Resource_tbyx2"]
+script = ExtResource("9_ut644")
+app_id = "CQM{fi?D$<2}BuQ"
+metadata/_custom_type_script = "uid://t4pe7yqc3pnt"
 
 [sub_resource type="Resource" id="Resource_evmps"]
 script = ExtResource("8_pulmy")
@@ -86,7 +95,13 @@ placeholder_text = "Enter Username"
 unique_name_in_owner = true
 script = ExtResource("3_1iwnb")
 backend = SubResource("Resource_ut644")
+use_listen_server = true
 metadata/_custom_type_script = "uid://c3yabfbvm8gyo"
+
+[node name="TubeClient" type="Node" parent="Client" unique_id=495222064]
+script = ExtResource("8_6rjpa")
+context = SubResource("Resource_tbyx2")
+metadata/_custom_type_script = "uid://cy006uvidc4y"
 
 [node name="MultiplayerLobbyManager" type="MultiplayerSpawner" parent="Client" unique_id=953236085]
 _spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr")
@@ -100,6 +115,14 @@ scene_config/AreaTest1/empty_action = 1
 [node name="NetworkClock" type="Node" parent="Client" unique_id=1929614123]
 script = ExtResource("11_tbyx2")
 metadata/_custom_type_script = "uid://domi8t23qrsdh"
+
+[node name="ActiveSceneView" type="Control" parent="Client" unique_id=1128066499]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("10_ut644")
+metadata/_custom_type_script = "uid://dfoggo64snch3"
 
 [node name="ConnectServerUI" parent="." unique_id=99213129 instance=ExtResource("9_evmps")]
 spawner_node = SubResource("Resource_evmps")
