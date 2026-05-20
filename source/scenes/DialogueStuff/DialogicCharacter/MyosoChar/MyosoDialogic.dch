@@ -19,7 +19,7 @@
 &"portraits": {
 "MyosoPlaceH.": {
 "export_overrides": {
-"image": "\"res://source/scenes/DialogueStuff/DialogicCharacter/MyosoChar/MyosoPlaceH.png\""
+"image": "\"res://source/scenes/characters/myoso/assets/Myoso.png\""
 },
 "mirror": false,
 "offset": Vector2(0, 0),

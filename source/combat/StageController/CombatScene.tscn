@@ -112,9 +112,21 @@ position = Vector2(-330, 0)
 [node name="AllyTestCharacter" parent="AllyTeam" index="0" unique_id=867888316]
 stats = ExtResource("5_ywd5h")
 
+[node name="SelectionSlot2" parent="AllyTeam" index="3" unique_id=335587062]
+process_mode = 4
+
+[node name="SelectionSlot3" parent="AllyTeam" index="4" unique_id=1769271849]
+process_mode = 4
+
 [node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
 position = Vector2(338, 4)
 team = 1
+
+[node name="SelectionSlot2" parent="EnemyTeam" index="3" unique_id=335587062]
+process_mode = 4
+
+[node name="SelectionSlot3" parent="EnemyTeam" index="4" unique_id=1769271849]
+process_mode = 4
 
 [connection signal="timeout" from="CanvasLayer/TurnTimerLabel/TurnTimer" to="TurnManager" method="_on_turn_timer_timeout"]
 [connection signal="timeout" from="CanvasLayer/TurnTimerLabel/SecondsBeat" to="CanvasLayer/TurnTimerLabel" method="_on_seconds_beat_timeout"]

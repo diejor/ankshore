@@ -9,7 +9,7 @@
 [ext_resource type="Resource" uid="uid://dbpkxuglahaaf" path="res://persistent/ankshore_db.tres" id="4_wwq54"]
 [ext_resource type="Script" uid="uid://b21bbqt166ive" path="res://addons/networked/sync/tick_interpolator.gd" id="8_m41ox"]
 [ext_resource type="Script" uid="uid://cwf8sf34fk0ib" path="res://addons/networked/nodes/input/move_input_component.gd" id="9_7n34x"]
-[ext_resource type="Texture2D" uid="uid://by0tw5rc8fns8" path="res://source/scenes/characters/myoso/assets/MyosoANK.png" id="10_7n34x"]
+[ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="10_m41ox"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wwq54"]
 properties/0/path = NodePath(".:position")
@@ -100,4 +100,4 @@ metadata/_edit_lock_ = true
 [node name="Icon" type="Sprite2D" parent="Visuals" unique_id=1730210634]
 position = Vector2(7.748604e-07, -12.999999)
 scale = Vector2(0.1, 0.1)
-texture = ExtResource("10_7n34x")
+texture = ExtResource("10_m41ox")
