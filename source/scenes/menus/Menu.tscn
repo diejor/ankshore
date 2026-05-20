@@ -32,6 +32,8 @@ metadata/_custom_type_script = "uid://lcvr56cpru8b"
 [sub_resource type="Resource" id="Resource_tbyx2"]
 script = ExtResource("9_ut644")
 app_id = "CQM{fi?D$<2}BuQ"
+trackers_urls = Array[String](["wss://tracker.openwebtorrent.com", "wss://tracker.files.fm:7073/announce", "wss://tracker.btorrent.xyz/", "wss://tracker.ghostchu-services.top:443/announce"])
+stun_servers_urls = Array[String](["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478", "stun:stun.bethesda.net:3478"])
 metadata/_custom_type_script = "uid://t4pe7yqc3pnt"
 
 [sub_resource type="Resource" id="Resource_evmps"]
