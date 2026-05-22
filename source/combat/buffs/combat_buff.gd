@@ -2,7 +2,6 @@ class_name CombatBuff extends Resource
 
 ## Base resource representing a buff or status effect in combat.
 ##
-## [br][br]
 ## Standardizes modifiers that affect character attributes.
 
 enum StatType {
@@ -11,7 +10,8 @@ enum StatType {
 	WILL,
 	DEFENSE,
 	BLOCKING_DEFENSE,
-	COURAGE
+	COURAGE,
+	SPEED,
 }
 
 ## The stat that is modified by this status effect.

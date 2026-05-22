@@ -1,60 +1,62 @@
 class_name TurnManager extends Node
 
-## Controls turn order and progression for a combat encounter.
+## Drives the planning/resolution loop of a combat encounter.
 ##
 ## [br][br]
-## Call [method end_turn] to conclude the active turn from any
-## source - a timer timeout, player input, or team logic.
-## The sequence advances to the next team and emits
-## [signal turn_started].
+## Each turn nominates an [member attacker_team]. Both teams plan
+## simultaneously via [PlanningPhase], then [ResolutionPhase] executes
+## the collected actions in speed order. Back-navigation is a per-step
+## concern inside the planning tree; this class is intentionally not
+## an interrupt boundary.
 
-signal turn_started(team: TeamManager)
-signal turn_ended(team: TeamManager)
-signal match_started(team: TeamManager)
+signal turn_started(attacker: TeamManager)
+signal turn_ended(attacker: TeamManager)
+signal match_started(attacker: TeamManager)
+signal match_ended
+signal planning_finished
 
-## The team whose turn is currently active.
-@export var current_team: TeamManager
-## All participating teams in turn order.
+## Team holding the attacker role this turn.
+@export var attacker_team: TeamManager
+
+## All participating teams in attacker-rotation order.
 @export var teams: Array[TeamManager]
 
 @export var current_turn: int = 0
-## Acts as a mutex if team is active
-var _is_turn_active: bool = false
+
+var _running: bool = false
 
 
-func _ready() -> void:
-	_connect_teams()
-	match_started.emit(current_team)
-	# Defer the first turn to ensure all ready handlers have run.
-	_start_turn.call_deferred(current_team)
+## Runs the full match loop until [method _is_match_over] returns true.
+## Call once from the scene bootstrap.
+func run_match(ctx: PhaseContext) -> void:
+	if _running:
+		push_error("TurnManager.run_match called while already running.")
+		return
+	_running = true
+	match_started.emit(attacker_team)
+
+	while not _is_match_over():
+		turn_started.emit(attacker_team)
+
+		var planning := PlanningPhase.new()
+		var actions: Array[CommittedAction] = await planning.run(ctx)
+		planning_finished.emit()
+
+		var resolution := ResolutionPhase.new(actions)
+		await resolution.run(ctx)
+
+		turn_ended.emit(attacker_team)
+		_rotate_attacker()
+		current_turn += 1
+
+	_running = false
+	match_ended.emit()
 
 
-func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("next_turn"):
-		end_turn()
-
-
-## Concludes the active turn and advances to the next team.
-##
-## [br][br]
-## Safe to call from a timer timeout, player input, or team
-## logic. Has no effect when no turn is in progress.
+## Placeholder retained so the scene's [code]TurnTimer.timeout[/code]
+## connection still resolves. No-op until per-step timeouts replace it.
 func end_turn() -> void:
-	if not _is_turn_active:
-		push_warning("`end_turn` called when no turn is active.")
-		return
-	
-	_is_turn_active = false
-	turn_ended.emit(current_team)
-	
-	var idx := teams.find(current_team)
-	if idx == -1:
-		push_error("Current team not found in teams array.")
-		return
-	
-	var next_team := teams[(idx + 1) % teams.size()]
-	current_turn += 1
-	_start_turn(next_team)
+	pass
 
 
 ## Returns the opponent of [param team].
@@ -65,15 +67,19 @@ func get_other_team(team: TeamManager) -> TeamManager:
 	return null
 
 
-# Wires [signal turn_started] to all registered teams.
-func _connect_teams() -> void:
+func _rotate_attacker() -> void:
+	var idx := teams.find(attacker_team)
+	if idx == -1:
+		push_error("attacker_team not found in teams array.")
+		return
+	attacker_team = teams[(idx + 1) % teams.size()]
+
+
+func _is_match_over() -> bool:
+	var alive_teams := 0
 	for team in teams:
-		if not turn_started.is_connected(team._on_turn_started):
-			turn_started.connect(team._on_turn_started)
-
-
-# Begins a new turn for the designated team and manages turn state.
-func _start_turn(team: TeamManager) -> void:
-	current_team = team
-	_is_turn_active = true
-	turn_started.emit(current_team)
+		for character in team.tracked_characters:
+			if character and character.is_alive():
+				alive_teams += 1
+				break
+	return alive_teams < 2

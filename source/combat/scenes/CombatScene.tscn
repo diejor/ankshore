@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://cy6ogtu3s0p7a"]
 
-[ext_resource type="Script" path="res://source/combat/scenes/combat_scene.gd" id="1_m7umq"]
+[ext_resource type="Script" uid="uid://duwxpk4fn1pls" path="res://source/combat/scenes/combat_scene.gd" id="1_m7umq"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
-[ext_resource type="Script" path="res://source/combat/controllers/turn_manager.gd" id="3_vk3fy"]
-[ext_resource type="PackedScene" path="res://source/combat/controllers/Team.tscn" id="4_ywd5h"]
-[ext_resource type="Resource" path="res://source/combat/stats/myoso_char_stats.tres" id="5_ywd5h"]
-[ext_resource type="Script" path="res://source/combat/actions/attack_action.gd" id="6_m7umq"]
-[ext_resource type="Script" path="res://source/combat/ui/turn_label.gd" id="7_turn_lbl"]
-[ext_resource type="Script" path="res://source/combat/ui/turn_number_label.gd" id="8_turn_num"]
-[ext_resource type="Script" path="res://source/combat/ui/turn_timer_label.gd" id="9_turn_tmr"]
+[ext_resource type="Script" uid="uid://clykgsy33l17p" path="res://source/combat/controllers/turn_manager.gd" id="3_vk3fy"]
+[ext_resource type="PackedScene" uid="uid://bflqs45vkku68" path="res://source/combat/controllers/Team.tscn" id="4_ywd5h"]
+[ext_resource type="Resource" uid="uid://yyby634trdkb" path="res://source/combat/stats/myoso_char_stats.tres" id="5_ywd5h"]
+[ext_resource type="Script" uid="uid://d30hc5smawe0m" path="res://source/combat/actions/attack_action.gd" id="6_m7umq"]
+[ext_resource type="Script" uid="uid://bq68phbxx7gd8" path="res://source/combat/ui/turn_label.gd" id="7_turn_lbl"]
+[ext_resource type="Script" uid="uid://cn5fsd6uh8mnp" path="res://source/combat/ui/turn_number_label.gd" id="8_turn_num"]
+[ext_resource type="Script" uid="uid://bc0nx3f5ffeu7" path="res://source/combat/ui/turn_timer_label.gd" id="9_turn_tmr"]
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_m7umq")
@@ -65,10 +65,10 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_v1j44")
 
-[node name="TurnManager" type="Node" parent="." unique_id=1147908716 node_paths=PackedStringArray("current_team", "teams")]
+[node name="TurnManager" type="Node" parent="." unique_id=1147908716 node_paths=PackedStringArray("attacker_team", "teams")]
 unique_name_in_owner = true
 script = ExtResource("3_vk3fy")
-current_team = NodePath("../AllyTeam")
+attacker_team = NodePath("../AllyTeam")
 teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
@@ -76,11 +76,12 @@ teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 [node name="AllyTeam" parent="." unique_id=1953363629 instance=ExtResource("4_ywd5h")]
 position = Vector2(-330, 0)
 teamTitle = "AllyTeam"
+team = null
 
 [node name="AllyTestCharacter" parent="AllyTeam" index="0" unique_id=867888316]
 stats = ExtResource("5_ywd5h")
 
-[node name="attack_action" type="Node" parent="AllyTeam/AllyTestCharacter" index="4" unique_id=273652385]
+[node name="attack_action" type="Node" parent="AllyTeam/AllyTestCharacter" index="3" unique_id=273652385]
 script = ExtResource("6_m7umq")
 
 [node name="SelectionSlot2" parent="AllyTeam" index="3" unique_id=335587062]

@@ -2,7 +2,6 @@ class_name AttackAction extends CombatAction
 
 ## Concrete action representing a physical attack.
 ##
-## [br][br]
 ## Standardizes damage scaling calculations and execution rules.
 
 enum AttackDirection {
@@ -15,6 +14,14 @@ enum AttackDirection {
 
 ## Baseline damage of the attack before stat scaling.
 @export var base_damage: int = 10
+
+
+func animation_key() -> StringName:
+	match direction:
+		AttackDirection.LEFT_RIGHT:
+			return &"attack_left_right"
+		_:
+			return &"attack_over_low"
 
 
 ## Evaluates damage based on attacker's damage stat and applies it to targets.

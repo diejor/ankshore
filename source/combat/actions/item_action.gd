@@ -2,7 +2,6 @@ class_name ItemAction extends CombatAction
 
 ## Concrete action representing the usage of a consumable inventory item.
 ##
-## [br][br]
 ## Standardizes target resolution and consumable usage checks.
 
 

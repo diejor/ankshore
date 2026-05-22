@@ -3,7 +3,6 @@ extends CanvasItem
 
 ## Focus visualizer script that modulates parent opacity when focused.
 ##
-## [br][br]
 ## Standardizes alpha transparency feedback during focus events.
 
 ## Modulation opacity applied to unfocused canvas items.

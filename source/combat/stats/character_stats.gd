@@ -2,7 +2,6 @@ class_name CharacterStats extends Resource
 
 ## Holds and recalculates attributes for a combat participant.
 ##
-## [br][br]
 ## Standardizes character growth stats and active buff/debuff modifications.
 
 signal health_depleted
@@ -19,6 +18,7 @@ signal health_changed(current: int, max_val: int)
 @export var base_defense: int = 50
 @export var base_blocking_defense: int = 70
 @export var base_courage: int = 50
+@export var base_speed: int = 10
 
 ## Current status attributes (recalculated with active buffs)
 var max_health: int = 500
@@ -27,6 +27,7 @@ var max_will: int = 100
 var defense: int = 50
 var blocking_defense: int = 70
 var courage: int = 50
+var speed: int = 10
 
 ## Active health and will points
 var health: int = 500
@@ -56,7 +57,8 @@ func recalculate_stats() -> void:
 	defense = base_defense
 	blocking_defense = base_blocking_defense
 	courage = base_courage
-	
+	speed = base_speed
+
 	for buff in active_buffs:
 		match buff.type:
 			CombatBuff.StatType.HEALTH:
@@ -71,6 +73,8 @@ func recalculate_stats() -> void:
 				blocking_defense += buff.flat_value
 			CombatBuff.StatType.COURAGE:
 				courage += buff.flat_value
+			CombatBuff.StatType.SPEED:
+				speed += buff.flat_value
 
 
 ## Adjusts active health by [param change_value] (damage is negative).

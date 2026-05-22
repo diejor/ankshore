@@ -33,18 +33,33 @@ func _ready() -> void:
 	print("Character node '%s' is ready" % name)
 
 
-func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("next"):
-		var other_team := team_manager.get_other_team()
-		if other_team and other_team.slots.size() > 0:
-			other_team.slots[0].grab_focus.call_deferred()
+## Returns all [CombatAction] nodes attached as direct children plus
+## any actions in [member move_list], without duplicates. Used by
+## [MoveSelectionStep] to populate the move list UI.
+func available_moves() -> Array[CombatAction]:
+	var result: Array[CombatAction] = []
+	for child in get_children():
+		if child is CombatAction:
+			result.append(child)
+	for action in move_list:
+		if action and not result.has(action):
+			result.append(action)
+	return result
 
 
-## Returns a list of active physical attacks in the move list.
-func get_attacks() -> Array:
-	var filter_attacks := func(action: CombatAction) -> bool:
-		return action is AttackAction
-	return move_list.filter(filter_attacks)
+## Returns active physical attacks among [method available_moves].
+func get_attacks() -> Array[CombatAction]:
+	var attacks: Array[CombatAction] = []
+	for action in available_moves():
+		if action is AttackAction:
+			attacks.append(action)
+	return attacks
+
+
+## True when [member stats] are present and [member CharacterStats.health]
+## is positive.
+func is_alive() -> bool:
+	return stats != null and stats.health > 0
 
 
 ## Forces a UI update by emitting character stats.
@@ -57,19 +72,6 @@ func take_dmg(raw_damage: int, blocked: bool) -> void:
 	stats.change_health(-raw_damage)
 	if stats.health <= 0:
 		health_depleted.emit()
-
-
-## Initiates the character action decision phase.
-func start_action() -> CombatAction:
-	action_label.text = "Choosing action..."
-	
-	# Simulate character action choice delay
-	await get_tree().create_timer(1.0).timeout
-	
-	action_label.text = "Action executed!"
-	var dummy_action := CombatAction.new()
-	action_finished.emit(dummy_action)
-	return dummy_action
 
 
 ## Modulates character modulate scaling to reflect team direction.

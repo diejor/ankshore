@@ -1,11 +1,11 @@
 class_name TeamManager extends Node2D
 
-## Represents one side in a combat encounter.
+## One side of a combat encounter.
 ##
-## [br][br]
-## Tracks characters, manages team slot arrangement, and handles team turns.
-
-signal actions_finished(actions: Array[CombatAction])
+## Owns the roster of [member tracked_characters] and their [member slots]
+## layout. Turn flow lives on [TurnManager]; this class only exposes
+## [member is_attacker] and [method pending_characters] for phases to
+## consume.
 
 enum Team {
 	Ally,
@@ -31,6 +31,11 @@ enum Team {
 var team_str: String:
 	get:
 		return Team.find_key(team)
+
+## True when this team currently holds the attacker role.
+var is_attacker: bool:
+	get:
+		return turn_manager and turn_manager.attacker_team == self
 
 ## Characters registered to this team.
 var tracked_characters: Array[Character] = []
@@ -70,40 +75,14 @@ func _apply_team_layout() -> void:
 		team_label.position.x = abs(team_label.position.x) * factor
 
 
-# Activates on turn start, collects actions sequentially, then executes them.
-func _on_turn_started(team_playing: TeamManager) -> void:
-	if team_playing != self:
-		return
-	assert(
-		not tracked_characters.is_empty(),
-		"Team '%s' has no characters." % name
-	)
-	
-	# Capture the active turn ID as a cancellation token.
-	var active_turn_id := turn_manager.current_turn
-	var actions: Array[CombatAction] = []
-	
+## Returns the alive characters of this team that still need to plan
+## an action this turn. Consumed by [PlanningPhase].
+func pending_characters() -> Array[Character]:
+	var result: Array[Character] = []
 	for character in tracked_characters:
-		print(
-			str(teamTitle) + "_" + 
-			str(character.stats.title) + "_" + 
-			str(character.stats.health)
-		)
-		var action := await character.start_action()
-		
-		# Abort immediately if the turn was interrupted during the await.
-		if turn_manager.current_turn != active_turn_id:
-			return
-		actions.append(action)
-	
-	for action in actions:
-		action.execute()
-	
-	actions_finished.emit(actions)
-	
-	# Double check turn validity before concluding the turn.
-	if turn_manager.current_turn == active_turn_id:
-		turn_manager.end_turn()
+		if character and character.is_alive():
+			result.append(character)
+	return result
 
 
 # Places the character into the first available slot.
