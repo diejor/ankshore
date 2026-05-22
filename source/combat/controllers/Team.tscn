@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://bflqs45vkku68"]
 
-[ext_resource type="Script" path="res://source/combat/controllers/team_manager.gd" id="1_buy7b"]
-[ext_resource type="PackedScene" path="res://source/combat/characters/Character.tscn" id="2_d1obe"]
-[ext_resource type="Script" path="res://source/combat/actions/combat_action.gd" id="3_2l3xt"]
-[ext_resource type="PackedScene" path="res://source/combat/characters/SelectionSlot.tscn" id="4_5xetp"]
+[ext_resource type="Script" uid="uid://clm3ap7qdkvau" path="res://source/combat/controllers/team_manager.gd" id="1_buy7b"]
+[ext_resource type="PackedScene" uid="uid://dro050gfjn0ih" path="res://source/combat/characters/Character.tscn" id="2_d1obe"]
+[ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/characters/SelectionSlot.tscn" id="4_5xetp"]
 
 [node name="Team" type="Node2D" unique_id=1953363629 node_paths=PackedStringArray("slots")]
 script = ExtResource("1_buy7b")
@@ -14,18 +13,10 @@ unique_name_in_owner = true
 position = Vector2(-119, -120)
 move_list = [null, null, null]
 
-[node name="combat_action" type="Node" parent="AllyTestCharacter" unique_id=2137647855 node_paths=PackedStringArray("targets")]
-script = ExtResource("3_2l3xt")
-targets = [null]
-
 [node name="AllyTestCharacter2" parent="." unique_id=968921343 node_paths=PackedStringArray("move_list") instance=ExtResource("2_d1obe")]
 unique_name_in_owner = true
 position = Vector2(99, -123)
 move_list = [null, null, null]
-
-[node name="combat_action" type="Node" parent="AllyTestCharacter2" unique_id=767532921 node_paths=PackedStringArray("targets")]
-script = ExtResource("3_2l3xt")
-targets = [null]
 
 [node name="SelectionSlot1" parent="." unique_id=833664602 instance=ExtResource("4_5xetp")]
 process_mode = 4
@@ -39,9 +30,11 @@ focus_neighbor_right = NodePath("../SelectionSlot2")
 focus_neighbor_bottom = NodePath("../SelectionSlot2")
 focus_next = NodePath("../SelectionSlot2")
 focus_previous = NodePath("../SelectionSlot3")
+focus_mode = 0
 focus_on_ready = true
 
 [node name="SelectionSlot2" parent="." unique_id=335587062 instance=ExtResource("4_5xetp")]
+process_mode = 4
 offset_left = 178.0
 offset_top = 118.0
 offset_right = 178.0
@@ -52,8 +45,10 @@ focus_neighbor_right = NodePath("../SelectionSlot3")
 focus_neighbor_bottom = NodePath("../SelectionSlot3")
 focus_next = NodePath("../SelectionSlot3")
 focus_previous = NodePath("../SelectionSlot1")
+focus_mode = 0
 
 [node name="SelectionSlot3" parent="." unique_id=1769271849 instance=ExtResource("4_5xetp")]
+process_mode = 4
 offset_left = -49.0
 offset_top = 210.0
 offset_right = -49.0
@@ -64,6 +59,7 @@ focus_neighbor_right = NodePath("../SelectionSlot1")
 focus_neighbor_bottom = NodePath("../SelectionSlot1")
 focus_next = NodePath("../SelectionSlot1")
 focus_previous = NodePath("../SelectionSlot2")
+focus_mode = 0
 
 [node name="Label" type="Label" parent="." unique_id=236511226]
 offset_left = 146.0

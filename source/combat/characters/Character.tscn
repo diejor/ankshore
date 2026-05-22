@@ -1,10 +1,12 @@
 [gd_scene format=3 uid="uid://dro050gfjn0ih"]
 
-[ext_resource type="Script" path="res://source/combat/characters/character.gd" id="1_7uwtj"]
+[ext_resource type="Script" uid="uid://cbpmc6f8h3dqo" path="res://source/combat/characters/character.gd" id="1_7uwtj"]
 [ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="2_bgf1o"]
+[ext_resource type="Script" uid="uid://4ct5j7enqupq" path="res://source/combat/actions/combat_action.gd" id="3_61ip3"]
 
-[node name="Character" type="Node2D" unique_id=867888316]
+[node name="Character" type="Node2D" unique_id=867888316 node_paths=PackedStringArray("move_list")]
 script = ExtResource("1_7uwtj")
+move_list = [NodePath("CombatAction")]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
 position = Vector2(0, -62)
@@ -19,3 +21,7 @@ offset_right = -3.0
 offset_bottom = -180.0
 pivot_offset_ratio = Vector2(0.5, 0.5)
 text = "ActionLabel"
+
+[node name="CombatAction" type="Node" parent="." unique_id=180430298]
+script = ExtResource("3_61ip3")
+metadata/_custom_type_script = "uid://4ct5j7enqupq"

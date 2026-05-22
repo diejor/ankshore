@@ -3,25 +3,21 @@ class_name SelectionSlot extends Control
 
 ## Focusable container for a [Character], gated by a [enum StepMode].
 ##
-## A planning step controls when a slot is interactive by calling
-## [method set_step_mode]. While selectable, pressing
-## [code]select_character[/code] emits [signal user_selected].
+## Pure presentation: planning steps toggle the slot's focusability via
+## [method set_step_mode]; controllers ([LocalController]) decide when
+## the focused slot is committed. The slot itself does not poll input.
 
-## How the slot responds to user input.
-## [br]- [code]INERT[/code]: ignores focus and input.
-## [br]- [code]SELECTABLE_OWN[/code]: picking the slot's own character
-## (e.g. character selection during planning).
-## [br]- [code]SELECTABLE_TARGET[/code]: picking the slot as a target
-## of another character's action.
+## How the slot responds to focus traversal.
+## [br]- [code]INERT[/code]: not focusable.
+## [br]- [code]SELECTABLE_OWN[/code]: focusable as one of "my" team's
+## characters (character selection).
+## [br]- [code]SELECTABLE_TARGET[/code]: focusable as a target of
+## another character's action.
 enum StepMode {
 	INERT,
 	SELECTABLE_OWN,
 	SELECTABLE_TARGET,
 }
-
-## Fired when the focused slot accepts the [code]select_character[/code]
-## input under a selectable [enum StepMode].
-signal user_selected(slot: SelectionSlot)
 
 @export var focus_on_ready: bool = false
 
@@ -38,6 +34,7 @@ var step_mode: StepMode = StepMode.INERT
 
 
 func _ready() -> void:
+	set_step_mode(step_mode)
 	if focus_on_ready:
 		grab_focus.call_deferred()
 
@@ -48,19 +45,7 @@ func _init() -> void:
 	focus_exited.connect(_on_focus_exited)
 
 
-func _process(_delta: float) -> void:
-	if Engine.is_editor_hint():
-		return
-
-	if (
-		has_focus
-		and step_mode != StepMode.INERT
-		and Input.is_action_just_pressed("select_character")
-	):
-		user_selected.emit(self)
-
-
-## Sets the slot's interaction mode and toggles [member focus_mode]
+## Sets the slot's selection mode and toggles [member focus_mode]
 ## accordingly. Slots in [code]INERT[/code] mode cannot grab focus.
 func set_step_mode(mode: StepMode) -> void:
 	step_mode = mode
@@ -79,8 +64,6 @@ func get_character() -> Character:
 # Updates process mode when focus enters.
 func _on_focus_entered() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
-	if not selected is Character:
-		print("No character found in slot")
 
 
 # Updates process mode when focus exits.

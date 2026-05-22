@@ -2,7 +2,6 @@ class_name TurnManager extends Node
 
 ## Drives the planning/resolution loop of a combat encounter.
 ##
-## [br][br]
 ## Each turn nominates an [member attacker_team]. Both teams plan
 ## simultaneously via [PlanningPhase], then [ResolutionPhase] executes
 ## the collected actions in speed order. Back-navigation is a per-step
@@ -20,6 +19,11 @@ signal planning_finished
 
 ## All participating teams in attacker-rotation order.
 @export var teams: Array[TeamManager]
+
+## One controller per team. Defines who plans each team's turn
+## (local input, AI, network). Order is independent of [member teams];
+## controllers are paired to teams by [member TeamController.team].
+@export var controllers: Array[TeamController] = []
 
 @export var current_turn: int = 0
 

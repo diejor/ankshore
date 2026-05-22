@@ -1,13 +1,13 @@
 class_name MoveListUI extends Control
 
-## Focusable list of moves shown during a [MoveSelectionStep].
+## Focusable list of moves rendered for one [LocalController].
 ##
 ## [method present] rebuilds the buttons for the given actor and grabs
 ## focus on the first one. Picking a button emits [signal move_picked];
-## pressing [code]ui_cancel[/code] emits [signal cancelled].
+## back-navigation is the parent controller's responsibility (it listens
+## for [code]ui_cancel[/code] and emits [signal TeamController.back_requested]).
 
 signal move_picked(action: CombatAction)
-signal cancelled
 
 var _container: VBoxContainer
 var _buttons: Array[Button] = []
@@ -50,14 +50,6 @@ func present(actor: Character) -> void:
 func dismiss() -> void:
 	hide()
 	_clear()
-
-
-func _input(event: InputEvent) -> void:
-	if not visible:
-		return
-	if event.is_action_pressed("ui_cancel"):
-		accept_event()
-		cancelled.emit()
 
 
 func _clear() -> void:

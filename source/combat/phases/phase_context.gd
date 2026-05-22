@@ -2,7 +2,6 @@ class_name PhaseContext extends RefCounted
 
 ## Shared services threaded through every planning step and phase.
 ##
-## [br][br]
 ## Steps never reach into the scene tree directly. They request an
 ## animator role via [method animator_for] and read [member turn_manager]
 ## from this bundle.
@@ -10,7 +9,6 @@ class_name PhaseContext extends RefCounted
 var turn_manager: TurnManager
 var ui_animator: PhaseAnimator
 var camera_animator: PhaseAnimator
-var move_list_ui: MoveListUI
 var character_animators: Dictionary = {}
 
 

@@ -2,71 +2,51 @@ class_name PlanningPhase extends RefCounted
 
 ## Both teams plan their actions before any of them resolve.
 ##
-## [br][br]
-## Loops through the pending characters of attacker-then-defender teams,
-## letting the user pick a character via [CharacterSelectionStep] and
-## then a move + targets via [MoveSelectionStep]. The collected
-## [CommittedAction]s are returned to the [TurnManager] for handoff to
-## [ResolutionPhase].
-##
-## [br][br]
-## Runs to completion: every pending character gets their turn at the
-## picker. Back-navigation lives one level down, inside the per-character
-## steps - the phase itself is not interruptible.
+## Iterates [member TurnManager.controllers] in attacker-first order,
+## activating each in turn and awaiting [method TeamController.plan_turn].
+## The phase itself is dumb - all selection logic lives inside each
+## controller. The collected [CommittedAction]s are returned to the
+## [TurnManager] for handoff to [ResolutionPhase].
 
 signal phase_started
 signal phase_finished
-signal active_character_changed(character: Character)
-signal character_plan_changed(character: Character, summary: Dictionary)
+signal controller_started(controller: TeamController)
+signal controller_finished(
+	controller: TeamController, actions: Array[CommittedAction]
+)
 
 
-## Returns the actions committed by every pending character on both
-## teams. The array is in commit order; [ResolutionPhase] sorts it.
+## Returns the actions committed by every controller, in the order
+## controllers planned. [ResolutionPhase] sorts by speed.
 func run(ctx: PhaseContext) -> Array[CommittedAction]:
 	phase_started.emit()
 
 	if ctx.ui_animator:
 		await ctx.ui_animator.play_and_finish(&"planning_in")
 
-	var pending: Array[Character] = _initial_pending(ctx)
-	var committed: Array[CommittedAction] = []
-
-	while not pending.is_empty():
-		var char_step := CharacterSelectionStep.new(pending)
-		var character: Character = await char_step.run()
-		if character == null:
-			continue
-
-		active_character_changed.emit(character)
-
-		var move_step := MoveSelectionStep.new(character)
-		move_step.summary_changed.connect(
-			func(s: Dictionary) -> void:
-				character_plan_changed.emit(character, s)
-		)
-		var action: CommittedAction = await move_step.run(ctx)
-		if action == null:
-			continue
-
-		committed.append(action)
-		pending.erase(character)
+	var all_actions: Array[CommittedAction] = []
+	for controller in _controllers_in_order(ctx):
+		controller_started.emit(controller)
+		controller.activate()
+		var actions: Array[CommittedAction] = await controller.plan_turn(ctx)
+		controller.deactivate()
+		controller_finished.emit(controller, actions)
+		all_actions.append_array(actions)
 
 	if ctx.ui_animator:
 		await ctx.ui_animator.play_and_finish(&"planning_out")
 
 	phase_finished.emit()
-	return committed
+	return all_actions
 
 
-func _initial_pending(ctx: PhaseContext) -> Array[Character]:
-	var pending: Array[Character] = []
+func _controllers_in_order(ctx: PhaseContext) -> Array[TeamController]:
+	var ordered: Array[TeamController] = []
 	var attacker := ctx.turn_manager.attacker_team
-	if attacker:
-		for c in attacker.pending_characters():
-			pending.append(c)
-	for team in ctx.turn_manager.teams:
-		if team == attacker:
-			continue
-		for c in team.pending_characters():
-			pending.append(c)
-	return pending
+	for controller in ctx.turn_manager.controllers:
+		if controller.team == attacker:
+			ordered.append(controller)
+	for controller in ctx.turn_manager.controllers:
+		if controller.team != attacker:
+			ordered.append(controller)
+	return ordered

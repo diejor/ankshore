@@ -2,25 +2,29 @@ class_name TargetSelectionStep extends RefCounted
 
 ## Picks one or more enemy characters as targets for [member move].
 ##
-## [br][br]
-## Toggles opposing slots into [code]SELECTABLE_TARGET[/code], grabs
-## focus on the first valid one, and accumulates picks until the user
-## confirms or backs out via [code]ui_cancel[/code].
+## Toggles opposing slots into [code]SELECTABLE_TARGET[/code] and listens
+## to the controller for [signal TeamController.slot_picked] and
+## [signal TeamController.back_requested]. Returns the chosen targets,
+## or an empty array on back-nav.
 ##
-## [br][br]
 ## v1 commits a single target on confirm; multi-target rules will move
 ## here when moves gain target-count metadata.
 
 signal summary_changed(summary: Dictionary)
 
+var _controller: TeamController
 var actor: Character
 var move: CombatAction
 var _picked: Array[Character] = []
 var _last_focused_slot: SelectionSlot
-var _cancel_watcher: _CancelWatcher
 
 
-func _init(p_actor: Character, p_move: CombatAction) -> void:
+func _init(
+	controller: TeamController,
+	p_actor: Character,
+	p_move: CombatAction
+) -> void:
+	_controller = controller
 	actor = p_actor
 	move = p_move
 
@@ -41,8 +45,8 @@ func run() -> Array[Character]:
 	var initial := _last_focused_slot if _last_focused_slot else (
 		slots[0] if not slots.is_empty() else null
 	)
-	if initial:
-		initial.grab_focus.call_deferred()
+	if initial and _controller is LocalController:
+		(_controller as LocalController).focus_on(initial)
 
 	var result: Array[Character] = await _gather_picks(slots)
 
@@ -61,10 +65,9 @@ func summary() -> Dictionary:
 
 
 func _gather_picks(slots: Array[SelectionSlot]) -> Array[Character]:
-	var gate := _TargetGate.new()
-	for slot in slots:
-		slot.user_selected.connect(gate.on_selected)
-	_install_cancel_watcher(gate)
+	var gate := _Gate.new(slots)
+	_controller.slot_picked.connect(gate.on_picked)
+	_controller.back_requested.connect(gate.on_back)
 
 	var result: Array[Character] = []
 	while true:
@@ -81,44 +84,29 @@ func _gather_picks(slots: Array[SelectionSlot]) -> Array[Character]:
 				break
 			gate.picked_slot = null
 
-	for slot in slots:
-		if slot.user_selected.is_connected(gate.on_selected):
-			slot.user_selected.disconnect(gate.on_selected)
-	_uninstall_cancel_watcher()
+	if _controller.slot_picked.is_connected(gate.on_picked):
+		_controller.slot_picked.disconnect(gate.on_picked)
+	if _controller.back_requested.is_connected(gate.on_back):
+		_controller.back_requested.disconnect(gate.on_back)
 
 	return result
 
 
-func _install_cancel_watcher(gate: _TargetGate) -> void:
-	_cancel_watcher = _CancelWatcher.new()
-	_cancel_watcher.gate = gate
-	Engine.get_main_loop().root.add_child(_cancel_watcher)
-
-
-func _uninstall_cancel_watcher() -> void:
-	if _cancel_watcher:
-		_cancel_watcher.queue_free()
-		_cancel_watcher = null
-
-
-class _TargetGate extends RefCounted:
+class _Gate extends RefCounted:
 	signal tick
 	var picked_slot: SelectionSlot
 	var cancelled: bool = false
+	var _eligible: Array[SelectionSlot]
 
-	func on_selected(slot: SelectionSlot) -> void:
+	func _init(eligible: Array[SelectionSlot]) -> void:
+		_eligible = eligible
+
+	func on_picked(slot: SelectionSlot) -> void:
+		if not _eligible.has(slot):
+			return
 		picked_slot = slot
 		tick.emit()
 
-	func on_cancel() -> void:
+	func on_back() -> void:
 		cancelled = true
 		tick.emit()
-
-
-class _CancelWatcher extends Node:
-	var gate: _TargetGate
-
-	func _input(event: InputEvent) -> void:
-		if event.is_action_pressed("ui_cancel") and gate:
-			get_viewport().set_input_as_handled()
-			gate.on_cancel()

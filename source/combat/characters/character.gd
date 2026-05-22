@@ -2,9 +2,12 @@ class_name Character extends Node2D
 
 ## Represents a participant in a combat encounter on the battlefield.
 
+@warning_ignore("unused_signal")
 signal action_finished(action: CombatAction)
 signal health_depleted
+@warning_ignore("unused_signal")
 signal will_depleted
+@warning_ignore("unused_signal")
 signal courage_depleted
 signal transferStats(stats: CharacterStats)
 
@@ -68,6 +71,7 @@ func recalculate_moves() -> void:
 
 
 ## Deals [param raw_damage] to character stats after checking blocks.
+@warning_ignore("unused_parameter")
 func take_dmg(raw_damage: int, blocked: bool) -> void:
 	stats.change_health(-raw_damage)
 	if stats.health <= 0:

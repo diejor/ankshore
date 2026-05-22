@@ -3,7 +3,6 @@ class_name ResolutionPhase extends RefCounted
 ## Executes the [CommittedAction]s collected by [PlanningPhase] in
 ## descending order of [member CommittedAction.speed_roll].
 ##
-## [br][br]
 ## Each action's [method CombatAction.execute_async] is awaited in turn
 ## so that per-character [AnimationTree] sequences play sequentially.
 ## Dead actors and actions whose targets are all dead are skipped. The

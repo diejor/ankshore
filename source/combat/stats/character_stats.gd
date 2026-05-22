@@ -94,10 +94,12 @@ func damage_taken(dmg: int, blocked: bool) -> int:
 		# Using standard armor damage reduction logic.
 		@warning_ignore("integer_division")
 		var damage_after_armor := dmg * 100 / (100 + defense)
+		@warning_ignore("unsafe_call_argument")
 		return int(max(0, damage_after_armor))
 	else:
 		# Using blocking defense scaling percentage reduction.
 		@warning_ignore("integer_division")
 		var dmg_reduction := dmg * blocking_defense / 100
 		var remaining_dmg := dmg - dmg_reduction
+		@warning_ignore("unsafe_call_argument")
 		return int(max(0, remaining_dmg))
