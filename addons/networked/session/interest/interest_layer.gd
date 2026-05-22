@@ -96,12 +96,13 @@ var viewers: Dictionary[int, bool] = {}
 
 var _entities: Dictionary[NetwEntity, bool] = {}
 
-## Server-owned entity set participating in this layer.
+## Entity set for this layer.
+##
+## On the server, this is every entity registered through
+## [method add_entity]. On a client, this is every entity currently
+## admitted to this layer for the local peer.
 var entities: Dictionary[NetwEntity, bool]:
 	get:
-		var s := _service()
-		if s and not s._is_server():
-			return {}
 		return _entities
 
 ## Per-(entity, peer) transition cache used by [method drive_now].
@@ -131,8 +132,12 @@ func set_policy(value: Policy) -> bool:
 
 ## Adds [param peer_id] to [member viewers]. Idempotent. Returns
 ## [code]true[/code] when the set changed.
+##
+## [param peer_id] must be non-zero.
 func add_viewer(peer_id: int) -> bool:
-	if peer_id == 0 or viewers.has(peer_id):
+	assert(peer_id != 0,
+			"NetwInterestLayer.add_viewer: peer_id must be non-zero")
+	if viewers.has(peer_id):
 		return false
 	viewers[peer_id] = true
 	viewer_added.emit(peer_id)
@@ -159,23 +164,39 @@ func has_viewer(peer_id: int) -> bool:
 	return viewers.has(peer_id)
 
 
-## Enrolls [param entity] in this layer. Idempotent.
+## Enrolls [param entity] in this layer. Idempotent. Server-only;
+## a no-op on clients.
+##
+## [param entity] must be non-null and own a live root node.
 func add_entity(entity: NetwEntity) -> bool:
-	if entity == null or not is_instance_valid(entity.owner):
+	assert(entity != null,
+			"NetwInterestLayer.add_entity: entity is null")
+	assert(is_instance_valid(entity.owner),
+			"NetwInterestLayer.add_entity: entity.owner is freed")
+	var s := _service()
+	if s and not s._is_server():
 		return false
 	if _entities.has(entity):
 		return false
 	_entities[entity] = true
 	entity_added.emit(entity)
-	var s := _service()
 	if s:
 		s._on_layer_entity_changed(self, entity, true)
 	return true
 
 
 ## Removes [param entity] from this layer. Emits exits first.
+## Server-only; a no-op on clients.
+##
+## [param entity] must be non-null; passing an unknown entity is a
+## no-op for idempotent teardown.
 func remove_entity(entity: NetwEntity) -> bool:
-	if entity == null or not _entities.has(entity):
+	assert(entity != null,
+			"NetwInterestLayer.remove_entity: entity is null")
+	var s := _service()
+	if s and not s._is_server():
+		return false
+	if not _entities.has(entity):
 		return false
 	var prev_view := driver.cached_view_for(entity)
 	for peer_id: int in prev_view:
@@ -185,7 +206,6 @@ func remove_entity(entity: NetwEntity) -> bool:
 	driver.forget(entity)
 	_entities.erase(entity)
 	entity_removed.emit(entity)
-	var s := _service()
 	if s:
 		s._on_layer_entity_changed(self, entity, false)
 	return true
@@ -194,6 +214,59 @@ func remove_entity(entity: NetwEntity) -> bool:
 ## Returns [code]true[/code] when [param entity] is in this layer.
 func has_entity(entity: NetwEntity) -> bool:
 	return _entities.has(entity)
+
+
+# Idempotent client-side membership path for bound gates. Unlike the
+# unbound RPC transition sink, this notifies InterestService so local
+# synchronizer visibility filters are installed.
+func _client_track_entity(entity: NetwEntity) -> void:
+	assert(entity != null,
+			"NetwInterestLayer._client_track_entity: entity is null")
+	if _entities.has(entity):
+		return
+	_entities[entity] = true
+	entity_added.emit(entity)
+	var s := _service()
+	if s:
+		s._on_layer_entity_changed(self, entity, true)
+	entity_visible.emit(entity)
+
+
+# Idempotent client-side counterpart to [method _client_track_entity].
+func _client_untrack_entity(entity: NetwEntity) -> void:
+	assert(entity != null,
+			"NetwInterestLayer._client_untrack_entity: entity is null")
+	if not _entities.has(entity):
+		return
+	_entities.erase(entity)
+	entity_removed.emit(entity)
+	driver.forget(entity)
+	var s := _service()
+	if s:
+		s._on_layer_entity_changed(self, entity, false)
+	entity_hidden.emit(entity)
+
+
+# Idempotent client-side admit. Adds [param entity] to [member entities]
+# and emits [signal entity_visible]. Used by unbound-layer RPC relay.
+func _client_admit(entity: NetwEntity) -> void:
+	assert(entity != null,
+			"NetwInterestLayer._client_admit: entity is null")
+	if _entities.has(entity):
+		return
+	_entities[entity] = true
+	entity_visible.emit(entity)
+
+
+# Idempotent client-side revoke. Removes [param entity] from
+# [member entities] and emits [signal entity_hidden].
+func _client_revoke(entity: NetwEntity) -> void:
+	assert(entity != null,
+			"NetwInterestLayer._client_revoke: entity is null")
+	if not _entities.has(entity):
+		return
+	_entities.erase(entity)
+	entity_hidden.emit(entity)
 
 
 ## Returns the cached verdict for [param entity] and [param peer_id].
@@ -246,15 +319,11 @@ func viewers_packed() -> PackedInt32Array:
 
 func _emit_transitions(result: InterestDriver.Result) -> void:
 	for t in result.hide_transitions:
-		var entity: NetwEntity = t[0]
-		var peer: int = t[1]
-		interest_exit.emit(entity, peer)
-		entity.interest_exit.emit(peer)
+		interest_exit.emit(t.entity, t.peer)
+		t.entity.interest_exit.emit(t.peer)
 	for t in result.show_transitions:
-		var entity: NetwEntity = t[0]
-		var peer: int = t[1]
-		interest_enter.emit(entity, peer)
-		entity.interest_enter.emit(peer)
+		interest_enter.emit(t.entity, t.peer)
+		t.entity.interest_enter.emit(t.peer)
 
 
 func _service() -> InterestService:

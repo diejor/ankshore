@@ -22,6 +22,16 @@ class_name InterestDriver
 extends RefCounted
 
 
+## One per-(entity, peer) visibility change emitted by [method compute].
+class Transition:
+	extends RefCounted
+	var entity: NetwEntity
+	var peer: int
+	func _init(e: NetwEntity = null, p: int = 0) -> void:
+		entity = e
+		peer = p
+
+
 ## Output of one [method compute] pass. Transitions are sorted so the
 ## caller can iterate in engine-safe order: hides deep-first to avoid
 ## Godot issue #68508, shows shallow-first so spawn packets arrive
@@ -29,13 +39,9 @@ extends RefCounted
 class Result:
 	extends RefCounted
 	## Per-(entity, peer) hide transitions, deep-first.
-	var hide_transitions: Array = []
+	var hide_transitions: Array[Transition] = []
 	## Per-(entity, peer) show transitions, shallow-first.
-	var show_transitions: Array = []
-	## Per-(sync, peer) hide tuples for visibility updates, deep-first.
-	var sync_hides: Array = []
-	## Per-(sync, peer) show tuples for visibility updates, shallow-first.
-	var sync_shows: Array = []
+	var show_transitions: Array[Transition] = []
 	## Full new visibility state: [code]{entity: {peer: bool}}[/code].
 	var new_state: Dictionary = {}
 
@@ -87,23 +93,24 @@ func compute(
 		kind: NetwInterestLayer.Policy,
 		viewers: Dictionary) -> Result:
 	var result := Result.new()
+	# Policy verdict depends only on (kind, viewers, peer), not on the
+	# entity. Compute it once per peer and reuse across the layer.
+	var verdict_by_peer: Dictionary = {}
+	for peer: int in peers:
+		verdict_by_peer[peer] = InterestPolicy.verdict(kind, viewers, peer)
 	for entity: NetwEntity in entities:
 		if not is_instance_valid(entity) \
 				or not is_instance_valid(entity.owner):
 			continue
-		_compute_entity(entity, peers, kind, viewers, result)
-	result.sync_hides.sort_custom(_sync_deeper_first)
-	result.sync_shows.sort_custom(_sync_shallower_first)
-	result.hide_transitions.sort_custom(_entity_deeper_first)
-	result.show_transitions.sort_custom(_entity_shallower_first)
+		_compute_entity(entity, verdict_by_peer, result)
+	result.hide_transitions.sort_custom(_transition_deeper_first)
+	result.show_transitions.sort_custom(_transition_shallower_first)
 	return result
 
 
 func _compute_entity(
 		entity: NetwEntity,
-		peers: Array[int],
-		kind: NetwInterestLayer.Policy,
-		viewers: Dictionary,
+		verdict_by_peer: Dictionary,
 		result: Result) -> void:
 	# Off-tree owners and syncs cannot be ordered by [method
 	# Node.get_path] (which the comparators call), and an off-tree
@@ -115,25 +122,17 @@ func _compute_entity(
 	var prev: Dictionary = _state.get(entity, {})
 	var per_entity: Dictionary = {}
 	result.new_state[entity] = per_entity
-	for peer: int in peers:
-		var now := InterestPolicy.verdict(kind, viewers, peer)
+	for peer: int in verdict_by_peer:
+		var now: bool = verdict_by_peer[peer]
 		per_entity[peer] = now
 		var was: bool = prev.get(peer, false)
 		if was == now:
 			continue
-		var transition := [entity, peer]
+		var transition := Transition.new(entity, peer)
 		if now:
 			result.show_transitions.append(transition)
 		else:
 			result.hide_transitions.append(transition)
-		for sync in entity.synchronizers():
-			if not is_instance_valid(sync) or not sync.is_inside_tree():
-				continue
-			var tup := [sync, peer]
-			if now:
-				result.sync_shows.append(tup)
-			else:
-				result.sync_hides.append(tup)
 
 
 ## Adopts [param result.new_state] as the current cache. Call after
@@ -151,21 +150,11 @@ func dump() -> Dictionary:
 # Sort comparators. Depth is measured via Node path name count so a
 # scripted scene tree and a runtime-built tree compare consistently.
 
-func _sync_deeper_first(a: Array, b: Array) -> bool:
-	return (a[0] as Node).get_path().get_name_count() \
-			> (b[0] as Node).get_path().get_name_count()
+func _transition_deeper_first(a: Transition, b: Transition) -> bool:
+	return a.entity.owner.get_path().get_name_count() \
+			> b.entity.owner.get_path().get_name_count()
 
 
-func _sync_shallower_first(a: Array, b: Array) -> bool:
-	return (a[0] as Node).get_path().get_name_count() \
-			< (b[0] as Node).get_path().get_name_count()
-
-
-func _entity_deeper_first(a: Array, b: Array) -> bool:
-	return (a[0] as NetwEntity).owner.get_path().get_name_count() \
-			> (b[0] as NetwEntity).owner.get_path().get_name_count()
-
-
-func _entity_shallower_first(a: Array, b: Array) -> bool:
-	return (a[0] as NetwEntity).owner.get_path().get_name_count() \
-			< (b[0] as NetwEntity).owner.get_path().get_name_count()
+func _transition_shallower_first(a: Transition, b: Transition) -> bool:
+	return a.entity.owner.get_path().get_name_count() \
+			< b.entity.owner.get_path().get_name_count()

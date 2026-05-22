@@ -19,9 +19,9 @@ properties/0/replication_mode = 2
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_y8aqg"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_u3s8h"]
-properties/0/path = NodePath("..:position")
+properties/0/path = NodePath("../..:position")
 properties/0/spawn = true
-properties/0/replication_mode = 2
+properties/0/replication_mode = 1
 
 [sub_resource type="Resource" id="Resource_wwq54"]
 script = ExtResource("3_wwq54")
@@ -37,18 +37,22 @@ motion_mode = 1
 script = ExtResource("1_jpx56")
 sprint_speed = 96.0
 
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=19976625]
+[node name="Components" type="Node" parent="." unique_id=1711373855]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Components" unique_id=19976625]
+root_path = NodePath("../..")
 replication_interval = 0.25
 delta_interval = 0.25
 replication_config = SubResource("SceneReplicationConfig_wwq54")
 
-[node name="SpawnerComponent" type="MultiplayerSynchronizer" parent="." unique_id=1639079124]
+[node name="SpawnerComponent" type="MultiplayerSynchronizer" parent="Components" unique_id=1639079124]
+root_path = NodePath("../..")
 replication_config = SubResource("SceneReplicationConfig_y8aqg")
 script = ExtResource("2_m41ox")
 authority_mode = 1
 metadata/_custom_type_script = "uid://cgyly1efa3m53"
 
-[node name="SaveComponent" type="MultiplayerSynchronizer" parent="." unique_id=1369520887]
+[node name="SaveComponent" type="MultiplayerSynchronizer" parent="Components" unique_id=1369520887]
 unique_name_in_owner = true
 root_path = NodePath(".")
 replication_interval = 5.0
@@ -61,21 +65,21 @@ database = ExtResource("4_wwq54")
 table_name = &"players"
 metadata/_custom_type_script = "uid://c72wanrudisxw"
 
-[node name="TPComponent" type="Node" parent="." unique_id=479005211]
+[node name="TPComponent" type="Node" parent="Components" unique_id=479005211]
 unique_name_in_owner = true
 script = ExtResource("2_ko57k")
 starting_scene_path = SubResource("Resource_wwq54")
 
-[node name="InputComponent" type="Node" parent="." unique_id=813433517]
+[node name="InputComponent" type="Node" parent="Components" unique_id=813433517]
 unique_name_in_owner = true
 script = ExtResource("9_7n34x")
 
-[node name="TickInterpolator" type="Node" parent="." unique_id=1838433912]
+[node name="TickInterpolator" type="Node" parent="Components" unique_id=1838433912]
 script = ExtResource("8_m41ox")
 property_modes = Dictionary[StringName, int]({
 &"position": 1
 })
-visual_root = NodePath("../Visuals")
+visual_root = NodePath("../../Visuals")
 metadata/_custom_type_script = "uid://b21bbqt166ive"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1410285114]

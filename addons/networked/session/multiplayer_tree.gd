@@ -737,23 +737,24 @@ func connect_player(join_payload: JoinPayload) -> Error:
 	var err := await _prepare_session(join_payload)
 	if err != OK:
 		return err
-	
+
 	var url := join_payload.url
 	Netw.dbg.info(
 		"Connecting player %s to %s", [join_payload.username, url]
 	)
-	
+
 	if _is_local_url(url):
 		if backend.supports_embedded_server():
-			if backend.supports_local_probe():
-				var probe_url := url if not url.is_empty() else "localhost"
-				var probe_err: Error = await join(
-					probe_url, join_payload.username, 1.0, true
-				)
-				if probe_err == OK:
+			var probe_url := url if not url.is_empty() else "localhost"
+			var probe: ProbeResult = await backend.probe(probe_url, 0.2)
+			if probe.is_reachable():
+				Netw.dbg.debug("Probe found local server (%s); joining.", [probe])
+				var join_err := await join(probe_url, join_payload.username)
+				if join_err == OK:
 					submit_join(join_payload)
-					return OK
-			
+				return join_err
+
+			Netw.dbg.debug("Probe found no local server (%s); hosting.", [probe])
 			return await _host_player_logic(join_payload)
 		else:
 			# For backends that don't support embedded servers (like Steam),
@@ -765,10 +766,10 @@ func connect_player(join_payload: JoinPayload) -> Error:
 				submit_join(join_payload)
 				return OK
 			return host_err
-	
+
 	if OS.has_feature("web") and url.begins_with("ws"):
 		backend = WebSocketBackend.new()
-	
+
 	var join_err := await join(url, join_payload.username)
 	if join_err == OK:
 		submit_join(join_payload)
@@ -1054,6 +1055,11 @@ func _rpc_request_disconnect(reason: String) -> void:
 	disconnect_requested.emit(peer_id, reason)
 
 
+## Broadcasts a server-shutdown notice to all connected clients.
+func notify_shutdown(reason: String) -> void:
+	_rpc_receive_notify_disconnect.rpc(reason)
+
+
 ## Sent by the server to notify clients it is shutting down.
 @rpc("any_peer", "call_local", "reliable")
 func _rpc_receive_notify_disconnect(reason: String) -> void:
@@ -1096,20 +1102,36 @@ func _ensure_interest_service() -> void:
 	if is_instance_valid(_interest_service) \
 			and is_ancestor_of(_interest_service):
 		return
+	
+	var existing := get_node_or_null("InterestService") \
+			as InterestService
+	if not existing:
+		existing = find_service_node(InterestService) \
+				as InterestService
+	if existing:
+		_free_unparented_interest_service(existing)
+		_interest_service = existing
+		return
+	
 	if is_instance_valid(_interest_service) \
 			and _interest_service.get_parent() == null:
 		add_child(_interest_service)
 		return
-	_interest_service = null
-	_interest_service = get_node_or_null("InterestService") \
-			as InterestService
-	if not _interest_service:
-		_interest_service = find_service_node(InterestService) \
-				as InterestService
-	if not _interest_service:
-		_interest_service = InterestService.new()
-		_interest_service.name = &"InterestService"
-		add_child(_interest_service)
+	
+	_interest_service = InterestService.new()
+	_interest_service.name = &"InterestService"
+	add_child(_interest_service)
+
+
+# Frees the transient service created by _init when duplicate() copied one.
+func _free_unparented_interest_service(keep: InterestService) -> void:
+	if not is_instance_valid(_interest_service):
+		return
+	if _interest_service == keep:
+		return
+	if _interest_service.get_parent() != null:
+		return
+	_interest_service.free()
 
 
 # Replaces a fresh empty SceneMultiplayer at the api's old path. Godot 4 does

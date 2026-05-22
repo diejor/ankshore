@@ -12,8 +12,8 @@
 ## filtering.
 ##
 ## [br][br]
-## A gate mirrors admission only. Entity membership remains server-owned,
-## and transition signals still live on [NetwInterestLayer].
+## A gate mirrors admission only. Entity membership and transition signals
+## still live on [NetwInterestLayer].
 ## [codeblock]
 ## var gate := InterestGate.new()
 ## gate.layer_id = &"arena:1"
@@ -61,6 +61,7 @@ var _layer: NetwInterestLayer
 var _applying_local: bool = false
 var _config_built: bool = false
 var _registered: bool = false
+var _client_entities: Dictionary[NetwEntity, bool] = {}
 
 
 func _init() -> void:
@@ -78,7 +79,59 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
+	_revoke_all_client_entities()
 	_unbind()
+
+
+## Enrolls [param entity] in this gate's bound layer. Idempotent.
+##
+## On the server, delegates to [method NetwInterestLayer.add_entity]. On
+## a client, records the local entity and admits it through the layer's
+## client tracking path so synchronizer visibility filters are installed.
+func track_entity(entity: NetwEntity) -> void:
+	if entity == null or _layer == null:
+		return
+	if _is_server():
+		_layer.add_entity(entity)
+		return
+	if _client_entities.has(entity):
+		return
+	_client_entities[entity] = true
+	_layer._client_track_entity(entity)
+
+
+## Removes [param entity] from this gate's bound layer. Idempotent.
+func untrack_entity(entity: NetwEntity) -> void:
+	if entity == null or _layer == null:
+		return
+	if _is_server():
+		_layer.remove_entity(entity)
+		return
+	if not _client_entities.has(entity):
+		return
+	_client_entities.erase(entity)
+	_layer._client_untrack_entity(entity)
+
+
+## Returns [code]true[/code] when this gate is tracking [param entity].
+func has_entity(entity: NetwEntity) -> bool:
+	if entity == null or _layer == null:
+		return false
+	if _is_server():
+		return _layer.has_entity(entity)
+	return _client_entities.has(entity)
+
+
+# Revokes local entities if the gate leaves before tracked subtree nodes
+# call [method untrack_entity].
+func _revoke_all_client_entities() -> void:
+	if _client_entities.is_empty() or _layer == null:
+		_client_entities.clear()
+		return
+	var entities := _client_entities.keys()
+	_client_entities.clear()
+	for entity: NetwEntity in entities:
+		_layer._client_untrack_entity(entity)
 
 
 ## Returns [code]true[/code] when [param peer_id] is in [member viewers].
@@ -98,11 +151,36 @@ func verdict_for(peer_id: int) -> bool:
 func apply_snapshot(
 		new_viewers: PackedInt32Array,
 		new_policy: NetwInterestLayer.Policy) -> void:
+	apply_snapshot_data(new_viewers, new_policy)
+	_apply_admission_visibility()
+
+
+## Writes [param new_viewers] and [param new_policy] without touching
+## per-peer visibility. Used by [InterestService] to stage gate data
+## ahead of split admit/revoke visibility passes.
+func apply_snapshot_data(
+		new_viewers: PackedInt32Array,
+		new_policy: NetwInterestLayer.Policy) -> void:
 	_applying_local = true
 	policy = new_policy
 	viewers = new_viewers
 	_applying_local = false
-	_apply_admission_visibility()
+
+
+## Applies admission visibility for [param peer_ids] only, using the
+## gate's current [member policy] and [member viewers] to compute each
+## verdict. Peers not listed are left untouched.
+func apply_admission_visibility_to(peer_ids: Array) -> void:
+	if not is_inside_tree():
+		return
+	if not multiplayer or multiplayer.multiplayer_peer == null:
+		return
+	if not multiplayer.is_server():
+		return
+	var v_dict := _viewers_as_dict()
+	for peer_id: int in peer_ids:
+		var verdict := InterestPolicy.verdict(policy, v_dict, peer_id)
+		set_visibility_for(peer_id, verdict)
 
 
 func _apply_admission_visibility() -> void:
