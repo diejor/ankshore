@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CharacterStats" format=3 uid="uid://yyby634trdkb"]
+
+[ext_resource type="Script" path="res://source/combat/stats/character_stats.gd" id="1_om5kx"]
+
+[resource]
+script = ExtResource("1_om5kx")
+title = "Myoso"
+level = 1
+base_max_health = 500
+base_damage = 10
+base_max_will = 100
+base_defense = 50
+base_blocking_defense = 70
+base_courage = 50

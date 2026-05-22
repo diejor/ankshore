@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dro050gfjn0ih"]
+
+[ext_resource type="Script" path="res://source/combat/characters/character.gd" id="1_7uwtj"]
+[ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="2_bgf1o"]
+
+[node name="Character" type="Node2D" unique_id=867888316]
+script = ExtResource("1_7uwtj")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
+position = Vector2(0, -62)
+scale = Vector2(0.19672132, 0.1967213)
+texture = ExtResource("2_bgf1o")
+
+[node name="ActionLabel" type="Label" parent="." unique_id=422375864]
+unique_name_in_owner = true
+offset_left = -94.0
+offset_top = -203.0
+offset_right = -3.0
+offset_bottom = -180.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+text = "ActionLabel"

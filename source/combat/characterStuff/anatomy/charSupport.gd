@@ -1,2 +1,0 @@
-extends charAction
-class_name charSupport

@@ -1,0 +1,110 @@
+[gd_scene format=3 uid="uid://cy6ogtu3s0p7a"]
+
+[ext_resource type="Script" path="res://source/combat/scenes/combat_scene.gd" id="1_m7umq"]
+[ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
+[ext_resource type="Script" path="res://source/combat/controllers/turn_manager.gd" id="3_vk3fy"]
+[ext_resource type="PackedScene" path="res://source/combat/controllers/Team.tscn" id="4_ywd5h"]
+[ext_resource type="Resource" path="res://source/combat/stats/myoso_char_stats.tres" id="5_ywd5h"]
+[ext_resource type="Script" path="res://source/combat/actions/attack_action.gd" id="6_m7umq"]
+[ext_resource type="Script" path="res://source/combat/ui/turn_label.gd" id="7_turn_lbl"]
+[ext_resource type="Script" path="res://source/combat/ui/turn_number_label.gd" id="8_turn_num"]
+[ext_resource type="Script" path="res://source/combat/ui/turn_timer_label.gd" id="9_turn_tmr"]
+
+[node name="Combat Set" type="Node2D" unique_id=303666812]
+script = ExtResource("1_m7umq")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1190960819]
+
+[node name="TurnLabel" type="Label" parent="CanvasLayer" unique_id=916242494]
+unique_name_in_owner = true
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -84.0
+offset_top = 49.0
+offset_right = 155.0
+offset_bottom = 94.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Turn: %s"
+script = ExtResource("7_turn_lbl")
+
+[node name="TurnNumber" type="Label" parent="CanvasLayer" unique_id=489810226]
+unique_name_in_owner = true
+offset_left = 537.0
+offset_top = 27.0
+offset_right = 604.0
+offset_bottom = 50.0
+text = "# %s"
+script = ExtResource("8_turn_num")
+
+[node name="TurnTimerLabel" type="Label" parent="CanvasLayer" unique_id=1620141512]
+unique_name_in_owner = true
+offset_left = 49.0
+offset_top = 45.0
+offset_right = 269.0
+offset_bottom = 90.0
+theme_override_font_sizes/font_size = 32
+text = "Time Left: %ss"
+script = ExtResource("9_turn_tmr")
+
+[node name="TurnTimer" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=2071835503]
+unique_name_in_owner = true
+wait_time = 10.0
+
+[node name="SecondsBeat" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=1718539369]
+unique_name_in_owner = true
+process_callback = 0
+autostart = true
+
+[node name="Background" type="TextureRect" parent="." unique_id=1518636395]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_v1j44")
+
+[node name="TurnManager" type="Node" parent="." unique_id=1147908716 node_paths=PackedStringArray("current_team", "teams")]
+unique_name_in_owner = true
+script = ExtResource("3_vk3fy")
+current_team = NodePath("../AllyTeam")
+teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
+
+[node name="AllyTeam" parent="." unique_id=1953363629 instance=ExtResource("4_ywd5h")]
+position = Vector2(-330, 0)
+teamTitle = "AllyTeam"
+
+[node name="AllyTestCharacter" parent="AllyTeam" index="0" unique_id=867888316]
+stats = ExtResource("5_ywd5h")
+
+[node name="attack_action" type="Node" parent="AllyTeam/AllyTestCharacter" index="4" unique_id=273652385]
+script = ExtResource("6_m7umq")
+
+[node name="SelectionSlot2" parent="AllyTeam" index="3" unique_id=335587062]
+process_mode = 4
+
+[node name="SelectionSlot3" parent="AllyTeam" index="4" unique_id=1769271849]
+process_mode = 4
+
+[node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
+position = Vector2(338, 4)
+teamTitle = "EnemyTeam"
+team = 1
+
+[node name="SelectionSlot2" parent="EnemyTeam" index="3" unique_id=335587062]
+process_mode = 4
+
+[node name="SelectionSlot3" parent="EnemyTeam" index="4" unique_id=1769271849]
+process_mode = 4
+
+[connection signal="timeout" from="CanvasLayer/TurnTimerLabel/TurnTimer" to="TurnManager" method="end_turn"]
+[connection signal="timeout" from="CanvasLayer/TurnTimerLabel/SecondsBeat" to="CanvasLayer/TurnTimerLabel" method="_on_seconds_beat_timeout"]
+[connection signal="turn_started" from="TurnManager" to="CanvasLayer/TurnLabel" method="_on_turn_manager_turn_started"]
+[connection signal="turn_started" from="TurnManager" to="CanvasLayer/TurnNumber" method="_on_turn_manager_turn_started"]
+[connection signal="turn_started" from="TurnManager" to="CanvasLayer/TurnTimerLabel" method="_on_turn_manager_turn_started"]
+
+[editable path="AllyTeam"]
+[editable path="EnemyTeam"]
