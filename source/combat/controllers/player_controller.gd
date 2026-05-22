@@ -70,6 +70,7 @@ func _on_parry_window_opened(window_sec: float) -> void:
 # qualifying press or timer expiry.
 func _start_capture(mode: int, window_sec: float) -> void:
 	var capture := _DefenseCapture.new()
+	@warning_ignore("int_as_enum_without_cast")
 	capture.mode = mode
 	_defense_capture = capture
 	_defending = true
@@ -112,7 +113,9 @@ class _DefenseCapture extends RefCounted:
 				_finish(DefenseInput.parry())
 			return
 		var triggered := false
+		@warning_ignore("untyped_declaration")
 		for action in ["ui_left", "ui_right", "ui_down"]:
+			@warning_ignore("unsafe_call_argument")
 			if event.is_action_pressed(action):
 				triggered = true
 				break

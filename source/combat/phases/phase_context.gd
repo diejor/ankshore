@@ -11,6 +11,10 @@ var ui_animator: PhaseAnimator
 var camera_animator: PhaseAnimator
 var character_animators: Dictionary = {}
 
+## Shared inspection target read by panel UIs. Constructed once per
+## encounter; UIs subscribe to [signal InspectionState.inspection_changed].
+var inspection_state: InspectionState
+
 
 ## Returns the [PhaseAnimator] registered for [param character], or
 ## [code]null[/code] if none was provided.

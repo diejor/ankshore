@@ -7,6 +7,19 @@ class_name CharacterStats extends Resource
 signal health_depleted
 signal health_changed(current: int, max_val: int)
 
+## Emitted by [method change_will] after [member will] is adjusted.
+signal will_changed(current: int, max_val: int)
+
+## Emitted by [method change_courage] after [member courage] is adjusted.
+signal courage_changed(current: int, max_val: int)
+
+## Emitted after [member active_buffs] is mutated. UI views bind to this
+## to re-render buff/debuff icons. Callers that mutate [member active_buffs]
+## directly should emit this themselves until proper add/remove helpers
+## exist.
+@warning_ignore("unused_signal")
+signal buffs_changed(buffs: Array)
+
 ## Custom name or identifier for the character.
 @export var title: String = "TestCharacter"
 
@@ -86,6 +99,22 @@ func change_health(change_value: int) -> void:
 		health = 0
 		health_depleted.emit()
 	health_changed.emit(health, max_health)
+
+
+## Adjusts active will by [param change_value] (cost is negative). Will
+## is clamped to [code][0, max_will][/code].
+func change_will(change_value: int) -> void:
+	will = clampi(will + change_value, 0, max_will)
+	will_changed.emit(will, max_will)
+
+
+## Adjusts active courage by [param change_value]. Courage is clamped to
+## [code][0, max(base_courage, courage)][/code] - growth uses the
+## recalculated cap from [method recalculate_stats].
+func change_courage(change_value: int) -> void:
+	@warning_ignore("unsafe_call_argument")
+	courage = clampi(courage + change_value, 0, max(courage, base_courage))
+	courage_changed.emit(courage, base_courage)
 
 
 ## Applies incoming physical damage after accounting for blocking/armor.

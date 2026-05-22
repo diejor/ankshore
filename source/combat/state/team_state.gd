@@ -72,14 +72,17 @@ signal defense_window_closed(result: DefenseInput)
 ## [param beat] against a character on this team. Mirrors the resolver's
 ## own signal so UI nodes can bind to the defender's [TeamState] without
 ## holding a reference to the transient resolver.
+@warning_ignore("unused_signal")
 signal beat_telegraphed(beat: AttackBeat)
 
 ## Emitted after a beat resolves against a character on this team.
+@warning_ignore("unused_signal")
 signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
 
 ## Emitted after an [enum AttackString.Ender] resolves against a
 ## character on this team. [param ender] is the [enum AttackString.Ender]
 ## value.
+@warning_ignore("unused_signal")
 signal ender_resolved(ender: int, hit: bool, damage: int)
 
 ## Current step of the planning state machine. Read-only to consumers -

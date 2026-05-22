@@ -69,7 +69,6 @@ func _resolve_beat(beat: AttackBeat) -> void:
 	else:
 		_state.chip_dealt += dmg
 	beat_resolved.emit(beat, blocked, dmg)
-	var d_state := _defender_state()
 	if d_state:
 		d_state.beat_resolved.emit(beat, blocked, dmg)
 
@@ -148,6 +147,7 @@ func _apply_beat_damage(beat: AttackBeat, blocked: bool) -> int:
 		return 0
 	var raw: int = beat.damage + _attacker.stats.damage
 	if blocked:
+		@warning_ignore("unsafe_call_argument")
 		raw = int(round(raw * beat.chip_pct))
 	var final: int = _defender.stats.damage_taken(raw, blocked)
 	_defender.take_dmg(final, blocked)

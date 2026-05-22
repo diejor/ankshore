@@ -103,6 +103,7 @@ script = ExtResource("10_pc")
 team = NodePath("..")
 
 [node name="SlotSelectionView" type="Node" parent="AllyTeam" unique_id=957909486 node_paths=PackedStringArray("team")]
+unique_name_in_owner = true
 script = ExtResource("12_ssv")
 team = NodePath("..")
 

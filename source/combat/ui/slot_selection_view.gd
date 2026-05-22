@@ -16,6 +16,11 @@ class_name SlotSelectionView extends Node
 ## Team whose [TeamState] this view observes.
 @export var team: TeamManager
 
+## Shared inspection target. Set by [CombatScene]; this view pushes the
+## focused slot's character into [member InspectionState.inspected_character]
+## so panels stay in sync with slot navigation.
+var inspection: InspectionState = null
+
 # Slot focused last during PICKING_CHARACTER. Used to restore focus when
 # re-entering that phase after a back-nav.
 var _last_character_slot: SelectionSlot = null
@@ -37,6 +42,8 @@ func _ready() -> void:
 		push_error("SlotSelectionView: team has no TeamState.")
 		return
 	s.phase_changed.connect(_on_phase_changed)
+	s.active_character_changed.connect(_on_active_changed)
+	_connect_focus_listeners.call_deferred()
 	_on_phase_changed(s.phase)
 
 
@@ -78,6 +85,37 @@ func _enter_pick_targets() -> void:
 			if first == null:
 				first = slot
 	_focus_or_fallback(_last_target_slot, first)
+
+
+# Pins inspection to the active character during PICKING_MOVE, since no
+# slot is focused during that phase. Other phases derive inspection from
+# slot focus directly.
+func _on_active_changed(c: Character) -> void:
+	if inspection == null or c == null:
+		return
+	if team.state.phase == TeamState.Phase.PICKING_MOVE:
+		inspection.inspected_character = c
+
+
+# Connects [signal Control.focus_entered] on every slot the player can
+# navigate to (own team plus the opposing team's slots) so inspection
+# updates reactively. Deferred to give [TeamManager] time to resolve its
+# opponent via [code]%TurnManager[/code].
+func _connect_focus_listeners() -> void:
+	for slot in team.slots:
+		slot.focus_entered.connect(_on_slot_focused.bind(slot))
+	var enemy := team.get_other_team()
+	if enemy:
+		for slot in enemy.slots:
+			slot.focus_entered.connect(_on_slot_focused.bind(slot))
+
+
+func _on_slot_focused(slot: SelectionSlot) -> void:
+	if inspection == null:
+		return
+	var c := slot.get_character()
+	if c:
+		inspection.inspected_character = c
 
 
 # Captures the currently focused slot before slot modes are cleared, so
