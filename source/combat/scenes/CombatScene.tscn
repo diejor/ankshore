@@ -8,8 +8,9 @@
 [ext_resource type="Script" uid="uid://bvj5pt4nu7nn7" path="res://source/combat/controllers/ai_controller.gd" id="7_ucdr0"]
 [ext_resource type="Script" uid="uid://cn5fsd6uh8mnp" path="res://source/combat/ui/turn_number_label.gd" id="8_turn_num"]
 [ext_resource type="Script" uid="uid://bc0nx3f5ffeu7" path="res://source/combat/ui/turn_timer_label.gd" id="9_turn_tmr"]
-[ext_resource type="Script" uid="uid://ddgv8e4pixwwb" path="res://source/combat/controllers/local_controller.gd" id="10_lc"]
+[ext_resource type="Script" uid="uid://jydmrcguev5v" path="res://source/combat/controllers/player_controller.gd" id="10_pc"]
 [ext_resource type="Script" uid="uid://cepdvuo6axk38" path="res://source/combat/ui/move_list_ui.gd" id="11_mlui"]
+[ext_resource type="Script" uid="uid://cnbjkqb4s8uuf" path="res://source/combat/ui/slot_selection_view.gd" id="12_ssv"]
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_m7umq")
@@ -58,6 +59,19 @@ unique_name_in_owner = true
 process_callback = 0
 autostart = true
 
+[node name="MoveListUI" type="Control" parent="CanvasLayer" unique_id=1476699155]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 32.0
+offset_top = -160.0
+offset_right = 260.0
+offset_bottom = 160.0
+grow_vertical = 2
+script = ExtResource("11_mlui")
+
 [node name="Background" type="TextureRect" parent="." unique_id=1518636395]
 anchors_preset = 15
 anchor_right = 1.0
@@ -75,7 +89,7 @@ unique_name_in_owner = true
 script = ExtResource("3_vk3fy")
 attacker_team = NodePath("../AllyTeam")
 teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
-controllers = [NodePath("../AllyTeam/AllyController"), NodePath("../EnemyTeam/EnemyController")]
+controllers = [null, null]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 
@@ -83,23 +97,14 @@ controllers = [NodePath("../AllyTeam/AllyController"), NodePath("../EnemyTeam/En
 position = Vector2(-330, 0)
 teamTitle = "AllyTeam"
 
-[node name="AllyController" type="Node" parent="AllyTeam" unique_id=420866388 node_paths=PackedStringArray("move_list_ui", "team")]
+[node name="AllyController" type="Node" parent="AllyTeam" unique_id=420866388 node_paths=PackedStringArray("team")]
 unique_name_in_owner = true
-script = ExtResource("10_lc")
-move_list_ui = NodePath("MoveListUI")
+script = ExtResource("10_pc")
 team = NodePath("..")
 
-[node name="MoveListUI" type="Control" parent="AllyTeam/AllyController" unique_id=1476699155]
-layout_mode = 3
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 32.0
-offset_top = -160.0
-offset_right = 260.0
-offset_bottom = 160.0
-grow_vertical = 2
-script = ExtResource("11_mlui")
+[node name="SlotSelectionView" type="Node" parent="AllyTeam" unique_id=957909486 node_paths=PackedStringArray("team")]
+script = ExtResource("12_ssv")
+team = NodePath("..")
 
 [node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
 position = Vector2(338, 4)

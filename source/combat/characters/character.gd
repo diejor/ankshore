@@ -9,12 +9,9 @@ signal health_depleted
 signal will_depleted
 @warning_ignore("unused_signal")
 signal courage_depleted
-signal transferStats(stats: CharacterStats)
 
 @export var stats: CharacterStats = CharacterStats.new()
 @export var move_list: Array[CombatAction] = []
-
-@onready var action_label: Label = %ActionLabel
 
 ## Parent team manager caching property.
 var team_manager: TeamManager:
@@ -32,13 +29,11 @@ var _team_manager_cache: TeamManager = null
 
 func _ready() -> void:
 	_update_facing_direction()
-	transferStats.emit(stats)
-	print("Character node '%s' is ready" % name)
 
 
 ## Returns all [CombatAction] nodes attached as direct children plus
 ## any actions in [member move_list], without duplicates. Used by
-## [MoveSelectionStep] to populate the move list UI.
+## [MoveListUI] to render the move-pick view.
 func available_moves() -> Array[CombatAction]:
 	var result: Array[CombatAction] = []
 	for child in get_children():
@@ -50,24 +45,10 @@ func available_moves() -> Array[CombatAction]:
 	return result
 
 
-## Returns active physical attacks among [method available_moves].
-func get_attacks() -> Array[CombatAction]:
-	var attacks: Array[CombatAction] = []
-	for action in available_moves():
-		if action is AttackAction:
-			attacks.append(action)
-	return attacks
-
-
 ## True when [member stats] are present and [member CharacterStats.health]
 ## is positive.
 func is_alive() -> bool:
 	return stats != null and stats.health > 0
-
-
-## Forces a UI update by emitting character stats.
-func recalculate_moves() -> void:
-	transferStats.emit(stats)
 
 
 ## Deals [param raw_damage] to character stats after checking blocks.
@@ -78,7 +59,7 @@ func take_dmg(raw_damage: int, blocked: bool) -> void:
 		health_depleted.emit()
 
 
-## Modulates character modulate scaling to reflect team direction.
+# Modulates sprite scale to reflect team-facing direction.
 func _update_facing_direction() -> void:
 	var tm := team_manager
 	if tm and tm.team == TeamManager.Team.Enemy:

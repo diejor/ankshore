@@ -2,10 +2,10 @@ class_name TeamManager extends Node2D
 
 ## One side of a combat encounter.
 ##
-## Owns the roster of [member tracked_characters] and their [member slots]
-## layout. Turn flow lives on [TurnManager]; this class only exposes
-## [member is_attacker] and [method pending_characters] for phases to
-## consume.
+## Owns the roster of [member tracked_characters], the slot layout, and
+## the per-encounter [TeamState] resource that planning, defense, and UI
+## all observe. Turn flow lives on [TurnManager]; this class drives
+## [method run_planning] when asked.
 
 enum Team {
 	Ally,
@@ -22,6 +22,11 @@ enum Team {
 
 ## Slots used to position characters on the field.
 @export var slots: Array[SelectionSlot]
+
+## Per-encounter observable state shared with controllers and views.
+## Constructed in [method _init] - never authored as a [code].tres[/code]
+## so the [Character] refs it holds remain scene-scoped.
+var state: TeamState
 
 ## The [TurnManager] resolved by unique name from the scene root.
 @onready var turn_manager: TurnManager:
@@ -47,6 +52,7 @@ var _original_slot_positions: Dictionary = {}
 
 
 func _init() -> void:
+	state = TeamState.new()
 	child_entered_tree.connect(_on_child_entered)
 
 
@@ -76,13 +82,28 @@ func _apply_team_layout() -> void:
 
 
 ## Returns the alive characters of this team that still need to plan
-## an action this turn. Consumed by [PlanningPhase].
+## an action this turn. Consumed by [method run_planning].
 func pending_characters() -> Array[Character]:
 	var result: Array[Character] = []
 	for character in tracked_characters:
 		if character and character.is_alive():
 			result.append(character)
 	return result
+
+
+## Begins planning on [member state] and awaits
+## [signal TeamState.planning_finished]. Returns the actions the bound
+## controller (Player or AI) committed.
+##
+## [br][br]
+## Whoever is bound to [member state] (a [PlayerController] reading input,
+## an [AIController] running policy, ...) drives the state machine to
+## completion. This method just kicks it off and waits.
+func run_planning() -> Array[CommittedAction]:
+	state.begin_planning(pending_characters())
+	if state.phase != TeamState.Phase.DONE:
+		await state.planning_finished
+	return state.committed_actions.duplicate()
 
 
 # Places the character into the first available slot.

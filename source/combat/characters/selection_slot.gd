@@ -4,7 +4,7 @@ class_name SelectionSlot extends Control
 ## Focusable container for a [Character], gated by a [enum StepMode].
 ##
 ## Pure presentation: planning steps toggle the slot's focusability via
-## [method set_step_mode]; controllers ([LocalController]) decide when
+## [method set_step_mode]; controllers ([PlayerController]) decide when
 ## the focused slot is committed. The slot itself does not poll input.
 
 ## How the slot responds to focus traversal.
