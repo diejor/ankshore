@@ -20,8 +20,18 @@ signal transferStats(stats: charStats)
 
 @onready var action_label: Label = %ActionLabel
 
-@onready var team_manager: TeamManager:
-	get: return owner
+## The parent [TeamManager] resolved dynamically by traversing ancestors.
+var team_manager: TeamManager:
+	get:
+		if _team_manager_cache:
+			return _team_manager_cache
+		var p := get_parent()
+		while p and not p is TeamManager:
+			p = p.get_parent()
+		_team_manager_cache = p as TeamManager
+		return _team_manager_cache
+
+var _team_manager_cache: TeamManager = null
 
 func get_attacks() -> Array:
 	var filter_attacks := func(action: charAction) -> bool:
@@ -68,14 +78,19 @@ func _process(_delta: float) -> void:
 		other_team.slots[0].grab_focus.call_deferred()
 		
 
-###other
 func _ready() -> void:
-	var team_manager: TeamManager = owner as TeamManager
-	if team_manager and team_manager.team == TeamManager.Team.Enemy:
-		scale.x *= -1.0
-	
-	transferStats.emit(stats.health, stats.damageStat, stats.will, stats.defense, stats.blockingDefense, stats.courage)
+	_update_facing_direction()
+	transferStats.emit(stats)
 	print("testCharacter node is ready")
+
+
+# Updates the character's horizontal flip based on its team assignment.
+func _update_facing_direction() -> void:
+	var tm := team_manager
+	if tm and tm.team == TeamManager.Team.Enemy:
+		$Sprite2D.scale.x = -abs($Sprite2D.scale.x)
+	else:
+		$Sprite2D.scale.x = abs($Sprite2D.scale.x)
 	
 ###
 func _init() -> void:

@@ -57,8 +57,9 @@ var courage := current_courage
 
 
 #assigning functions----------------------------
-func _init()-> void:
-	setup_Stats.call_deferred
+func _init() -> void:
+	# Defer stats setup.
+	setup_Stats.call_deferred()
 
 func setup_Stats() -> void:
 	health = base_max_health
@@ -78,13 +79,13 @@ func statsDebuffer() -> void:
 
 
 
-func recalculateStats()-> void:
+func recalculateStats() -> void:
 	for buff in buffsHolder:
 		print("hello")
 		#if(buff.turn = 0){
 			#
 		#}
-		buff.get
+		#buff.get
 	
 	pass
 
@@ -110,9 +111,9 @@ func getDamageStat() -> int:
 
 #each attack within an attack string will read if the attack has been blocked or not
 func damageTaken(dmg: int, blocked: bool) -> int:
-	if !blocked:
-		var dmgCalc = dmg * (100/(100+defense)) # im using league of legends armor calculation lol
-		return dmg
+	if not blocked:
+		# Using League of Legends style armor calculation.
+		return dmg * (100 / (100 + defense))
 	else:
 		#this is blocking dmg calculation for now
 		var dmgCalc = dmg * (blockingDefense/100)

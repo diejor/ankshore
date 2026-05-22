@@ -17,26 +17,22 @@ signal match_started(team: TeamManager)
 ## All participating teams in turn order.
 @export var teams: Array[TeamManager]
 
-var current_turn: int = 0
+@export var current_turn: int = 0
 
-#turn lock
-var _turn_mutex := AsyncMutex.new()
+var _is_turn_active: bool = false
 
-# connects self-handlers so the mutex tracks every turn cycle
-func _init() -> void:
-	turn_started.connect(_on_turn_started)
-	turn_ended.connect(_on_turn_ended)
 
-# wires teams, announces match start, and defers the first turn
 func _ready() -> void:
 	_connect_teams()
 	match_started.emit(current_team)
-	turn_started.emit.call_deferred(current_team)
+	# Defer the first turn to ensure all ready handlers have run.
+	_start_turn.call_deferred(current_team)
 
-# manual shortcut - ends the current turn on input
+
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("next_turn"):
 		end_turn()
+
 
 ## Concludes the active turn and advances to the next team.
 ##
@@ -44,10 +40,22 @@ func _process(_delta: float) -> void:
 ## Safe to call from a timer timeout, player input, or team
 ## logic. Has no effect when no turn is in progress.
 func end_turn() -> void:
-	if not _turn_mutex.is_locked():
+	if not _is_turn_active:
 		push_warning("`end_turn` called when no turn is active.")
 		return
+	
+	_is_turn_active = false
 	turn_ended.emit(current_team)
+	
+	var idx := teams.find(current_team)
+	if idx == -1:
+		push_error("Current team not found in teams array.")
+		return
+	
+	var next_team := teams[(idx + 1) % teams.size()]
+	current_turn += 1
+	_start_turn(next_team)
+
 
 ## Returns the opponent of [param team].
 func get_other_team(team: TeamManager) -> TeamManager:
@@ -56,30 +64,16 @@ func get_other_team(team: TeamManager) -> TeamManager:
 			return other
 	return null
 
+
 # Wires [signal turn_started] to all registered teams.
 func _connect_teams() -> void:
 	for team in teams:
 		if not turn_started.is_connected(team._on_turn_started):
 			turn_started.connect(team._on_turn_started)
 
-# Advances [member current_team] and emits [signal turn_started].
-func _next_turn() -> void:
-	if _turn_mutex.is_locked():
-		push_warning("`_next_turn` called while a turn is active.")
-		return
-	var idx: int = teams.find(current_team)
-	current_team = teams[(idx + 1) % teams.size()]
-	current_turn += 1
+
+# Begins a new turn for the designated team and manages turn state.
+func _start_turn(team: TeamManager) -> void:
+	current_team = team
+	_is_turn_active = true
 	turn_started.emit(current_team)
-
-# locks the mutex so nothing else can advance the turn mid-action
-func _on_turn_started(_team: TeamManager) -> void:
-	if _turn_mutex.is_locked():
-		push_warning("`turn_started` fired while a turn is active.")
-		return
-	_turn_mutex.lock()
-
-# releases the lock then immediately sequences the next turn
-func _on_turn_ended(_team: TeamManager) -> void:
-	_turn_mutex.unlock()
-	_next_turn()

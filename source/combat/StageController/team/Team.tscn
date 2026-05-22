@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cimbbxcr07s7n" path="res://source/combat/characterStuff/anatomy/charAction.gd" id="3_2l3xt"]
 [ext_resource type="PackedScene" uid="uid://bvhruhjarrpeq" path="res://source/combat/characterStuff/Characters/testCharacterFolder/SelectionSlot.tscn" id="4_5xetp"]
 
-[node name="Team" type="Node2D" unique_id=1953363629 node_paths=PackedStringArray("slots") groups=["mirror"]]
+[node name="Team" type="Node2D" unique_id=1953363629 node_paths=PackedStringArray("slots")]
 script = ExtResource("1_buy7b")
 slots = [NodePath("SelectionSlot1"), NodePath("SelectionSlot2"), NodePath("SelectionSlot3")]
 
@@ -67,7 +67,7 @@ focus_neighbor_bottom = NodePath("../SelectionSlot1")
 focus_next = NodePath("../SelectionSlot1")
 focus_previous = NodePath("../SelectionSlot2")
 
-[node name="Label" type="Label" parent="." unique_id=236511226 groups=["mirror"]]
+[node name="Label" type="Label" parent="." unique_id=236511226]
 offset_left = 146.0
 offset_top = -230.0
 offset_right = 222.0

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cy6ogtu3s0p7a"]
 
-[ext_resource type="Script" path="res://source/combat/StageController/combat_scene_(Controller).gd" id="1_m7umq"]
+[ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/StageController/combat_scene.gd" id="1_m7umq"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/StageController/turn_manager.gd" id="3_vk3fy"]
 [ext_resource type="PackedScene" uid="uid://bflqs45vkku68" path="res://source/combat/StageController/team/Team.tscn" id="4_ywd5h"]
@@ -93,6 +93,10 @@ process_mode = 4
 [node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
 position = Vector2(338, 4)
 team = 1
+
+[node name="SelectionSlot1" parent="EnemyTeam" index="2" unique_id=833664602]
+process_mode = 0
+modulate = Color(1, 1, 1, 1)
 
 [node name="SelectionSlot2" parent="EnemyTeam" index="3" unique_id=335587062]
 process_mode = 4
