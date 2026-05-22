@@ -13,6 +13,14 @@ var selected: Node:
 		
 		selected.reparent.call_deferred(self)
 
+func _process(delta: float) -> void:
+	
+	# activates when player selects character, for initial test it will do random move
+	if has_focus && Input.is_action_just_pressed("select_character"):
+			print("input character selected!")
+			return
+	#if press c, do a move
+	
 func _init() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	focus_entered.connect(_on_focus_entered)
@@ -20,6 +28,12 @@ func _init() -> void:
 
 func _on_focus_entered() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
+	# checks if character if alive and exists on slot
+	if !selected is testCharacter:
+		print("No test character found")
+		return
+	
+	
 
 func _on_focus_exited() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED

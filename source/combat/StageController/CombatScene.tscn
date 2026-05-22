@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://cy6ogtu3s0p7a"]
 
-[ext_resource type="Script" uid="uid://s1mui0tp3mrq" path="res://source/combat/StageController/combat_scene.gd" id="1_m7umq"]
+[ext_resource type="Script" path="res://source/combat/StageController/combat_scene_(Controller).gd" id="1_m7umq"]
 [ext_resource type="Texture2D" uid="uid://dluyp6q3bojhm" path="res://source/combat/assets/guiltymapPlaceholder.jpg" id="2_v1j44"]
 [ext_resource type="Script" uid="uid://iqltqw8qho4q" path="res://source/combat/StageController/turn_manager.gd" id="3_vk3fy"]
 [ext_resource type="PackedScene" uid="uid://bflqs45vkku68" path="res://source/combat/StageController/team/Team.tscn" id="4_ywd5h"]
-[ext_resource type="Resource" uid="uid://yyby634trdkb" path="res://source/combat/characterStuff/Characters/MyosoAnatomy/MyosoCharStats.tres" id="5_ywd5h"]
-[ext_resource type="Script" uid="uid://dusoo1uvlltvt" path="res://source/combat/characterStuff/anatomy/charAttack.gd" id="6_m7umq"]
+[ext_resource type="Resource" uid="uid://yyby634trdkb" path="res://source/combat/CharacterStuff/Characters/MyosoAnatomy/MyosoCharStats.tres" id="5_ywd5h"]
+[ext_resource type="Script" uid="uid://dusoo1uvlltvt" path="res://source/combat/CharacterStuff/anatomy/charAttack.gd" id="6_m7umq"]
 [ext_resource type="Script" uid="uid://bsy37f1rbk632" path="res://source/combat/StageController/turn_label.gd" id="7_turn_lbl"]
-[ext_resource type="Script" uid="uid://b0wud8ci2aatn" path="res://source/combat/StageController/turn_number_label.gd" id="8_turn_num"]
-[ext_resource type="Script" uid="uid://f2nbmp4n5qa2" path="res://source/combat/StageController/turn_timer_label.gd" id="9_turn_tmr"]
+[ext_resource type="Script" path="res://source/combat/StageController/turn_number_label.gd" id="8_turn_num"]
+[ext_resource type="Script" path="res://source/combat/StageController/turn_timer_label.gd" id="9_turn_tmr"]
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_m7umq")
@@ -51,7 +51,6 @@ script = ExtResource("9_turn_tmr")
 [node name="TurnTimer" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=2071835503]
 unique_name_in_owner = true
 wait_time = 10.0
-autostart = true
 
 [node name="SecondsBeat" type="Timer" parent="CanvasLayer/TurnTimerLabel" unique_id=1718539369]
 unique_name_in_owner = true
@@ -76,6 +75,7 @@ teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 
 [node name="AllyTeam" parent="." unique_id=1953363629 instance=ExtResource("4_ywd5h")]
 position = Vector2(-330, 0)
+teamTitle = "AllyTeam"
 
 [node name="AllyTestCharacter" parent="AllyTeam" index="0" unique_id=867888316]
 stats = ExtResource("5_ywd5h")
@@ -92,11 +92,8 @@ process_mode = 4
 
 [node name="EnemyTeam" parent="." unique_id=507727922 instance=ExtResource("4_ywd5h")]
 position = Vector2(338, 4)
+teamTitle = "EnemyTeam"
 team = 1
-
-[node name="SelectionSlot1" parent="EnemyTeam" index="2" unique_id=833664602]
-process_mode = 0
-modulate = Color(1, 1, 1, 1)
 
 [node name="SelectionSlot2" parent="EnemyTeam" index="3" unique_id=335587062]
 process_mode = 4

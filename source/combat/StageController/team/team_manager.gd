@@ -7,7 +7,7 @@ class_name TeamManager extends Node2D
 ## places them into [member slots]. On [signal TurnManager.turn_started],
 ## each character submits an action sequentially; then
 ## [method TurnManager.end_turn] closes the turn.
-
+@export var teamTitle = "test_teamTitle"
 enum Team {
 	Ally,
 	Enemy
@@ -72,6 +72,7 @@ func _apply_team_layout() -> void:
 
 # Activates on turn start, collects actions sequentially, then executes them.
 func _on_turn_started(team_playing: TeamManager) -> void:
+	
 	if team_playing != self:
 		return
 	assert(
@@ -79,11 +80,14 @@ func _on_turn_started(team_playing: TeamManager) -> void:
 		"Team '%s' has no characters." % name
 	)
 	
+	
+	
 	# Capture the active turn ID as a cancellation token.
 	var active_turn_id := turn_manager.current_turn
 	var actions: Array[charAction] = []
 	
 	for character in tracked_characters:
+		print(str(teamTitle) + "_" + str(character.stats.title) + "_" + str(character.stats.health))
 		var action := await character.start_action()
 		
 		# Abort immediately if the turn was interrupted during the await.

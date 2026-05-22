@@ -18,7 +18,7 @@ signal match_started(team: TeamManager)
 @export var teams: Array[TeamManager]
 
 @export var current_turn: int = 0
-
+## Acts as a mutex if team is active
 var _is_turn_active: bool = false
 
 
