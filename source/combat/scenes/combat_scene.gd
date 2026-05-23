@@ -8,7 +8,9 @@ class_name CombatScene extends Node2D
 ## [TeamState]-backed models, and kicks off [method TurnManager.run_match].
 
 @onready var _turn_manager: TurnManager = %TurnManager
-@onready var _move_list_ui: MoveListUI = %MoveListUI
+@onready var _match_hud: MatchHud = %MatchHud
+@onready var _planning_panel: PlanningPanel = %PlanningPanel
+@onready var _defense_prompt: DefensePromptUI = %DefensePromptUI
 @onready var _slot_selection_view: SlotSelectionView = (
 	get_node_or_null("%SlotSelectionView")
 )
@@ -33,7 +35,17 @@ func _bind_views() -> void:
 	var ally_team := _turn_manager.teams[0] if (
 		_turn_manager.teams.size() > 0
 	) else null
-	if ally_team and _move_list_ui:
-		_move_list_ui.team_state = ally_team.state
+
+	if _match_hud:
+		_match_hud.turn_manager = _turn_manager
+
+	if ally_team and _planning_panel:
+		_planning_panel.inspection = _inspection
+		_planning_panel.team_state = ally_team.state
+		_planning_panel.bind_turn_manager(_turn_manager)
+
+	if ally_team and _defense_prompt:
+		_defense_prompt.team_state = ally_team.state
+
 	if _slot_selection_view:
 		_slot_selection_view.inspection = _inspection

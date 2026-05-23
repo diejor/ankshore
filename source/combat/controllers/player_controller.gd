@@ -113,9 +113,7 @@ class _DefenseCapture extends RefCounted:
 				_finish(DefenseInput.parry())
 			return
 		var triggered := false
-		@warning_ignore("untyped_declaration")
-		for action in ["ui_left", "ui_right", "ui_down"]:
-			@warning_ignore("unsafe_call_argument")
+		for action: String in ["ui_left", "ui_right", "ui_down"]:
 			if event.is_action_pressed(action):
 				triggered = true
 				break

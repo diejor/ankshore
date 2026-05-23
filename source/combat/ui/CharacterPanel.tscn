@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://source/combat/ui/character_panel.gd" id="1"]
+
+[node name="CharacterPanel" type="VBoxContainer"]
+script = ExtResource("1")
+
+[node name="NameLabel" type="Label" parent="."]
+text = "(none)"
+
+[node name="HpLabel" type="Label" parent="."]
+
+[node name="WillLabel" type="Label" parent="."]
+
+[node name="CourageLabel" type="Label" parent="."]

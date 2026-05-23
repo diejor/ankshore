@@ -4,14 +4,17 @@ class_name TeamManager extends Node2D
 ##
 ## Owns the roster of [member tracked_characters], the slot layout, and
 ## the per-encounter [TeamState] resource that planning, defense, and UI
-## all observe. Turn flow lives on [TurnManager]; this class drives
+## all observe. Turn flow lives on [TurnManager], this class drives
 ## [method run_planning] when asked.
 
 enum Team {
+	## The ally team.
 	Ally,
+	## The enemy team.
 	Enemy
 }
 
+## Name of the team.
 @export var teamTitle: String = "test_teamTitle"
 
 ## Which side this team belongs to.

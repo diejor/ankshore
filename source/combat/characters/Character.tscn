@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dro050gfjn0ih"]
+[gd_scene format=3 uid="uid://dro050gfjn0ih"]
 
 [ext_resource type="Script" uid="uid://cbpmc6f8h3dqo" path="res://source/combat/characters/character.gd" id="1_7uwtj"]
 [ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="2_bgf1o"]
@@ -7,27 +7,14 @@
 
 [sub_resource type="Resource" id="Beat_1"]
 script = ExtResource("4_beat")
-direction = 0
-side = 0
-damage = 10
-chip_pct = 0.1
-react_window_sec = 0.8
 
 [sub_resource type="Resource" id="Beat_2"]
 script = ExtResource("4_beat")
 direction = 1
-side = 0
-damage = 10
-chip_pct = 0.1
-react_window_sec = 0.8
 
 [sub_resource type="Resource" id="Beat_3"]
 script = ExtResource("4_beat")
-direction = 0
 side = 1
-damage = 10
-chip_pct = 0.1
-react_window_sec = 0.8
 
 [node name="Character" type="Node2D" unique_id=867888316 node_paths=PackedStringArray("move_list")]
 script = ExtResource("1_7uwtj")
@@ -49,10 +36,5 @@ text = "ActionLabel"
 
 [node name="AttackString" type="Node" parent="." unique_id=180430298]
 script = ExtResource("3_atks")
-beats = [SubResource("Beat_1"), SubResource("Beat_2"), SubResource("Beat_3")]
-ender = 0
-strike_damage = 20
-grab_damage = 30
-parry_counter_damage = 25
-parry_window_sec = 0.6
+beats = Array[ExtResource("4_beat")]([SubResource("Beat_1"), SubResource("Beat_2"), SubResource("Beat_3")])
 metadata/_custom_type_script = "uid://cmk8ja17kw1h3"

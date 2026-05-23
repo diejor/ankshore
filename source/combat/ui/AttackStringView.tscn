@@ -1,0 +1,6 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://source/combat/ui/attack_string_view.gd" id="1"]
+
+[node name="AttackStringView" type="HBoxContainer"]
+script = ExtResource("1")

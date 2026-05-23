@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://source/combat/ui/match_hud.gd" id="1"]
+
+[node name="MatchHud" type="Control"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+script = ExtResource("1")
+
+[node name="HBox" type="HBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TurnLabel" type="Label" parent="HBox"]
+text = "Turn: -"
+
+[node name="TurnNumberLabel" type="Label" parent="HBox"]
+text = "# 0"
+
+[node name="PhaseBanner" type="Label" parent="HBox"]

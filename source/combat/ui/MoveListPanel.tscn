@@ -1,0 +1,9 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://source/combat/ui/move_list_panel.gd" id="1"]
+
+[node name="MoveListPanel" type="VBoxContainer"]
+script = ExtResource("1")
+
+[node name="Title" type="Label" parent="."]
+text = "Moves"
