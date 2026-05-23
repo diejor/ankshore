@@ -12,9 +12,9 @@ class_name DefensePromptUI extends Control
 		team_state = value
 		_connect_state()
 
-@onready var _beat_view: AttackStringView = $Panel/AttackStringView
-@onready var _label: Label = $Panel/Label
-@onready var _timer_bar: ProgressBar = $Panel/TimerBar
+@onready var _beat_view: AttackStringView = $Panel/VBox/AttackStringView
+@onready var _label: Label = $Panel/VBox/Label
+@onready var _timer_bar: ProgressBar = $Panel/VBox/TimerBar
 
 var _window_remaining: float = 0.0
 
@@ -23,6 +23,12 @@ func _ready() -> void:
 	hide()
 	set_process(false)
 	_connect_state()
+	_check_wiring.call_deferred()
+
+
+func _check_wiring() -> void:
+	if team_state == null:
+		push_warning("DefensePromptUI: 'team_state' is not bound. The defense prompt will be non-functional.")
 
 
 func _connect_state() -> void:

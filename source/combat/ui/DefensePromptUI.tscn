@@ -22,13 +22,13 @@ anchor_bottom = 1.0
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 
-[node name="Label" type="Label" parent="Panel"]
+[node name="Label" type="Label" parent="Panel/VBox"]
 text = "Defend"
 horizontal_alignment = 1
 
-[node name="AttackStringView" parent="Panel" instance=ExtResource("2")]
+[node name="AttackStringView" parent="Panel/VBox" instance=ExtResource("2")]
 
-[node name="TimerBar" type="ProgressBar" parent="Panel"]
+[node name="TimerBar" type="ProgressBar" parent="Panel/VBox"]
 max_value = 1.0
 value = 1.0
 show_percentage = false

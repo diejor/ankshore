@@ -14,9 +14,10 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="TurnLabel" type="Label" parent="HBox"]
-text = "Turn: -"
+text = "Turn: Ally Team (Mock)"
 
 [node name="TurnNumberLabel" type="Label" parent="HBox"]
-text = "# 0"
+text = "# 1"
 
 [node name="PhaseBanner" type="Label" parent="HBox"]
+text = "Planning (Mock)"

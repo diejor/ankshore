@@ -7,7 +7,17 @@ class_name MatchHud extends Control
 ## [member PhaseContext.ui_animator] from [CombatScene] - this script
 ## does not assume one exists.
 
-@export var turn_manager: TurnManager
+@export var turn_manager: TurnManager:
+	set(value):
+		if turn_manager:
+			turn_manager.turn_started.disconnect(_on_turn_started)
+			turn_manager.planning_finished.disconnect(_on_planning_finished)
+			turn_manager.match_ended.disconnect(_on_match_ended)
+		turn_manager = value
+		if turn_manager:
+			turn_manager.turn_started.connect(_on_turn_started)
+			turn_manager.planning_finished.connect(_on_planning_finished)
+			turn_manager.match_ended.connect(_on_match_ended)
 
 @onready var _turn_label: Label = $HBox/TurnLabel
 @onready var _turn_number: Label = $HBox/TurnNumberLabel
@@ -15,13 +25,13 @@ class_name MatchHud extends Control
 
 
 func _ready() -> void:
-	if turn_manager == null:
-		push_warning("MatchHud has no TurnManager bound.")
-		return
-	turn_manager.turn_started.connect(_on_turn_started)
-	turn_manager.planning_finished.connect(_on_planning_finished)
-	turn_manager.match_ended.connect(_on_match_ended)
 	_phase_banner.text = ""
+	_check_wiring.call_deferred()
+
+
+func _check_wiring() -> void:
+	if turn_manager == null:
+		push_warning("MatchHud: 'turn_manager' is not bound. The HUD will be non-functional.")
 
 
 func _on_turn_started(team: TeamManager) -> void:

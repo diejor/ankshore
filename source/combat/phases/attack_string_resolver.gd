@@ -82,7 +82,7 @@ func _resolve_ender() -> void:
 
 
 func _resolve_strike_ender() -> void:
-	# A strike ender follows the same block rules as a beat - the
+	# A strike ender follows the same block rules as a beat, the
 	# defender must read the final beat's side. We synthesize a virtual
 	# beat for the read so habits/AI use the same path.
 	var virtual_beat := AttackBeat.new()

@@ -1,6 +1,20 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bwrs3w8kl3ebk"]
 
-[ext_resource type="Script" path="res://source/combat/ui/attack_string_view.gd" id="1"]
+[ext_resource type="Script" uid="uid://x5jxy407kjei" path="res://source/combat/ui/attack_string_view.gd" id="1"]
 
-[node name="AttackStringView" type="HBoxContainer"]
+[node name="AttackStringView" type="HBoxContainer" unique_id=1861523319]
+offset_right = 316.0
+offset_bottom = 23.0
 script = ExtResource("1")
+
+[node name="Beat1Mock" type="Label" parent="." unique_id=716150116]
+layout_mode = 2
+text = "FRONT OVERHEAD"
+
+[node name="Beat2Mock" type="Label" parent="." unique_id=1348550154]
+layout_mode = 2
+text = "BEHIND LOW"
+
+[node name="EnderMock" type="Label" parent="." unique_id=1268959562]
+layout_mode = 2
+text = "[STRIKE]"

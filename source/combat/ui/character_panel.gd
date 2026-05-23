@@ -1,4 +1,4 @@
-class_name CharacterPanel extends VBoxContainer
+class_name CharacterPanel extends Control
 
 ## Deep info view for the [Character] currently in [InspectionState].
 ##
@@ -15,10 +15,10 @@ class_name CharacterPanel extends VBoxContainer
 			if is_node_ready():
 				_bind(inspection.inspected_character)
 
-@onready var _name_label: Label = $NameLabel
-@onready var _hp_label: Label = $HpLabel
-@onready var _will_label: Label = $WillLabel
-@onready var _courage_label: Label = $CourageLabel
+@onready var _name_label: Label = %NameLabel
+@onready var _hp_label: Label = %HpLabel
+@onready var _will_label: Label = %WillLabel
+@onready var _courage_label: Label = %CourageLabel
 
 var _bound_stats: CharacterStats = null
 

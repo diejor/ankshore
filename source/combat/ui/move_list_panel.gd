@@ -1,4 +1,4 @@
-class_name MoveListPanel extends VBoxContainer
+class_name MoveListContainer extends VBoxContainer
 
 ## Lists the moves of the [Character] currently in [InspectionState].
 ##
@@ -104,8 +104,9 @@ func _build_item(action: CombatAction, mode: int, index: int) -> Control:
 
 
 func _clear() -> void:
-	for item in _items:
-		item.queue_free()
+	for child in get_children():
+		if child.name != "Title":
+			child.queue_free()
 	_items.clear()
 
 

@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="2_bgf1o"]
 [ext_resource type="Script" uid="uid://cmk8ja17kw1h3" path="res://source/combat/actions/attack_string.gd" id="3_atks"]
 [ext_resource type="Script" uid="uid://qk3v1jjmitu" path="res://source/combat/actions/attack_beat.gd" id="4_beat"]
+[ext_resource type="PackedScene" path="res://source/combat/ui/CharacterOverlay.tscn" id="5_overlay"]
 
 [sub_resource type="Resource" id="Beat_1"]
 script = ExtResource("4_beat")
@@ -25,14 +26,8 @@ position = Vector2(0, -62)
 scale = Vector2(0.19672132, 0.1967213)
 texture = ExtResource("2_bgf1o")
 
-[node name="ActionLabel" type="Label" parent="." unique_id=422375864]
+[node name="CharacterOverlay" parent="." unique_id=422375864 instance=ExtResource("5_overlay")]
 unique_name_in_owner = true
-offset_left = -94.0
-offset_top = -203.0
-offset_right = -3.0
-offset_bottom = -180.0
-pivot_offset_ratio = Vector2(0.5, 0.5)
-text = "ActionLabel"
 
 [node name="AttackString" type="Node" parent="." unique_id=180430298]
 script = ExtResource("3_atks")

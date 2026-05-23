@@ -57,12 +57,6 @@ func run_match(ctx: PhaseContext) -> void:
 	match_ended.emit()
 
 
-## Placeholder retained so the scene's [code]TurnTimer.timeout[/code]
-## connection still resolves. No-op until per-step timeouts replace it.
-func end_turn() -> void:
-	pass
-
-
 ## Returns the opponent of [param team].
 func get_other_team(team: TeamManager) -> TeamManager:
 	for other in teams:

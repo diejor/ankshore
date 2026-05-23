@@ -1,9 +1,24 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://e6rtq4qr2m3l"]
 
-[ext_resource type="Script" path="res://source/combat/ui/move_list_panel.gd" id="1"]
+[ext_resource type="Script" uid="uid://ce50216lwy6bc" path="res://source/combat/ui/move_list_panel.gd" id="1"]
 
-[node name="MoveListPanel" type="VBoxContainer"]
+[node name="MoveListPanel" type="VBoxContainer" unique_id=1000423419]
+offset_right = 165.0
+offset_bottom = 104.0
 script = ExtResource("1")
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=27833090]
+layout_mode = 2
 text = "Moves"
+
+[node name="JabMock" type="Label" parent="." unique_id=1959595970]
+layout_mode = 2
+text = "Jab (Mock)"
+
+[node name="HeavySwingMock" type="Label" parent="." unique_id=719379155]
+layout_mode = 2
+text = "Heavy Swing (Mock)"
+
+[node name="CounterParryMock" type="Label" parent="." unique_id=1040382238]
+layout_mode = 2
+text = "Counter Parry (Mock)"

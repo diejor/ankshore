@@ -8,26 +8,44 @@
 [ext_resource type="Script" uid="uid://jydmrcguev5v" path="res://source/combat/controllers/player_controller.gd" id="10_pc"]
 [ext_resource type="Script" uid="uid://cnbjkqb4s8uuf" path="res://source/combat/ui/slot_selection_view.gd" id="12_ssv"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/MatchHud.tscn" id="13_hud"]
-[ext_resource type="PackedScene" path="res://source/combat/ui/PlanningPanel.tscn" id="14_plan"]
+[ext_resource type="PackedScene" uid="uid://bwxx1a0fil4tw" path="res://source/combat/ui/PlanningPanel.tscn" id="14_plan"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/DefensePromptUI.tscn" id="15_defp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ucdr0"]
+content_margin_left = 32.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 32.0
+bg_color = Color(0.11764706, 0.11764706, 0.11764706, 0.06666667)
 
 [node name="Combat Set" type="Node2D" unique_id=303666812]
 script = ExtResource("1_m7umq")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1190960819]
 
-[node name="MatchHud" parent="CanvasLayer" instance=ExtResource("13_hud")]
+[node name="MatchHud" parent="CanvasLayer" unique_id=1048758915 node_paths=PackedStringArray("turn_manager") instance=ExtResource("13_hud")]
 unique_name_in_owner = true
+layout_mode = 3
+turn_manager = NodePath("../../TurnManager")
 
-[node name="PlanningPanel" parent="CanvasLayer" instance=ExtResource("14_plan")]
+[node name="DefensePromptUI" parent="CanvasLayer" unique_id=1562756847 instance=ExtResource("15_defp")]
 unique_name_in_owner = true
-offset_left = 32.0
-offset_top = 80.0
-offset_right = 1100.0
-offset_bottom = 360.0
+layout_mode = 3
 
-[node name="DefensePromptUI" parent="CanvasLayer" instance=ExtResource("15_defp")]
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer" unique_id=711464610]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -171.0
+offset_right = 688.0
+grow_vertical = 0
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_ucdr0")
+
+[node name="PlanningPanel" parent="CanvasLayer/PanelContainer" unique_id=285399911 instance=ExtResource("14_plan")]
 unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="Background" type="TextureRect" parent="." unique_id=1518636395]
 anchors_preset = 15
@@ -74,4 +92,3 @@ unique_name_in_owner = true
 script = ExtResource("7_ucdr0")
 team = NodePath("..")
 metadata/_custom_type_script = "uid://bvj5pt4nu7nn7"
-

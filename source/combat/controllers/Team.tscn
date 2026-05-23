@@ -31,7 +31,6 @@ focus_neighbor_bottom = NodePath("../SelectionSlot2")
 focus_next = NodePath("../SelectionSlot2")
 focus_previous = NodePath("../SelectionSlot3")
 focus_mode = 0
-focus_on_ready = true
 
 [node name="SelectionSlot2" parent="." unique_id=335587062 instance=ExtResource("4_5xetp")]
 process_mode = 4

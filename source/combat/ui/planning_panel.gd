@@ -8,23 +8,47 @@ class_name PlanningPanel extends HBoxContainer
 ## to its child widgets and listens to [TurnManager] via
 ## [method bind_turn_manager] for visibility.
 
-@export var inspection: InspectionState
-@export var team_state: TeamState
+@export var inspection: InspectionState:
+	set(value):
+		if inspection:
+			inspection.inspection_changed.disconnect(_on_inspection_changed)
+		inspection = value
+		if inspection:
+			inspection.inspection_changed.connect(_on_inspection_changed)
+		if is_node_ready():
+			_character_panel.inspection = inspection
+			_move_list_panel.inspection = inspection
+			_refresh_preview()
 
-@onready var _character_panel: CharacterPanel = $CharacterPanel
-@onready var _move_list_panel: MoveListPanel = $MoveListPanel
-@onready var _attack_string_view: AttackStringView = $AttackStringView
+@export var team_state: TeamState:
+	set(value):
+		if team_state:
+			team_state.move_selected.disconnect(_on_move_selected)
+		team_state = value
+		if team_state:
+			team_state.move_selected.connect(_on_move_selected)
+		if is_node_ready():
+			_move_list_panel.team_state = team_state
+			_refresh_preview()
+
+@onready var _character_panel: CharacterPanel = %CharacterPanel
+@onready var _move_list_panel: MoveListContainer = %MoveListContainer
+@onready var _attack_string_view: AttackStringView = %AttackStringView
 
 
 func _ready() -> void:
 	_character_panel.inspection = inspection
 	_move_list_panel.inspection = inspection
 	_move_list_panel.team_state = team_state
-	if inspection:
-		inspection.inspection_changed.connect(_on_inspection_changed)
-	if team_state:
-		team_state.move_selected.connect(_on_move_selected)
 	hide()
+	_check_wiring.call_deferred()
+
+
+func _check_wiring() -> void:
+	if inspection == null:
+		push_warning("PlanningPanel: 'inspection' is not bound. Inspection features will be inert.")
+	if team_state == null:
+		push_warning("PlanningPanel: 'team_state' is not bound. Moves list and commit functions will be inert.")
 
 
 ## Subscribes to [param tm] for show/hide cues. Call once from

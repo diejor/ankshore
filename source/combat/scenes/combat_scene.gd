@@ -19,6 +19,9 @@ var _inspection: InspectionState
 
 
 func _ready() -> void:
+	if _turn_manager == null:
+		push_error("CombatScene: TurnManager '%TurnManager' is missing in the scene tree.")
+		return
 	_inspection = InspectionState.new()
 	_bind_views()
 	var ctx := PhaseContext.new()
