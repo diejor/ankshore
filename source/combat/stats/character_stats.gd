@@ -6,6 +6,7 @@ class_name CharacterStats extends Resource
 
 signal health_depleted
 signal health_changed(current: int, max_val: int)
+signal level_up(level: int)
 
 ## Emitted by [method change_will] after [member will] is adjusted.
 signal will_changed(current: int, max_val: int)
@@ -23,8 +24,12 @@ signal buffs_changed(buffs: Array)
 ## Custom name or identifier for the character.
 @export var title: String = "TestCharacter"
 
-## Base attributes
+## Leveling attributes
 @export var level: int = 1
+var levelCapEXP: int = 100 # level cap exp, increases ex
+var currentEXP: int = 0
+
+## Base attributes
 @export var base_max_health: int = 500
 @export var base_damage: int = 10
 @export var base_max_will: int = 100
@@ -32,6 +37,7 @@ signal buffs_changed(buffs: Array)
 @export var base_blocking_defense: int = 70
 @export var base_courage: int = 50
 @export var base_speed: int = 10
+
 
 ## Current status attributes (recalculated with active buffs)
 var max_health: int = 500
@@ -112,11 +118,25 @@ func change_will(change_value: int) -> void:
 ## [code][0, max(base_courage, courage)][/code] - growth uses the
 ## recalculated cap from [method recalculate_stats].
 func change_courage(change_value: int) -> void:
-	@warning_ignore("unsafe_call_argument")
+	@warning_ignore("unsafe_call_argument") # ???
 	courage = clampi(courage + change_value, 0, max(courage, base_courage))
 	courage_changed.emit(courage, base_courage)
 
+## Calculates gained experience after a battle or interaction
+func gainExperience(gainedEXP: int) -> void:
+	if gainedEXP+currentEXP >= levelCapEXP:
+		levelUP()
+		currentEXP = (gainedEXP + currentEXP) - levelCapEXP # recycles extra exp for next level
+	else:
+		currentEXP = gainedEXP
 
+
+##Procs recalculateStats, creates new exp cap for new level using parobola equation
+func levelUP() -> void:
+	
+	return
+	
+	
 ## Applies incoming physical damage after accounting for blocking/armor.
 func damage_taken(dmg: int, blocked: bool) -> int:
 	if not blocked:

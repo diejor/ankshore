@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" path="res://source/combat/ui/MatchHud.tscn" id="13_hud"]
 [ext_resource type="PackedScene" uid="uid://bwxx1a0fil4tw" path="res://source/combat/ui/PlanningPanel.tscn" id="14_plan"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/DefensePromptUI.tscn" id="15_defp"]
-[ext_resource type="Script" path="res://source/combat/ui/damage_overlay.gd" id="16_dmg"]
+[ext_resource type="Script" uid="uid://cpp7582xv03uf" path="res://source/combat/ui/damage_overlay.gd" id="16_dmg"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/DamageNumber.tscn" id="17_num"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ucdr0"]
