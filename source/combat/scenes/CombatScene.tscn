@@ -59,12 +59,11 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("2_v1j44")
 
-[node name="TurnManager" type="Node" parent="." unique_id=1147908716 node_paths=PackedStringArray("attacker_team", "teams", "controllers")]
+[node name="TurnManager" type="Node" parent="." unique_id=1147908716 node_paths=PackedStringArray("attacker_team", "teams")]
 unique_name_in_owner = true
 script = ExtResource("3_vk3fy")
 attacker_team = NodePath("../AllyTeam")
 teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
-controllers = [null, null]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
 

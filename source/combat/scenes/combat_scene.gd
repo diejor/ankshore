@@ -2,8 +2,8 @@ class_name CombatScene extends Node2D
 
 ## Entry point for a combat encounter.
 ##
-## The scene file wires the static structure (teams, controllers,
-## animators); this script constructs the shared runtime state
+## The scene file wires the static structure (teams, controllers);
+## this script constructs the shared runtime state
 ## ([InspectionState], [PhaseContext]), binds views to the
 ## [TeamState]-backed models, and kicks off [method TurnManager.run_match].
 
@@ -20,7 +20,10 @@ var _inspection: InspectionState
 
 func _ready() -> void:
 	if _turn_manager == null:
-		push_error("CombatScene: TurnManager '%TurnManager' is missing in the scene tree.")
+		push_error(
+			"CombatScene: TurnManager '%TurnManager' is missing "
+			+ "in the scene tree."
+		)
 		return
 	_inspection = InspectionState.new()
 	_bind_views()
@@ -48,7 +51,7 @@ func _bind_views() -> void:
 		_planning_panel.bind_turn_manager(_turn_manager)
 
 	if ally_team and _defense_prompt:
-		_defense_prompt.team_state = ally_team.state
+		_defense_prompt.team = ally_team
 
 	if _slot_selection_view:
 		_slot_selection_view.inspection = _inspection

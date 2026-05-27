@@ -3,9 +3,8 @@ class_name DefenseInput extends RefCounted
 ## Defender reaction sample for one beat or ender.
 ##
 ## Produced by the defender's [TeamController] in response to
-## [signal TeamState.defense_window_opened] /
-## [signal TeamState.parry_window_opened], and consumed by
-## [AttackStringResolver] via [signal TeamState.defense_window_closed].
+## [signal Character.defense_window_opened], and consumed by
+## [AttackStringResolver] via [signal Character.defense_window_closed].
 ## The struct reports what the defender did, not whether it succeeded -
 ## the resolver scores it against the active [AttackBeat].
 

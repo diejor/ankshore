@@ -3,8 +3,8 @@ class_name TeamManager extends Node2D
 ## One side of a combat encounter.
 ##
 ## Owns the roster of [member tracked_characters], the slot layout, and
-## the per-encounter [TeamState] resource that planning, defense, and UI
-## all observe. Turn flow lives on [TurnManager], this class drives
+## the per-encounter [TeamState] resource that planning UI observes.
+## Turn flow lives on [TurnManager], this class drives
 ## [method run_planning] when asked.
 
 enum Team {
@@ -13,6 +13,18 @@ enum Team {
 	## The enemy team.
 	Enemy
 }
+
+signal character_added(character: Character)
+signal character_defense_window_opened(
+	character: Character,
+	kind: Character.DefenseKind,
+	beat: AttackBeat,
+	window_sec: float
+)
+signal character_defense_window_closed(
+	character: Character,
+	result: DefenseInput
+)
 
 ## Name of the team.
 @export var teamTitle: String = "test_teamTitle"
@@ -26,7 +38,7 @@ enum Team {
 ## Slots used to position characters on the field.
 @export var slots: Array[SelectionSlot]
 
-## Per-encounter observable state shared with controllers and views.
+## Per-encounter planning state shared with controllers and views.
 ## Constructed in [method _init] - never authored as a [code].tres[/code]
 ## so the [Character] refs it holds remain scene-scoped.
 var state: TeamState
@@ -95,18 +107,27 @@ func pending_characters() -> Array[Character]:
 
 
 ## Begins planning on [member state] and awaits
-## [signal TeamState.planning_finished]. Returns the actions the bound
-## controller (Player or AI) committed.
+## [signal TeamState.planning_finished]. Returns the characters whose
+## pending moves were committed by the bound controller.
 ##
 ## [br][br]
 ## Whoever is bound to [member state] (a [PlayerController] reading input,
 ## an [AIController] running policy, ...) drives the state machine to
 ## completion. This method just kicks it off and waits.
-func run_planning() -> Array[CommittedAction]:
+func run_planning() -> Array[Character]:
+	var result: Array[Character] = []
+	var on_action_committed := func(character: Character) -> void:
+		result.append(character)
+
+	for character in tracked_characters:
+		if character:
+			character.clear_pending_move()
+	state.action_committed.connect(on_action_committed)
 	state.begin_planning(pending_characters())
 	if state.phase != TeamState.Phase.DONE:
 		await state.planning_finished
-	return state.committed_actions.duplicate()
+	state.action_committed.disconnect(on_action_committed)
+	return result
 
 
 # Places the character into the first available slot.
@@ -122,5 +143,33 @@ func _on_child_entered(node: Node) -> void:
 	if Engine.is_editor_hint():
 		return
 	if node is Character:
-		tracked_characters.append(node)
-		_organize_character(node as Character)
+		var character := node as Character
+		tracked_characters.append(character)
+		_organize_character(character)
+		character.defense_window_opened.connect(
+			_relay_defense_window_opened.bind(character)
+		)
+		character.defense_window_closed.connect(
+			_relay_defense_window_closed.bind(character)
+		)
+		character_added.emit(character)
+
+
+# Re-emits defense windows for subscribers interested in any teammate.
+func _relay_defense_window_opened(
+	kind: Character.DefenseKind,
+	beat: AttackBeat,
+	window_sec: float,
+	character: Character
+) -> void:
+	character_defense_window_opened.emit(
+		character, kind, beat, window_sec
+	)
+
+
+# Re-emits defense completion for subscribers interested in any teammate.
+func _relay_defense_window_closed(
+	result: DefenseInput,
+	character: Character
+) -> void:
+	character_defense_window_closed.emit(character, result)

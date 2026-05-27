@@ -4,26 +4,28 @@ class_name TurnManager extends Node
 ##
 ## Each turn nominates an [member attacker_team]. Both teams plan
 ## simultaneously via [PlanningPhase], then [ResolutionPhase] executes
-## the collected actions in speed order. Back-navigation is a per-step
-## concern inside the planning tree; this class is intentionally not
-## an interrupt boundary.
+## characters with pending moves in speed order. Back-navigation is a
+## per-step concern inside the planning tree; this class is not an
+## interrupt boundary.
 
 signal turn_started(attacker: TeamManager)
 signal turn_ended(attacker: TeamManager)
 signal match_started(attacker: TeamManager)
 signal match_ended
+signal planning_started
 signal planning_finished
+signal planning_team_started(team: TeamManager)
+signal planning_team_finished(team: TeamManager, characters: Array[Character])
+signal resolution_started
+signal resolution_finished
+signal action_started(character: Character)
+signal action_finished(character: Character)
 
 ## Team holding the attacker role this turn.
 @export var attacker_team: TeamManager
 
 ## All participating teams in attacker-rotation order.
 @export var teams: Array[TeamManager]
-
-## One controller per team. Defines who plans each team's turn
-## (local input, AI, network). Order is independent of [member teams];
-## controllers are paired to teams by [member TeamController.team].
-@export var controllers: Array[TeamController] = []
 
 @export var current_turn: int = 0
 
@@ -42,12 +44,15 @@ func run_match(ctx: PhaseContext) -> void:
 	while not _is_match_over():
 		turn_started.emit(attacker_team)
 
+		planning_started.emit()
 		var planning := PlanningPhase.new()
-		var actions: Array[CommittedAction] = await planning.run(ctx)
+		var characters: Array[Character] = await planning.run(ctx, self)
 		planning_finished.emit()
 
-		var resolution := ResolutionPhase.new(actions)
-		await resolution.run(ctx)
+		resolution_started.emit()
+		var resolution := ResolutionPhase.new(characters)
+		await resolution.run(ctx, self)
+		resolution_finished.emit()
 
 		turn_ended.emit(attacker_team)
 		_rotate_attacker()

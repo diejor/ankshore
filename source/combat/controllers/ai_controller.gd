@@ -3,8 +3,8 @@ class_name AIController extends TeamController
 ## [TeamController] driven by an automated policy.
 ##
 ## Reacts to [TeamState] phase changes by computing a decision and
-## calling the relevant mutation method, so the team plans without any
-## UI or input. Defense windows are answered with a probability roll.
+## calling the relevant mutation method. Defense windows are answered
+## with a probability roll.
 
 ## Probability the AI picks the correct block direction during a
 ## defense window. Tunable per encounter.
@@ -23,8 +23,12 @@ func _ready() -> void:
 		push_error("AIController has no bound TeamState.")
 		return
 	state.phase_changed.connect(_on_phase_changed)
-	state.defense_window_opened.connect(_on_defense_window_opened)
-	state.parry_window_opened.connect(_on_parry_window_opened)
+	if not team.character_defense_window_opened.is_connected(
+		_on_defense_window_opened
+	):
+		team.character_defense_window_opened.connect(
+			_on_defense_window_opened
+		)
 	_on_phase_changed(state.phase)
 
 
@@ -78,20 +82,28 @@ func _pick_targets() -> void:
 
 
 func _on_defense_window_opened(
-	beat: AttackBeat, window_sec: float
+	character: Character,
+	kind: Character.DefenseKind,
+	beat: AttackBeat,
+	window_sec: float
 ) -> void:
-	_react_block.call_deferred(beat, window_sec)
-
-
-func _on_parry_window_opened(window_sec: float) -> void:
-	_react_parry.call_deferred(window_sec)
+	if kind == Character.DefenseKind.PARRY:
+		_react_parry.call_deferred(character, window_sec)
+	else:
+		_react_block.call_deferred(character, beat, window_sec)
 
 
 # Picks a block direction; wrong guesses miss on the vertical axis.
-func _react_block(beat: AttackBeat, window_sec: float) -> void:
+func _react_block(
+	defender: Character,
+	beat: AttackBeat,
+	window_sec: float
+) -> void:
 	await get_tree().create_timer(window_sec * 0.5).timeout
+	if defender == null:
+		return
 	if randf() < block_skill:
-		state.complete_defense(
+		defender.complete_defense(
 			DefenseInput.block(beat.direction, beat.side)
 		)
 		return
@@ -100,16 +112,18 @@ func _react_block(beat: AttackBeat, window_sec: float) -> void:
 		if beat.direction == AttackBeat.Direction.OVERHEAD
 		else AttackBeat.Direction.OVERHEAD
 	)
-	state.complete_defense(DefenseInput.block(wrong_dir, beat.side))
+	defender.complete_defense(DefenseInput.block(wrong_dir, beat.side))
 
 
 # Rolls against [member parry_skill] for the grab ender.
-func _react_parry(window_sec: float) -> void:
+func _react_parry(defender: Character, window_sec: float) -> void:
 	await get_tree().create_timer(window_sec * 0.5).timeout
+	if defender == null:
+		return
 	if randf() < parry_skill:
-		state.complete_defense(DefenseInput.parry())
+		defender.complete_defense(DefenseInput.parry())
 	else:
-		state.complete_defense(DefenseInput.none())
+		defender.complete_defense(DefenseInput.none())
 
 
 # Yields long enough for the player to read the AI's decision.

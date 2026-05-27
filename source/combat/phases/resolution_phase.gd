@@ -1,64 +1,54 @@
 class_name ResolutionPhase extends RefCounted
 
-## Executes the [CommittedAction]s collected by [PlanningPhase] in
-## descending order of [member CommittedAction.speed_roll].
+## Executes the characters collected by [PlanningPhase] in descending
+## initiative order.
 ##
-## Each action's [method CombatAction.execute_async] is awaited in turn
-## so that per-character [AnimationTree] sequences play sequentially.
-## Dead actors and actions whose targets are all dead are skipped. The
-## phase plays out to completion - once planning commits, nothing
-## interrupts it.
+## Each character's pending move is awaited in turn. Dead actors and
+## moves whose targets are all dead are skipped. The phase plays out to
+## completion - once planning commits, nothing interrupts it.
 
-signal phase_started
-signal phase_finished
-signal action_started(action: CommittedAction)
-signal action_finished(action: CommittedAction)
-
-var _actions: Array[CommittedAction]
+var _characters: Array[Character]
+var _speed_rolls: Dictionary = {}
 
 
-func _init(p_actions: Array[CommittedAction]) -> void:
-	_actions = p_actions
+func _init(p_characters: Array[Character]) -> void:
+	_characters = p_characters
 
 
-func run(ctx: PhaseContext) -> void:
-	phase_started.emit()
-
+func run(ctx: PhaseContext, turn_manager: TurnManager) -> void:
 	_roll_speeds()
-	_actions.sort_custom(
-		func(a: CommittedAction, b: CommittedAction) -> bool:
-			return a.speed_roll > b.speed_roll
+	_characters.sort_custom(
+		func(a: Character, b: Character) -> bool:
+			return _speed_rolls.get(a, 0) > _speed_rolls.get(b, 0)
 	)
 
 	if ctx.ui_animator:
 		await ctx.ui_animator.play_and_finish(&"resolution_in")
 
-	for action in _actions:
-		if not action.actor or not action.actor.is_alive():
+	for character in _characters:
+		if not character or not character.is_alive():
 			continue
-		if not _has_live_target(action):
+		if not _has_live_target(character):
 			continue
-		action_started.emit(action)
-		await action.to_runtime_action().execute_async(ctx)
-		action_finished.emit(action)
+		turn_manager.action_started.emit(character)
+		await character.execute_turn(ctx)
+		turn_manager.action_finished.emit(character)
 
 	if ctx.ui_animator:
 		await ctx.ui_animator.play_and_finish(&"resolution_out")
 
-	phase_finished.emit()
-
 
 func _roll_speeds() -> void:
-	for action in _actions:
+	for character in _characters:
 		var base := (
-			action.actor.stats.speed if action.actor and action.actor.stats
+			character.stats.speed if character and character.stats
 			else 0
 		)
-		action.speed_roll = base + randi_range(0, 9)
+		_speed_rolls[character] = base + randi_range(0, 9)
 
 
-func _has_live_target(action: CommittedAction) -> bool:
-	for target in action.targets:
+func _has_live_target(character: Character) -> bool:
+	for target in character.pending_targets:
 		if target and target.is_alive():
 			return true
 	return false

@@ -6,5 +6,5 @@ class_name ItemAction extends CombatAction
 
 
 ## Triggers consumable item application logic on targets.
-func execute() -> void:
+func execute(_actor: Character, _targets: Array[Character]) -> void:
 	pass

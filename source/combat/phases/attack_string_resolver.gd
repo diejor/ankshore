@@ -9,13 +9,8 @@ class_name AttackStringResolver extends RefCounted
 ## (strike or grab) the same way. Once the defender takes one unblocked
 ## hit, [member StringState.combo_locked] short-circuits later defense
 ## windows so the remaining beats confirm at full damage.
-##
-## [ResolutionPhase] knows nothing about this class - it sees
-## [method AttackString.execute_async] like any other [CombatAction].
-
-signal beat_telegraphed(beat: AttackBeat)
-signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
-signal ender_resolved(ender: int, hit: bool, damage: int)
+## Observers bind to the defender's combat signals; this resolver has
+## no public signal surface.
 
 var _ctx: PhaseContext
 var _attacker: Character
@@ -49,17 +44,18 @@ func run() -> void:
 
 
 func _resolve_beat(beat: AttackBeat) -> void:
-	beat_telegraphed.emit(beat)
-	var d_state := _defender_state()
-	if d_state:
-		d_state.beat_telegraphed.emit(beat)
+	_defender.beat_telegraphed.emit(beat)
 	await _play_windup(beat)
 
 	var blocked: bool
 	if _state.combo_locked:
 		blocked = false
 	else:
-		var input := await _await_block(beat)
+		var input := await _defender.request_defense(
+			Character.DefenseKind.BLOCK,
+			beat,
+			beat.react_window_sec
+		)
 		blocked = input.matches_beat(beat)
 
 	var dmg: int = _apply_beat_damage(beat, blocked)
@@ -68,9 +64,7 @@ func _resolve_beat(beat: AttackBeat) -> void:
 		_state.hits_landed += 1
 	else:
 		_state.chip_dealt += dmg
-	beat_resolved.emit(beat, blocked, dmg)
-	if d_state:
-		d_state.beat_resolved.emit(beat, blocked, dmg)
+	_defender.beat_resolved.emit(beat, blocked, dmg)
 
 
 func _resolve_ender() -> void:
@@ -103,43 +97,39 @@ func _resolve_strike_ender() -> void:
 	if _state.combo_locked:
 		blocked = false
 	else:
-		var input := await _await_block(virtual_beat)
+		var input := await _defender.request_defense(
+			Character.DefenseKind.BLOCK,
+			virtual_beat,
+			virtual_beat.react_window_sec
+		)
 		blocked = input.matches_beat(virtual_beat)
 
 	var dmg: int = _apply_beat_damage(virtual_beat, blocked)
 	if not blocked:
 		_state.combo_locked = true
 		_state.hits_landed += 1
-	ender_resolved.emit(AttackString.Ender.STRIKE, not blocked, dmg)
-	var d_state := _defender_state()
-	if d_state:
-		d_state.ender_resolved.emit(
-			AttackString.Ender.STRIKE, not blocked, dmg
-		)
+	_defender.ender_resolved.emit(
+		AttackString.Ender.STRIKE, not blocked, dmg
+	)
 
 
 func _resolve_grab_ender() -> void:
 	# A grab ignores the combo-confirm rule - even a hit-confirmed
 	# defender can still parry the grab.
-	var input := await _await_parry(_string.parry_window_sec)
+	var input := await _defender.request_defense(
+		Character.DefenseKind.PARRY, null, _string.parry_window_sec
+	)
 	var parried := input.kind == DefenseInput.Kind.PARRY
 
-	var d_state := _defender_state()
 	if parried:
 		var counter: int = _apply_counter_damage(_string.parry_counter_damage)
-		ender_resolved.emit(AttackString.Ender.GRAB, false, counter)
-		if d_state:
-			d_state.ender_resolved.emit(
-				AttackString.Ender.GRAB, false, counter
-			)
+		_defender.ender_resolved.emit(
+			AttackString.Ender.GRAB, false, counter
+		)
 	else:
 		var dmg: int = _apply_grab_damage(_string.grab_damage)
 		_state.hits_landed += 1
-		ender_resolved.emit(AttackString.Ender.GRAB, true, dmg)
-		if d_state:
-			d_state.ender_resolved.emit(
-				AttackString.Ender.GRAB, true, dmg
-			)
+		_defender.ender_resolved.emit(AttackString.Ender.GRAB, true, dmg)
 
 
 func _apply_beat_damage(beat: AttackBeat, blocked: bool) -> int:
@@ -179,40 +169,6 @@ func _play_windup(_beat: AttackBeat) -> void:
 	var tree := _ctx.turn_manager.get_tree() if _ctx.turn_manager else null
 	if tree:
 		await tree.create_timer(0.15).timeout
-
-
-# Opens a block window on the defender's [TeamState] and awaits the
-# matching close signal. Returns [method DefenseInput.none] if there is
-# no bound state (defender outside a managed team, e.g. a test fixture).
-func _await_block(beat: AttackBeat) -> DefenseInput:
-	var s := _defender_state()
-	if s == null:
-		return DefenseInput.none()
-	s.request_block(beat, beat.react_window_sec)
-	var result: DefenseInput = await s.defense_window_closed
-	if result == null:
-		return DefenseInput.none()
-	return result
-
-
-# Opens a parry window on the defender's [TeamState] and awaits close.
-func _await_parry(window_sec: float) -> DefenseInput:
-	var s := _defender_state()
-	if s == null:
-		return DefenseInput.none()
-	s.request_parry(window_sec)
-	var result: DefenseInput = await s.defense_window_closed
-	if result == null:
-		return DefenseInput.none()
-	return result
-
-
-# Resolves the defender's [TeamState] via its [TeamManager].
-func _defender_state() -> TeamState:
-	if _defender == null:
-		return null
-	var tm := _defender.team_manager
-	return tm.state if tm else null
 
 
 ## Per-string mutable state. Lives only for one [method run] invocation.

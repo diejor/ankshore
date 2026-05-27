@@ -3,10 +3,8 @@ class_name AttackString extends CombatAction
 ## A sequence of [AttackBeat]s closed by a strike or grab ender.
 ##
 ## The canonical attacking move. [method execute_async] delegates to
-## [AttackStringResolver], which runs
-## the interactive defense loop against the targeted character's
-## controller. [ResolutionPhase] sees this just like any other
-## [CombatAction] - the per-beat interaction lives behind this override.
+## [AttackStringResolver], which runs the interactive defense loop
+## against the targeted character's controller.
 
 enum Ender { STRIKE, GRAB }
 
@@ -33,11 +31,15 @@ enum Ender { STRIKE, GRAB }
 
 ## Hands resolution to [AttackStringResolver] for the first live target.
 ## Multi-target strings are out of scope - the first valid defender wins.
-func execute_async(ctx: PhaseContext) -> void:
-	var defender: Character = _first_live_target()
-	if not attacker or not defender:
+func execute_async(
+	actor: Character,
+	targets: Array[Character],
+	ctx: PhaseContext
+) -> void:
+	var defender: Character = _first_live_target(targets)
+	if not actor or not defender:
 		return
-	var resolver := AttackStringResolver.new(ctx, attacker, defender, self)
+	var resolver := AttackStringResolver.new(ctx, actor, defender, self)
 	await resolver.run()
 
 
@@ -45,7 +47,7 @@ func animation_key() -> StringName:
 	return &"attack_string"
 
 
-func _first_live_target() -> Character:
+func _first_live_target(targets: Array[Character]) -> Character:
 	for target in targets:
 		if target and target.is_alive():
 			return target

@@ -5,7 +5,7 @@ class_name PlayerController extends TeamController
 ## Pure input -> state. Confirms the focused [SelectionSlot] into the
 ## current [TeamState] step, [code]ui_cancel[/code] backs out, and during
 ## defense windows directional keys or [code]ui_accept[/code] feed
-## [method TeamState.complete_defense].
+## [method Character.complete_defense].
 ##
 ## [br][br]
 ## Owns no view. Slot affordances (focus, step-mode visuals) live on
@@ -14,21 +14,24 @@ class_name PlayerController extends TeamController
 
 # True while a defense window is sampling input. Suppresses normal
 # planning-mode dispatch so block/parry presses don't double-fire.
-var _defending: bool = false
-var _defense_capture: _DefenseCapture = null
+var _active_defense: _DefenseCapture = null
 
 
 func _ready() -> void:
 	if state == null:
 		push_error("PlayerController has no bound TeamState.")
 		return
-	state.defense_window_opened.connect(_on_defense_window_opened)
-	state.parry_window_opened.connect(_on_parry_window_opened)
+	if not team.character_defense_window_opened.is_connected(
+		_on_defense_window_opened
+	):
+		team.character_defense_window_opened.connect(
+			_on_defense_window_opened
+		)
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _defending and _defense_capture:
-		_defense_capture.handle_event(event)
+	if _active_defense:
+		_active_defense.handle_event(event)
 		return
 	if state == null:
 		return
@@ -57,33 +60,39 @@ func _handle_slot_confirm() -> void:
 
 
 func _on_defense_window_opened(
-	_beat: AttackBeat, window_sec: float
+	character: Character,
+	kind: Character.DefenseKind,
+	_beat: AttackBeat,
+	window_sec: float
 ) -> void:
-	_start_capture(_DefenseCapture.Mode.BLOCK, window_sec)
-
-
-func _on_parry_window_opened(window_sec: float) -> void:
-	_start_capture(_DefenseCapture.Mode.PARRY, window_sec)
+	var mode := _DefenseCapture.Mode.BLOCK
+	if kind == Character.DefenseKind.PARRY:
+		mode = _DefenseCapture.Mode.PARRY
+	_start_capture(character, mode, window_sec)
 
 
 # Begins listening for one defense reaction. Resolves on the first
 # qualifying press or timer expiry.
-func _start_capture(mode: int, window_sec: float) -> void:
+func _start_capture(
+	character: Character,
+	mode: int,
+	window_sec: float
+) -> void:
 	var capture := _DefenseCapture.new()
 	@warning_ignore("int_as_enum_without_cast")
 	capture.mode = mode
-	_defense_capture = capture
-	_defending = true
+	capture.character = character
+	_active_defense = capture
 
 	var timer := get_tree().create_timer(window_sec)
 	timer.timeout.connect(capture.on_timeout)
 	await capture.resolved
 
-	_defending = false
-	_defense_capture = null
 	var result: DefenseInput = capture.result if capture.result \
 		else DefenseInput.none()
-	state.complete_defense(result)
+	if capture.character:
+		capture.character.complete_defense(result)
+	_active_defense = null
 
 
 ## Single-use input gate for one defense window. Resolves on the first
@@ -97,6 +106,9 @@ class _DefenseCapture extends RefCounted:
 
 	## Which input shape this capture is sampling.
 	var mode: Mode = Mode.BLOCK
+
+	## Character whose defense window this capture answers.
+	var character: Character = null
 
 	## The reaction the user produced, or [code]null[/code] on timeout.
 	var result: DefenseInput = null

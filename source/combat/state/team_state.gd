@@ -1,12 +1,11 @@
 class_name TeamState extends Resource
 
-## Observable state for one team across planning and defense.
+## Observable state for one team's planning flow.
 ##
 ## The model in an MVC sense. Holds the planning state machine
 ## ([member phase], [member active_character], [member selected_move],
-## [member selected_targets]) and broadcasts a defense window during the
-## opposing team's [AttackString]. Nodes mutate via the [code]select_*[/code]
-## and [code]request_*[/code] methods; views subscribe to the signals.
+## [member selected_targets]). Nodes mutate via the [code]select_*[/code]
+## methods; views subscribe to the signals.
 ##
 ## [br][br]
 ## One instance per team per encounter. Constructed by [TeamManager] -
@@ -43,9 +42,9 @@ signal move_selected(move: CombatAction)
 ## move. Carries the final target list.
 signal targets_committed(targets: Array[Character])
 
-## Emitted after [method commit_targets] packages a [CommittedAction] and
-## appends it to [member committed_actions].
-signal action_committed(action: CommittedAction)
+## Emitted after [method commit_targets] stores a pending move on
+## [param character].
+signal action_committed(character: Character)
 
 ## Emitted when [method go_back] rewinds one step in the planning state
 ## machine. Carries the phase the state returned to.
@@ -53,37 +52,8 @@ signal back_navigated(phase: Phase)
 
 ## Emitted when [member pending_characters] empties and [member phase]
 ## settles in [constant Phase.DONE]. Listeners can read
-## [member committed_actions] for the result.
+## the characters' pending moves for the result.
 signal planning_finished
-
-## Emitted by [method request_block] when the resolver needs the
-## defender to react to [param beat] within [param window_sec] seconds.
-signal defense_window_opened(beat: AttackBeat, window_sec: float)
-
-## Emitted by [method request_parry] when the resolver needs the
-## defender to parry a grab within [param window_sec] seconds.
-signal parry_window_opened(window_sec: float)
-
-## Emitted by [method complete_defense] with whatever the defending
-## controller produced. Resolver awaits this to score the beat.
-signal defense_window_closed(result: DefenseInput)
-
-## Emitted by [AttackStringResolver] when an attacker telegraphs
-## [param beat] against a character on this team. Mirrors the resolver's
-## own signal so UI nodes can bind to the defender's [TeamState] without
-## holding a reference to the transient resolver.
-@warning_ignore("unused_signal")
-signal beat_telegraphed(beat: AttackBeat)
-
-## Emitted after a beat resolves against a character on this team.
-@warning_ignore("unused_signal")
-signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
-
-## Emitted after an [enum AttackString.Ender] resolves against a
-## character on this team. [param ender] is the [enum AttackString.Ender]
-## value.
-@warning_ignore("unused_signal")
-signal ender_resolved(ender: int, hit: bool, damage: int)
 
 ## Current step of the planning state machine. Read-only to consumers -
 ## mutate via [method begin_planning], [method select_character], etc.
@@ -97,17 +67,11 @@ var pending_characters: Array[Character] = []
 ## [constant Phase.IDLE] / [constant Phase.DONE].
 var active_character: Character = null
 
-## Move chosen by the active character; set during
-## [constant Phase.PICKING_TARGETS], cleared on commit or back-nav.
+## Move chosen by the active character. Cleared on commit or back-nav.
 var selected_move: CombatAction = null
 
-## Targets accumulated during [constant Phase.PICKING_TARGETS]. Frozen
-## into a [CommittedAction] by [method commit_targets].
+## Targets accumulated during [constant Phase.PICKING_TARGETS].
 var selected_targets: Array[Character] = []
-
-## Actions committed by this team this turn, in commit order. Drained
-## by [TeamManager] at end of planning.
-var committed_actions: Array[CommittedAction] = []
 
 
 ## Resets state and starts a new planning sequence for [param roster].
@@ -116,7 +80,6 @@ var committed_actions: Array[CommittedAction] = []
 ## [constant Phase.DONE] when the roster is empty) and emits
 ## [signal phase_changed].
 func begin_planning(roster: Array[Character]) -> void:
-	committed_actions = []
 	pending_characters = roster.duplicate()
 	selected_move = null
 	selected_targets = []
@@ -153,9 +116,8 @@ func select_move(move: CombatAction) -> void:
 	_set_phase(Phase.PICKING_TARGETS)
 
 
-## Freezes [param targets] into a [CommittedAction], removes the active
-## character from [member pending_characters], and advances to either
-## the next character or [constant Phase.DONE].
+## Stores [param targets] and the selected move on the active character,
+## then advances to the next character or [constant Phase.DONE].
 func commit_targets(targets: Array[Character]) -> void:
 	if phase != Phase.PICKING_TARGETS:
 		push_warning("TeamState.commit_targets called outside PICKING_TARGETS.")
@@ -165,11 +127,8 @@ func commit_targets(targets: Array[Character]) -> void:
 		return
 	selected_targets = targets.duplicate()
 	targets_committed.emit(selected_targets)
-	var action := CommittedAction.new(
-		active_character, selected_move, selected_targets
-	)
-	committed_actions.append(action)
-	action_committed.emit(action)
+	active_character.commit_move(selected_move, selected_targets)
+	action_committed.emit(active_character)
 	pending_characters.erase(active_character)
 	selected_move = null
 	selected_targets = []
@@ -195,28 +154,6 @@ func go_back() -> void:
 			_set_active(null)
 			_set_phase(Phase.PICKING_CHARACTER)
 			back_navigated.emit(phase)
-
-
-## Asks the bound defender controller for a block input against
-## [param beat]. Emits [signal defense_window_opened]; the controller
-## must respond with [method complete_defense] within
-## [param window_sec].
-func request_block(beat: AttackBeat, window_sec: float) -> void:
-	defense_window_opened.emit(beat, window_sec)
-
-
-## Asks the bound defender controller for a parry input. Emits
-## [signal parry_window_opened]; the controller must respond with
-## [method complete_defense] within [param window_sec].
-func request_parry(window_sec: float) -> void:
-	parry_window_opened.emit(window_sec)
-
-
-## Reports the defender's reaction back to the resolver. Emitted as
-## [signal defense_window_closed]. Pass [method DefenseInput.none] for
-## a timeout/no-react.
-func complete_defense(result: DefenseInput) -> void:
-	defense_window_closed.emit(result)
 
 
 # Internal phase setter. Centralizes the change signal.
