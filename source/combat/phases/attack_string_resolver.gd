@@ -123,8 +123,11 @@ func _resolve_grab_ender() -> void:
 
 	if parried:
 		var counter: int = _apply_counter_damage(_string.parry_counter_damage)
-		_defender.ender_resolved.emit(
+		_attacker.ender_resolved.emit(
 			AttackString.Ender.GRAB, false, counter
+		)
+		_defender.ender_resolved.emit(
+			AttackString.Ender.GRAB, false, 0
 		)
 	else:
 		var dmg: int = _apply_grab_damage(_string.grab_damage)

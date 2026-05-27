@@ -14,11 +14,15 @@ signal match_started(attacker: TeamManager)
 signal match_ended
 signal planning_started
 signal planning_finished
+@warning_ignore("unused_signal")
 signal planning_team_started(team: TeamManager)
+@warning_ignore("unused_signal")
 signal planning_team_finished(team: TeamManager, characters: Array[Character])
 signal resolution_started
 signal resolution_finished
+@warning_ignore("unused_signal")
 signal action_started(character: Character)
+@warning_ignore("unused_signal")
 signal action_finished(character: Character)
 
 ## Team holding the attacker role this turn.

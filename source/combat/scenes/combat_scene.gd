@@ -11,6 +11,7 @@ class_name CombatScene extends Node2D
 @onready var _match_hud: MatchHud = %MatchHud
 @onready var _planning_panel: PlanningPanel = %PlanningPanel
 @onready var _defense_prompt: DefensePromptUI = %DefensePromptUI
+@onready var _damage_overlay: DamageOverlay = %DamageOverlay
 @onready var _slot_selection_view: SlotSelectionView = (
 	get_node_or_null("%SlotSelectionView")
 )
@@ -52,6 +53,9 @@ func _bind_views() -> void:
 
 	if ally_team and _defense_prompt:
 		_defense_prompt.team = ally_team
+
+	if _damage_overlay:
+		_damage_overlay.bind_teams(_turn_manager.teams)
 
 	if _slot_selection_view:
 		_slot_selection_view.inspection = _inspection

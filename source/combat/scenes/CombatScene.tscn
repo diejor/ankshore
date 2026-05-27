@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" path="res://source/combat/ui/MatchHud.tscn" id="13_hud"]
 [ext_resource type="PackedScene" uid="uid://bwxx1a0fil4tw" path="res://source/combat/ui/PlanningPanel.tscn" id="14_plan"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/DefensePromptUI.tscn" id="15_defp"]
+[ext_resource type="Script" path="res://source/combat/ui/damage_overlay.gd" id="16_dmg"]
+[ext_resource type="PackedScene" path="res://source/combat/ui/DamageNumber.tscn" id="17_num"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ucdr0"]
 content_margin_left = 32.0
@@ -66,6 +68,11 @@ attacker_team = NodePath("../AllyTeam")
 teams = [NodePath("../AllyTeam"), NodePath("../EnemyTeam")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1069866750]
+
+[node name="DamageOverlay" type="Node2D" parent="." unique_id=1729746025]
+unique_name_in_owner = true
+script = ExtResource("16_dmg")
+damage_number_scene = ExtResource("17_num")
 
 [node name="AllyTeam" parent="." unique_id=1953363629 instance=ExtResource("4_ywd5h")]
 position = Vector2(-330, 0)

@@ -2,6 +2,10 @@ class_name CombatAction extends Node
 
 ## Base class representing move data that can resolve during a turn.
 
+## True when this action should commit against the actor itself without
+## entering target selection.
+@export var targets_self: bool = false
+
 
 ## Synchronous entry point. Subclasses apply gameplay effects here
 ## (damage, healing, buff application). Animation playback belongs in

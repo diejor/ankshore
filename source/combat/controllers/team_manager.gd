@@ -25,6 +25,18 @@ signal character_defense_window_closed(
 	character: Character,
 	result: DefenseInput
 )
+signal character_beat_resolved(
+	character: Character,
+	beat: AttackBeat,
+	blocked: bool,
+	damage: int
+)
+signal character_ender_resolved(
+	character: Character,
+	ender: int,
+	hit: bool,
+	damage: int
+)
 
 ## Name of the team.
 @export var teamTitle: String = "test_teamTitle"
@@ -152,7 +164,43 @@ func _on_child_entered(node: Node) -> void:
 		character.defense_window_closed.connect(
 			_relay_defense_window_closed.bind(character)
 		)
+		character.beat_resolved.connect(
+			_relay_beat_resolved.bind(character)
+		)
+		character.ender_resolved.connect(
+			_relay_ender_resolved.bind(character)
+		)
+		character.tree_exiting.connect(
+			_on_character_tree_exiting.bind(character)
+		)
 		character_added.emit(character)
+
+
+# Disconnects relays when a character leaves the scene tree.
+func _on_character_tree_exiting(character: Character) -> void:
+	_disconnect_if_removed.call_deferred(character)
+
+
+# Ignores slot reparenting and disconnects only true removals.
+func _disconnect_if_removed(character: Character) -> void:
+	if not is_instance_valid(character):
+		tracked_characters.erase(character)
+		return
+	if is_ancestor_of(character):
+		return
+	tracked_characters.erase(character)
+	var opened := _relay_defense_window_opened.bind(character)
+	var closed := _relay_defense_window_closed.bind(character)
+	var beat := _relay_beat_resolved.bind(character)
+	var ender := _relay_ender_resolved.bind(character)
+	if character.defense_window_opened.is_connected(opened):
+		character.defense_window_opened.disconnect(opened)
+	if character.defense_window_closed.is_connected(closed):
+		character.defense_window_closed.disconnect(closed)
+	if character.beat_resolved.is_connected(beat):
+		character.beat_resolved.disconnect(beat)
+	if character.ender_resolved.is_connected(ender):
+		character.ender_resolved.disconnect(ender)
 
 
 # Re-emits defense windows for subscribers interested in any teammate.
@@ -173,3 +221,23 @@ func _relay_defense_window_closed(
 	character: Character
 ) -> void:
 	character_defense_window_closed.emit(character, result)
+
+
+# Re-emits beat resolution for subscribers interested in any teammate.
+func _relay_beat_resolved(
+	beat: AttackBeat,
+	blocked: bool,
+	damage: int,
+	character: Character
+) -> void:
+	character_beat_resolved.emit(character, beat, blocked, damage)
+
+
+# Re-emits ender resolution for subscribers interested in any teammate.
+func _relay_ender_resolved(
+	ender: int,
+	hit: bool,
+	damage: int,
+	character: Character
+) -> void:
+	character_ender_resolved.emit(character, ender, hit, damage)

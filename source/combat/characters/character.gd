@@ -23,6 +23,8 @@ signal beat_telegraphed(beat: AttackBeat)
 signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
 @warning_ignore("unused_signal")
 signal ender_resolved(ender: int, hit: bool, damage: int)
+signal pending_move_changed(move: CombatAction)
+signal pending_target_changed(target: Character)
 
 @export var stats: CharacterStats = CharacterStats.new()
 @export var move_list: Array[CombatAction] = []
@@ -45,6 +47,8 @@ var team_manager: TeamManager:
 		return _team_manager_cache
 
 var _team_manager_cache: TeamManager = null
+static var _WAIT_ACTION: WaitAction = WaitAction.new()
+var _defense_window_active: bool = false
 
 
 func _ready() -> void:
@@ -55,7 +59,7 @@ func _ready() -> void:
 ## any actions in [member move_list], without duplicates. Used by
 ## [MoveListUI] to render the move-pick view.
 func available_moves() -> Array[CombatAction]:
-	var result: Array[CombatAction] = []
+	var result: Array[CombatAction] = [_WAIT_ACTION]
 	for child in get_children():
 		if child is CombatAction:
 			result.append(child)
@@ -75,12 +79,16 @@ func is_alive() -> bool:
 func commit_move(move: CombatAction, targets: Array[Character]) -> void:
 	pending_move = move
 	pending_targets = targets.duplicate()
+	pending_move_changed.emit(pending_move)
+	pending_target_changed.emit(_first_pending_target())
 
 
 ## Clears the move and targets committed for this turn.
 func clear_pending_move() -> void:
 	pending_move = null
 	pending_targets = []
+	pending_move_changed.emit(null)
+	pending_target_changed.emit(null)
 
 
 ## Executes [member pending_move], then clears the pending turn data.
@@ -97,8 +105,13 @@ func request_defense(
 	beat: AttackBeat,
 	window_sec: float
 ) -> DefenseInput:
+	_defense_window_active = true
 	defense_window_opened.emit(kind, beat, window_sec)
+	get_tree().create_timer(window_sec).timeout.connect(
+		_complete_defense_timeout
+	)
 	var result: DefenseInput = await defense_window_closed
+	_defense_window_active = false
 	if result == null:
 		return DefenseInput.none()
 	return result
@@ -106,6 +119,8 @@ func request_defense(
 
 ## Reports the defender's reaction back to the resolver.
 func complete_defense(result: DefenseInput) -> void:
+	if not _defense_window_active:
+		return
 	defense_window_closed.emit(result)
 
 
@@ -115,6 +130,20 @@ func take_dmg(raw_damage: int, blocked: bool) -> void:
 	stats.change_health(-raw_damage)
 	if stats.health <= 0:
 		health_depleted.emit()
+
+
+# Returns the first selected target for single-target views.
+func _first_pending_target() -> Character:
+	for target in pending_targets:
+		if target:
+			return target
+	return null
+
+
+# Closes unanswered defense windows so resolution cannot stall.
+func _complete_defense_timeout() -> void:
+	if _defense_window_active:
+		complete_defense(DefenseInput.none())
 
 
 # Modulates sprite scale to reflect team-facing direction.

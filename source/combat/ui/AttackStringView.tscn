@@ -9,12 +9,8 @@ script = ExtResource("1")
 
 [node name="Beat1Mock" type="Label" parent="." unique_id=716150116]
 layout_mode = 2
-text = "FRONT OVERHEAD"
+text = "↖"
 
 [node name="Beat2Mock" type="Label" parent="." unique_id=1348550154]
 layout_mode = 2
-text = "BEHIND LOW"
-
-[node name="EnderMock" type="Label" parent="." unique_id=1268959562]
-layout_mode = 2
-text = "[STRIKE]"
+text = "↘"

@@ -1,6 +1,6 @@
 class_name AttackStringView extends HBoxContainer
 
-## Renders the beats and ender of an [AttackString].
+## Renders the beats and non-default ender of an [AttackString].
 ##
 ## Pure data view: assign [member attack_string] to render, pass
 ## [code]null[/code] to clear. Used as a preview during planning and as
@@ -26,7 +26,8 @@ func _rebuild() -> void:
 		return
 	for beat in attack_string.beats:
 		add_child(_build_beat(beat))
-	add_child(_build_ender(attack_string.ender))
+	if attack_string.ender != AttackString.Ender.STRIKE:
+		add_child(_build_ender(attack_string.ender))
 
 
 # Builds the visual representation of one [AttackBeat].

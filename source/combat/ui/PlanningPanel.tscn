@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://dolosyhf7oq3p" path="res://source/combat/ui/planning_panel.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c6gwjp8u17dqk" path="res://source/combat/ui/CharacterPanel.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://e6rtq4qr2m3l" path="res://source/combat/ui/MoveListPanel.tscn" id="3"]
-[ext_resource type="PackedScene" uid="uid://bwrs3w8kl3ebk" path="res://source/combat/ui/AttackStringView.tscn" id="4"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1pdbf"]
 content_margin_left = 8.0
@@ -15,17 +14,6 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5imgi"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.11764706, 0.11764706, 0.11764706, 0.39215687)
-corner_radius_top_left = 32
-corner_radius_top_right = 32
-corner_radius_bottom_right = 32
-corner_radius_bottom_left = 32
 
 [node name="PlanningPanel" type="HBoxContainer" unique_id=329305276]
 offset_right = 1379.0
@@ -47,13 +35,3 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_1pdbf")
 [node name="MoveListContainer" parent="MoveListPanel" unique_id=1397083590 instance=ExtResource("3")]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="AttackStringPanel" type="PanelContainer" parent="." unique_id=1306796356]
-layout_mode = 2
-size_flags_vertical = 8
-theme_override_styles/panel = SubResource("StyleBoxFlat_5imgi")
-
-[node name="AttackStringView" parent="AttackStringPanel" unique_id=1241781973 instance=ExtResource("4")]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 8

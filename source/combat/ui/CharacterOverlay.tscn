@@ -1,18 +1,32 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://bn3i12v3eque3"]
 
-[ext_resource type="Script" path="res://source/combat/ui/character_overlay.gd" id="1"]
+[ext_resource type="Script" uid="uid://dbwflm6w0mh4o" path="res://source/combat/ui/character_overlay.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://bwrs3w8kl3ebk" path="res://source/combat/ui/AttackStringView.tscn" id="2"]
+[ext_resource type="Script" uid="uid://bfsuc1ytfhgeq" path="res://source/combat/ui/target_arrow_view.gd" id="3"]
 
-[node name="CharacterOverlay" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_preview"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.11764706, 0.11764706, 0.11764706, 0.39215687)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="CharacterOverlay" type="Node2D" unique_id=1845463412]
 script = ExtResource("1")
+preview_move_name = "Slash Combo"
 
-[node name="NameLabel" type="Label" parent="."]
+[node name="NameLabel" type="Label" parent="." unique_id=1515311718]
 offset_left = -50.0
 offset_top = -180.0
 offset_right = 50.0
 offset_bottom = -160.0
 horizontal_alignment = 1
 
-[node name="HpBar" type="ProgressBar" parent="."]
+[node name="HpBar" type="ProgressBar" parent="." unique_id=1691307669]
 offset_left = -50.0
 offset_top = -155.0
 offset_right = 50.0
@@ -20,3 +34,29 @@ offset_bottom = -145.0
 max_value = 500.0
 value = 500.0
 show_percentage = false
+
+[node name="PlanningPreview" type="PanelContainer" parent="." unique_id=1466495804]
+offset_left = -78.0
+offset_top = -135.0
+offset_right = 78.0
+offset_bottom = -95.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_preview")
+
+[node name="VBox" type="VBoxContainer" parent="PlanningPreview" unique_id=163535634]
+layout_mode = 2
+
+[node name="MoveLabel" type="Label" parent="PlanningPreview/VBox" unique_id=481102163]
+layout_mode = 2
+text = "Slash Combo"
+horizontal_alignment = 1
+
+[node name="AttackStringView" parent="PlanningPreview/VBox" unique_id=1845992809 instance=ExtResource("2")]
+layout_mode = 2
+alignment = 1
+
+[node name="TargetArrowView" type="Line2D" parent="." unique_id=102929776]
+visible = false
+z_index = 50
+width = 4.0
+default_color = Color(1, 0.18039216, 0.11764706, 0.9411765)
+script = ExtResource("3")

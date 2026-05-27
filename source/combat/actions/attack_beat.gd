@@ -28,7 +28,10 @@ enum StrikeSide { FRONT, BEHIND }
 
 ## Human-readable label for logs and UI cues.
 func describe() -> String:
-	return "%s %s" % [
-		StrikeSide.find_key(side),
-		Direction.find_key(direction),
-	]
+	if side == StrikeSide.FRONT:
+		if direction == Direction.OVERHEAD:
+			return char(0x2196)
+		return char(0x2199)
+	if direction == Direction.OVERHEAD:
+		return char(0x2197)
+	return char(0x2198)

@@ -113,6 +113,10 @@ func select_move(move: CombatAction) -> void:
 		return
 	selected_move = move
 	move_selected.emit(move)
+	if selected_move and selected_move.targets_self:
+		selected_targets = [active_character]
+		_commit_selected_action()
+		return
 	_set_phase(Phase.PICKING_TARGETS)
 
 
@@ -126,6 +130,11 @@ func commit_targets(targets: Array[Character]) -> void:
 		push_warning("TeamState.commit_targets without an active char/move.")
 		return
 	selected_targets = targets.duplicate()
+	_commit_selected_action()
+
+
+# Commits the selected action, then advances to the next planner.
+func _commit_selected_action() -> void:
 	targets_committed.emit(selected_targets)
 	active_character.commit_move(selected_move, selected_targets)
 	action_committed.emit(active_character)
