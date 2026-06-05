@@ -29,14 +29,23 @@ signal buffs_changed(buffs: Array)
 var levelCapEXP: int = 100 # level cap exp, increases ex
 var currentEXP: int = 0
 
-## Base attributes
-@export var base_max_health: int = 500
-@export var base_damage: int = 10
-@export var base_max_will: int = 100
-@export var base_defense: int = 50
-@export var base_blocking_defense: int = 70
-@export var base_courage: int = 50
-@export var base_speed: int = 10
+## Level One Basic Stats
+var oneMaxHealth: int = 500
+var oneDamage: int = 10
+var oneMax_will: int = 100
+var oneDefense: int = 50
+var oneBlocking_defense: int = 70
+var oneCourage: int = 50
+var oneSpeed: int = 10
+
+## Base attributes, increases with levels
+@export var base_max_health: int = oneMaxHealth
+@export var base_damage: int = oneDamage
+@export var base_max_will: int = oneMax_will
+@export var base_defense: int = oneDefense
+@export var base_blocking_defense: int = oneBlocking_defense
+@export var base_courage: int = oneCourage
+@export var base_speed: int = oneSpeed
 
 
 ## Current status attributes (recalculated with active buffs)
@@ -55,6 +64,13 @@ var will: int = 100
 ## Active status effects and modifiers currently applied
 var active_buffs: Array[CombatBuff] = []
 
+
+
+
+
+
+
+#functions
 
 func _init() -> void:
 	# Defer initial state calculation.
@@ -125,17 +141,24 @@ func change_courage(change_value: int) -> void:
 ## Calculates gained experience after a battle or interaction
 func gainExperience(gainedEXP: int) -> void:
 	if gainedEXP+currentEXP >= levelCapEXP:
-		levelUP()
+		level += 1
+		changeLevel(level)
 		currentEXP = (gainedEXP + currentEXP) - levelCapEXP # recycles extra exp for next level
 	else:
 		currentEXP = gainedEXP
 
-
-##Procs recalculateStats, creates new exp cap for new level using parobola equation
-func levelUP() -> void:
-	
+##Procs recalculateStats, creates new exp cap for new level using exponential(?) equation
+func changeLevel(lvlChange:int) -> void:
+	levelCapEXP += 1000 #temporary
+	base_max_health = oneMaxHealth + (lvlChange*20)
+	base_damage += oneMaxHealth + (lvlChange*20)
+	base_max_will += oneMaxHealth + (lvlChange*20)
+	base_defense += oneMaxHealth + (lvlChange*20)
+	base_blocking_defense += oneMaxHealth + (lvlChange*20)
+	base_courage += oneMaxHealth + (lvlChange*20)
+	base_speed += oneMaxHealth + (lvlChange*20)
+	recalculate_stats()
 	return
-	
 	
 ## Applies incoming physical damage after accounting for blocking/armor.
 func damage_taken(dmg: int, blocked: bool) -> int:
