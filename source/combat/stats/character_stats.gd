@@ -159,7 +159,7 @@ func changeLevel(lvlChange:int) -> void:
 	base_speed += oneMaxHealth + (lvlChange*20)
 	recalculate_stats()
 	return
-	
+
 ## Applies incoming physical damage after accounting for blocking/armor.
 func damage_taken(dmg: int, blocked: bool) -> int:
 	if not blocked:
