@@ -12,6 +12,7 @@ class_name AttackString extends Resource
 ## Ordered beats played in turn against the defender.
 @export var beats: Array[AttackBeat] = []
 
+var chipDamage: float  = .1
 
 ## Plays the string against [param defender], awaiting each beat's defense
 ## window. Returns once damage has been applied.

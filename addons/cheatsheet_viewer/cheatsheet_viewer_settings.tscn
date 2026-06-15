@@ -1,0 +1,1085 @@
+[gd_scene format=3 uid="uid://c8yhdrh1gdpgg"]
+
+[ext_resource type="Script" uid="uid://caixa7u51yt5n" path="res://addons/cheatsheet_viewer/cheatsheet_viewer_settings.gd" id="1_risxl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_risxl"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.05, 0.05, 0.05, 0.827451)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g7bm6"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.05490196, 0.05490196, 0.05490196, 0.48235294)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8xbie"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.047058824, 0.047058824, 0.047058824, 0.827451)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a4gfw"]
+content_margin_left = 8.0
+content_margin_top = 4.0
+content_margin_right = 8.0
+bg_color = Color(0.050980393, 0.050980393, 0.050980393, 0.5686275)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_detail = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v5koo"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.04755766, 0.047557645, 0.047557645, 0.58431375)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4tpws"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 0.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.23137255)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jcjnt"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.82, 0.82, 0.82, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lho70"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.5, 0.5, 0.5, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_skunt"]
+bg_color = Color(0.11, 0.11, 0.11, 1)
+draw_center = false
+corner_detail = 10
+
+[sub_resource type="FoldableGroup" id="FoldableGroup_risxl"]
+allow_folding_all = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dcq8k"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.043039218, 0.043039136, 0.04303918, 1)
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_top = 6.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_risxl"]
+
+[node name="CheatsheetViewerSettings" type="PanelContainer" unique_id=546958209]
+custom_minimum_size = Vector2(500, 500)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_risxl")
+script = ExtResource("1_risxl")
+
+[node name="TabContainer" type="TabContainer" parent="." unique_id=1197965205]
+layout_mode = 2
+theme_override_colors/font_unselected_color = Color(0.82606, 0.82606006, 0.82606, 1)
+current_tab = 0
+use_hidden_tabs_for_min_size = true
+tab_0/title = "Global Settings"
+tab_1/title = "Manage Cheatsheets"
+tab_2/title = "New Cheatsheet Helper"
+tab_3/title = "About"
+
+[node name="SettingsContainer" type="BoxContainer" parent="TabContainer" unique_id=1257024481]
+layout_mode = 2
+vertical = true
+metadata/_tab_index = 0
+metadata/_tab_name = "Global Settings"
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/SettingsContainer" unique_id=1476552847]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="GlobalSettingsContainer" type="BoxContainer" parent="TabContainer/SettingsContainer/MarginContainer" unique_id=208947791]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+vertical = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=898818312]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer" unique_id=1648099938]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+size_flags_stretch_ratio = 1.5
+tooltip_text = "If enabled, hovering a button in the bottom bar will display the cheatsheet it represents.
+(Defaults to True)"
+mouse_filter = 0
+text = "Quick View on button hovering"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer" unique_id=1475464061]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7bm6")
+
+[node name="EnableQuickViewButton" type="CheckBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer/PanelContainer" unique_id=569847025]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "On"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=564956408]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer4" unique_id=575742476]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+size_flags_stretch_ratio = 1.5
+tooltip_text = "If Quick View is enabled, it will only be triggered after this amount of seconds.
+(Defaults to 0.0)"
+mouse_filter = 0
+text = "Quick View after hovering for"
+
+[node name="QuickViewDelayBox" type="SpinBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer4" unique_id=629480437]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 33)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 2.5
+step = 0.1
+allow_greater = true
+suffix = "s"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=1592013239]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer2" unique_id=2057925758]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+size_flags_stretch_ratio = 1.5
+tooltip_text = "If enabled, quick viewing a cheatsheet (that isnt pinned) will move it back to its original position.
+(You can always shift+click on a button to reset the cheatsheet position)
+
+(Defaults to False)"
+mouse_filter = 0
+text = "Quick View resets scale and position"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer2" unique_id=998736529]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7bm6")
+
+[node name="QuickViewResetsPositions" type="CheckBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer2/PanelContainer" unique_id=492804353]
+unique_name_in_owner = true
+layout_mode = 2
+text = "On"
+
+[node name="Control" type="Control" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=1846616220]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=1623031529]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer6" unique_id=626908328]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+tooltip_text = "When enabled, cheatsheet that are too big for the screen will be scaled to fit.
+Scaled cheatsheet are ofter blurrier.
+(Defaults to True)"
+mouse_filter = 0
+text = "Scale cheatsheets to fit in screen"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer6" unique_id=57545610]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7bm6")
+
+[node name="AutoScaleButton" type="CheckBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer6/PanelContainer" unique_id=1318321733]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "On"
+
+[node name="Control3" type="Control" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=139473969]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=1091795839]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer5" unique_id=963275318]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+tooltip_text = "When enabled, cheatsheets can be toggled with keyboard shortcuts.
+You can configure them in the Editor Settings.
+
+The defaults shortcuts are ALT + 1,  ALT+2, ALT+3... and
+Alt + C to toggle the last pinned cheatsheet 
+
+(Defaults to true)"
+mouse_filter = 0
+text = "Enable keyboard shortcuts"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer5" unique_id=1621118172]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7bm6")
+
+[node name="EnableShortcutsCheckBox" type="CheckBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer5/PanelContainer" unique_id=95965099]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "On"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=841984424]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer7" unique_id=162130563]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+tooltip_text = "When enabled, buttons in the bottom bar will be flat.
+It just changes the way they look!
+(Defaults to True)"
+mouse_filter = 0
+text = "Use flat button style"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer7" unique_id=1071299717]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7bm6")
+
+[node name="UseFlatButton" type="CheckBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer7/PanelContainer" unique_id=944104970]
+unique_name_in_owner = true
+layout_mode = 2
+text = "On"
+
+[node name="Control5" type="Control" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=1571715473]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=509035580]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer8" unique_id=1620545126]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.5
+tooltip_text = "When enabled, cheatsheets that are not already in the bottom bar 
+but are enabled with the command palette will be added to an extra button
+
+(Defaults to true)"
+mouse_filter = 0
+text = "Show Command Palette cheatsheet in extra button"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer8" unique_id=1266536644]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_g7bm6")
+
+[node name="ShowMoreCheckBox" type="CheckBox" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/HBoxContainer8/PanelContainer" unique_id=1658556896]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+text = "On"
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=464391556]
+layout_mode = 2
+vertical = true
+
+[node name="Label" type="Label" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/BoxContainer" unique_id=629877247]
+modulate = Color(1, 1, 1, 0.5372549)
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_filter = 0
+text = "Drag to reorder"
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/BoxContainer" unique_id=1280151502]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8xbie")
+
+[node name="ButtonOrderBar" type="TabBar" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer/BoxContainer/PanelContainer" unique_id=313654085]
+unique_name_in_owner = true
+layout_mode = 2
+close_with_middle_mouse = false
+drag_to_rearrange_enabled = true
+deselect_enabled = true
+
+[node name="Control4" type="Control" parent="TabContainer/SettingsContainer/MarginContainer/GlobalSettingsContainer" unique_id=110913769]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="ApplyGlobalSettingsButton" type="Button" parent="TabContainer/SettingsContainer" unique_id=1932486610]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 10
+text = "Save"
+
+[node name="ManageCheatsheetsContainer" type="BoxContainer" parent="TabContainer" unique_id=1423423076]
+visible = false
+layout_mode = 2
+vertical = true
+metadata/_tab_index = 1
+metadata/_tab_name = "Manage Cheatsheets"
+
+[node name="BoxContainer" type="MarginContainer" parent="TabContainer/ManageCheatsheetsContainer" unique_id=1785053255]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ManageTabContainer" type="TabContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer" unique_id=965023970]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_unselected_color = Color(0.827451, 0.827451, 0.827451, 1)
+theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_a4gfw")
+current_tab = 0
+
+[node name="Global" type="BoxContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer" unique_id=1393784183]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+vertical = true
+metadata/_tab_index = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global" unique_id=420235754]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global/HBoxContainer" unique_id=690599539]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5koo")
+text = "Cheatsheet"
+
+[node name="Label2" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global/HBoxContainer" unique_id=1390344305]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "If enabled, this cheatsheet will appear as a button in the bottom bar by default"
+mouse_filter = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5koo")
+text = "Button"
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global/HBoxContainer" unique_id=366770673]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+tooltip_text = "If enabled, this cheatsheet will be added in the command palette by default"
+mouse_filter = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5koo")
+text = "Command"
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global" unique_id=1823605329]
+custom_minimum_size = Vector2(500, 400)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_4tpws")
+vertical_scroll_mode = 3
+
+[node name="ManageGlobalContainer" type="BoxContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global/ScrollContainer" unique_id=73856923]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+
+[node name="Label" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global/ScrollContainer/ManageGlobalContainer" unique_id=981180479]
+layout_mode = 2
+text = "No Cheatsheet detected! Try restarting the plugin with the button below!"
+
+[node name="Label3" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Global" unique_id=1693494387]
+modulate = Color(1, 1, 1, 0.49019608)
+layout_mode = 2
+size_flags_vertical = 8
+text = "These options will change the default behavior of each cheatsheet. 
+(i.e: You want to hide a specific cheatsheet in all projects by default)"
+horizontal_alignment = 1
+
+[node name="Project" type="BoxContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer" unique_id=190393628]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 0
+vertical = true
+metadata/_tab_index = 1
+metadata/_tab_name = "Project"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project" unique_id=63959569]
+layout_mode = 2
+theme_override_constants/separation = 1
+
+[node name="Label" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project/HBoxContainer" unique_id=1834667247]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5koo")
+text = "Cheatsheet"
+
+[node name="Label2" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project/HBoxContainer" unique_id=1374881920]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5koo")
+text = "Button"
+vertical_alignment = 1
+
+[node name="Label3" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project/HBoxContainer" unique_id=268106034]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_v5koo")
+text = "Command"
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project" unique_id=799866125]
+custom_minimum_size = Vector2(500, 400)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_4tpws")
+vertical_scroll_mode = 3
+
+[node name="ManageContainer" type="BoxContainer" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project/ScrollContainer" unique_id=387177890]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(500, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+
+[node name="Label" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project/ScrollContainer/ManageContainer" unique_id=1750345666]
+layout_mode = 2
+text = "No Cheatsheet detected! Try restarting the plugin with the button below!"
+
+[node name="Label" type="Label" parent="TabContainer/ManageCheatsheetsContainer/BoxContainer/ManageTabContainer/Project" unique_id=1199796075]
+modulate = Color(1, 1, 1, 0.49019608)
+layout_mode = 2
+size_flags_vertical = 8
+text = "These options will be applied on this project only 
+(i.e: you can hide 3D related cheatsheets in your 2D project)"
+horizontal_alignment = 1
+
+[node name="OverrideForProjectButton" type="Button" parent="TabContainer/ManageCheatsheetsContainer" unique_id=1791394793]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8
+text = "Restart Plugin (to view changes)"
+
+[node name="CreateCheatsheetContainer" type="BoxContainer" parent="TabContainer" unique_id=2017496580]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+metadata/_tab_name = "New Cheatsheet Helper"
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/CreateCheatsheetContainer" unique_id=974656314]
+layout_mode = 2
+size_flags_horizontal = 3
+vertical = true
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/CreateCheatsheetContainer/BoxContainer" unique_id=70342548]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="CreateCheatsheetBoxContainer" type="BoxContainer" parent="TabContainer/CreateCheatsheetContainer/BoxContainer/MarginContainer" unique_id=577735009]
+unique_name_in_owner = true
+layout_mode = 2
+vertical = true
+
+[node name="CreateCheatsheetRundown" type="RichTextLabel" parent="TabContainer/CreateCheatsheetContainer/BoxContainer" unique_id=939678030]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/line_separation = 8
+bbcode_enabled = true
+fit_content = true
+
+[node name="CreateCheatsheetButton" type="Button" parent="TabContainer/CreateCheatsheetContainer/BoxContainer" unique_id=1977548910]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+disabled = true
+text = "Create Cheatsheet"
+
+[node name="AboutContainer" type="BoxContainer" parent="TabContainer" unique_id=854497420]
+visible = false
+layout_mode = 2
+vertical = true
+metadata/_tab_index = 3
+metadata/_tab_name = "About"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/AboutContainer" unique_id=1024191521]
+custom_minimum_size = Vector2(0, 600)
+layout_mode = 2
+size_flags_vertical = 3
+vertical_scroll_mode = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="TabContainer/AboutContainer/ScrollContainer" unique_id=30462745]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer" unique_id=1764389799]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+
+[node name="AddingCheatsheets" type="FoldableContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer" unique_id=874809766]
+self_modulate = Color(1.353256, 0.49895856, 0.49895856, 1)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"HeaderLarge"
+theme_override_colors/font_color = Color(0, 0, 0, 0.6901961)
+theme_override_colors/hover_font_color = Color(0, 0, 0, 0.6901961)
+theme_override_colors/collapsed_font_color = Color(0, 0, 0, 0.6901961)
+theme_override_styles/title_panel = SubResource("StyleBoxFlat_jcjnt")
+theme_override_styles/title_hover_panel = SubResource("StyleBoxFlat_jcjnt")
+theme_override_styles/title_collapsed_panel = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/title_collapsed_hover_panel = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/focus = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/panel = SubResource("StyleBoxFlat_skunt")
+title = "Adding Cheatsheets"
+foldable_group = SubResource("FoldableGroup_risxl")
+
+[node name="BoxContainer2" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets" unique_id=222061229]
+layout_mode = 2
+vertical = true
+
+[node name="Control" type="Control" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2" unique_id=291368433]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2" unique_id=610011268]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dcq8k")
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer" unique_id=538057771]
+layout_mode = 2
+vertical = true
+
+[node name="Pin" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer" unique_id=940544554]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Pin" unique_id=188178676]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Pin" unique_id=874444607]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Download[/b]
+Download the ready-to-go cheatsheets [url=https://qaqelol.itch.io/cheatsheet-viewer]here[/url]
+"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Move" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer" unique_id=945659103]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Move" unique_id=1129511854]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Move" unique_id=981547973]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Import[/b]
+Unzip and put each [b]folder[/b] in [url=\"DATA_DIRECTORY\"]this directory[/url]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Move2" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer" unique_id=287432098]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Move2" unique_id=732590940]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Move2" unique_id=651111784]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Thats it![/b]
+Go in the [url=1]\"Manage Cheatsheets\" tab[/url] to hide/show cheatsheets"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer" unique_id=179934894]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer" unique_id=2081507272]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.79, 0.79, 0.79, 1)
+theme_override_font_sizes/font_size = 14
+text = "You can also import your own cheatsheets with \"New Cheatsheet Helper\" tab!"
+
+[node name="CoolFeatures" type="FoldableContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer" unique_id=406018856]
+self_modulate = Color(0.31764707, 0.6431373, 0.92941177, 1)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"HeaderLarge"
+theme_override_colors/font_color = Color(0, 0, 0, 0.6901961)
+theme_override_colors/hover_font_color = Color(0, 0, 0, 0.6901961)
+theme_override_colors/collapsed_font_color = Color(0, 0, 0, 0.6901961)
+theme_override_styles/title_panel = SubResource("StyleBoxFlat_jcjnt")
+theme_override_styles/title_hover_panel = SubResource("StyleBoxFlat_jcjnt")
+theme_override_styles/title_collapsed_panel = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/title_collapsed_hover_panel = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/focus = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/panel = SubResource("StyleBoxFlat_skunt")
+folded = true
+title = "Cool Features"
+foldable_group = SubResource("FoldableGroup_risxl")
+
+[node name="BoxContainer2" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures" unique_id=2003056923]
+visible = false
+layout_mode = 2
+vertical = true
+
+[node name="Control" type="Control" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2" unique_id=701456251]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2" unique_id=814339448]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dcq8k")
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer" unique_id=1209305957]
+layout_mode = 2
+vertical = true
+
+[node name="Pin" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=520541447]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Pin" unique_id=236442831]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "📌"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Pin" unique_id=408763656]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Pin[/b]
+Toggle with bottom buttons, command palette, keyboard shortcuts
+Unpin by right clicking a cheatsheet"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Move" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=1936164599]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Move" unique_id=538933061]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "🚚"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Move" unique_id=447361921]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Move[/b]
+left click + drag around (they can go 90% out of screen)"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Zoom" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=95057380]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Zoom" unique_id=1221876571]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "📐"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Zoom" unique_id=1564626319]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Scale[/b]
+Scroll while hovering a cheatsheet (shift + click to reset)"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="HSeparator" type="HSeparator" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=820970087]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=438273538]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/HBoxContainer" unique_id=528547771]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "👀"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/HBoxContainer" unique_id=565483971]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Quick View[/b]
+Hover a bottom button to reveal its cheatsheet temporarily"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="OS" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=1999190849]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/OS" unique_id=1089070779]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "🖼️"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/OS" unique_id=1949614804]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Open in Image viewer[/b]
+alt+click on button/cheatsheet to open it in the OS"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Web" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=1448588133]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Web" unique_id=835504091]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "💅🏻"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer/Web" unique_id=604562670]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Open Extra Resource[/b]
+ctrl + click on button/cheatsheet to open related doc or tutorial"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=1567507768]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/CoolFeatures/BoxContainer2/PanelContainer/BoxContainer" unique_id=698354587]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.79, 0.79, 0.79, 1)
+theme_override_font_sizes/font_size = 14
+text = "Your cheatsheets and addon settings are global! 
+They will be available on all project using this addon (on this device)."
+
+[node name="FilePaths" type="FoldableContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer" unique_id=486521159]
+self_modulate = Color(0.627451, 0.83137256, 0.32156864, 1)
+layout_mode = 2
+size_flags_vertical = 0
+theme_type_variation = &"HeaderLarge"
+theme_override_colors/font_color = Color(0, 0, 0, 0.6901961)
+theme_override_colors/hover_font_color = Color(0, 0, 0, 0.6901961)
+theme_override_colors/collapsed_font_color = Color(0, 0, 0, 0.6901961)
+theme_override_styles/title_panel = SubResource("StyleBoxFlat_jcjnt")
+theme_override_styles/title_hover_panel = SubResource("StyleBoxFlat_jcjnt")
+theme_override_styles/title_collapsed_panel = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/title_collapsed_hover_panel = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/focus = SubResource("StyleBoxFlat_lho70")
+theme_override_styles/panel = SubResource("StyleBoxFlat_skunt")
+folded = true
+title = "File paths"
+foldable_group = SubResource("FoldableGroup_risxl")
+
+[node name="BoxContainer2" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths" unique_id=1258280713]
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+vertical = true
+
+[node name="PanelContainer" type="PanelContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2" unique_id=1387361059]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dcq8k")
+
+[node name="BoxContainer" type="BoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer" unique_id=361384067]
+layout_mode = 2
+vertical = true
+
+[node name="Move" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer" unique_id=766670340]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move" unique_id=1518826020]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "📁"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GlobalCheatsheetLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move" unique_id=462682105]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Global Cheatsheet Directory[/b]
+[font_size=12][url=\"DATA_DIRECTORY\"]DATA_DIRECTORY"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Move3" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer" unique_id=2113748095]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move3" unique_id=563765004]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "📁"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move3" unique_id=1769719601]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Global Settings[/b]
+Stored in the editor settings > plugin/cheatsheet_viewer"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Move2" type="HBoxContainer" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer" unique_id=1028414988]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move2" unique_id=440995460]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 30
+text = "📁"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move2" unique_id=1942009162]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "[b]Project Overrides[/b]
+Stored in a [url=\"SETTINGS_DIRECTORY\"]hidden folder[/url] in your project.
+The directory is ignored by git and Godot."
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="HSeparator2" type="HSeparator" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer" unique_id=46226587]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer" unique_id=977885429]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.79, 0.79, 0.79, 1)
+theme_override_font_sizes/font_size = 14
+
+[node name="MadeByLabel" type="RichTextLabel" parent="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer" unique_id=2075971784]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.67058825)
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 10
+theme_override_colors/default_color = Color(0.8627451, 0.8627451, 0.8627451, 1)
+theme_override_constants/line_separation = 2
+theme_override_font_sizes/normal_font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxEmpty_risxl")
+bbcode_enabled = true
+text = "Made by [url=\"https://bsky.app/profile/qaqelol.bsky.social\"]Christophe[/url] 🌱
+[url=\"https://qaqelol.itch.io/cheatsheet-viewer\"]vVERSION[/url]"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+horizontal_alignment = 1
+
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Pin/RichTextLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Move/RichTextLabel2" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/AddingCheatsheets/BoxContainer2/PanelContainer/BoxContainer/Move2/RichTextLabel2" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move/GlobalCheatsheetLabel" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move3/RichTextLabel2" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/FilePaths/BoxContainer2/PanelContainer/BoxContainer/Move2/RichTextLabel2" to="." method="_on_rich_text_label_meta_clicked"]
+[connection signal="meta_clicked" from="TabContainer/AboutContainer/ScrollContainer/MarginContainer/BoxContainer/MadeByLabel" to="." method="_on_rich_text_label_meta_clicked"]

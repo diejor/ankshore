@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dq33wcojin7xw"]
+
+[ext_resource type="Script" uid="uid://b21kwhtjjdpbg" path="res://source/combat/actions/moves/test_move_one/test_move_one.gd" id="1_7i85h"]
+[ext_resource type="Script" uid="uid://cmk8ja17kw1h3" path="res://source/combat/actions/attack_string.gd" id="2_85k5i"]
+[ext_resource type="Script" uid="uid://qk3v1jjmitu" path="res://source/combat/actions/attack_beat.gd" id="3_n0mdn"]
+
+[sub_resource type="Resource" id="Resource_nylop"]
+script = ExtResource("3_n0mdn")
+metadata/_custom_type_script = "uid://qk3v1jjmitu"
+
+[sub_resource type="Resource" id="Resource_e87lr"]
+script = ExtResource("3_n0mdn")
+metadata/_custom_type_script = "uid://qk3v1jjmitu"
+
+[sub_resource type="Resource" id="Resource_b1hv5"]
+script = ExtResource("3_n0mdn")
+metadata/_custom_type_script = "uid://qk3v1jjmitu"
+
+[sub_resource type="Resource" id="Resource_a7tdw"]
+script = ExtResource("2_85k5i")
+beats = Array[ExtResource("3_n0mdn")]([SubResource("Resource_nylop"), SubResource("Resource_e87lr"), SubResource("Resource_b1hv5"), null, null, null])
+metadata/_custom_type_script = "uid://cmk8ja17kw1h3"
+
+[node name="TestMoveOne" type="Node" unique_id=444256076]
+script = ExtResource("1_7i85h")
+variations = Array[ExtResource("2_85k5i")]([SubResource("Resource_a7tdw")])
+metadata/_custom_type_script = "uid://b21kwhtjjdpbg"

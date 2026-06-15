@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cbpmc6f8h3dqo" path="res://source/combat/characters/character.gd" id="1_7uwtj"]
 [ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="2_bgf1o"]
 [ext_resource type="Script" uid="uid://4ct5j7enqupq" path="res://source/combat/actions/combat_action.gd" id="3_combat"]
-[ext_resource type="Script" uid="uid://b21kwhtjjdpbg" path="res://source/combat/actions/moves/test_move_one.gd" id="5_n4ghy"]
+[ext_resource type="Script" uid="uid://b21kwhtjjdpbg" path="res://source/combat/actions/moves/test_move_one/test_move_one.gd" id="5_n4ghy"]
 [ext_resource type="PackedScene" uid="uid://bn3i12v3eque3" path="res://source/combat/ui/CharacterOverlay.tscn" id="5_overlay"]
 
 [node name="Character" type="Node2D" unique_id=867888316]
@@ -25,4 +25,9 @@ script = ExtResource("3_combat")
 
 [node name="TestMoveOne" type="Node" parent="." unique_id=1507499945]
 script = ExtResource("5_n4ghy")
+max_beats = null
+build_time_sec = null
+variations = null
+chipCalculation = null
+targets_self = null
 metadata/_custom_type_script = "uid://b21kwhtjjdpbg"

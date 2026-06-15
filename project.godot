@@ -106,6 +106,7 @@ enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/netw
 
 folder_colors={
 "res://source/combat/": "blue",
+"res://source/combat/items/": "purple",
 "res://source/components/": "orange",
 "res://source/scenes/": "teal",
 "res://source/scenes/DialogueStuff/DialogicCharacter/": "yellow",
