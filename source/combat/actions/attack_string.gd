@@ -32,6 +32,11 @@ func resolve(attacker: Character, defender: Character) -> void:
 			)
 			blocked = input.matches_beat(beat)
 		var dmg := _apply_damage(attacker, defender, beat, blocked)
+		if defender.is_alive():
+			if blocked:
+				defender.play_block()
+			else:
+				defender.play_hit()
 		if not blocked:
 			combo_locked = true
 		defender.beat_resolved.emit(beat, blocked, dmg)
@@ -55,10 +60,8 @@ func _apply_damage(
 	return final
 
 
-# Brief windup pause; per-beat animation clips plug in here later. The
-# attacker's swing and the defender's reaction will play on the [Character]
-# nodes themselves - no shared context needed.
+# Brief windup pause before each beat resolves.
 func _windup(defender: Character) -> void:
 	var tree := defender.get_tree()
 	if tree:
-		await tree.create_timer(0.15).timeout
+		await tree.create_timer(0.08).timeout

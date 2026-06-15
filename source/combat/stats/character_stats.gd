@@ -158,6 +158,7 @@ func changeLevel(lvlChange:int) -> void:
 	base_courage += oneMaxHealth + (lvlChange*20)
 	base_speed += oneMaxHealth + (lvlChange*20)
 	recalculate_stats()
+	level_up.emit(lvlChange)
 	return
 
 ## Applies incoming physical damage after accounting for blocking/armor.

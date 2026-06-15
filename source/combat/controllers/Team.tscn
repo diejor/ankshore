@@ -19,7 +19,6 @@ position = Vector2(99, -123)
 move_list = [null, null, null]
 
 [node name="SelectionSlot1" parent="." unique_id=833664602 instance=ExtResource("4_5xetp")]
-process_mode = 4
 offset_left = -57.0
 offset_top = 19.0
 offset_right = -57.0
@@ -33,7 +32,6 @@ focus_previous = NodePath("../SelectionSlot3")
 focus_mode = 0
 
 [node name="SelectionSlot2" parent="." unique_id=335587062 instance=ExtResource("4_5xetp")]
-process_mode = 4
 offset_left = 178.0
 offset_top = 118.0
 offset_right = 178.0
@@ -47,7 +45,6 @@ focus_previous = NodePath("../SelectionSlot1")
 focus_mode = 0
 
 [node name="SelectionSlot3" parent="." unique_id=1769271849 instance=ExtResource("4_5xetp")]
-process_mode = 4
 offset_left = -49.0
 offset_top = 210.0
 offset_right = -49.0

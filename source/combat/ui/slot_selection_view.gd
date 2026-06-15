@@ -54,6 +54,9 @@ func _on_phase_changed(phase: TeamState.Phase) -> void:
 	match phase:
 		TeamState.Phase.PICKING_CHARACTER:
 			_enter_pick_character()
+		TeamState.Phase.PICKING_MOVE:
+			if inspection and team.state.active_character:
+				inspection.inspected_character = team.state.active_character
 		TeamState.Phase.PICKING_TARGETS:
 			_enter_pick_targets()
 

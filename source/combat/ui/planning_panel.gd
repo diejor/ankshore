@@ -23,12 +23,14 @@ class_name PlanningPanel extends HBoxContainer
 
 @onready var _character_panel: CharacterPanel = %CharacterPanel
 @onready var _move_list_panel: MoveListContainer = %MoveListContainer
+@onready var _anim: AnimationPlayer = $AnimationPlayer
 
 
 func _ready() -> void:
 	_character_panel.inspection = inspection
 	_move_list_panel.inspection = inspection
 	_move_list_panel.team_state = team_state
+	modulate.a = 0.0
 	hide()
 	_check_wiring.call_deferred()
 
@@ -51,12 +53,26 @@ func _check_wiring() -> void:
 func bind_turn_manager(tm: TurnManager) -> void:
 	tm.turn_started.connect(_on_turn_started)
 	tm.planning_finished.connect(_on_planning_finished)
-	tm.match_ended.connect(hide)
+	tm.match_ended.connect(_on_match_ended)
 
 
 func _on_turn_started(_team: TeamManager) -> void:
 	show()
+	_anim.play("slide_in")
 
 
 func _on_planning_finished() -> void:
+	_play_out_and_hide()
+
+
+func _on_match_ended() -> void:
+	_play_out_and_hide()
+
+
+# Plays the transition out before hiding the panel.
+func _play_out_and_hide() -> void:
+	if not visible:
+		return
+	_anim.play("slide_out")
+	await _anim.animation_finished
 	hide()

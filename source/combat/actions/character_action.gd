@@ -13,7 +13,8 @@
 
 ## Resolves this action for [param actor] against [param target].
 ## Async - may await animations or interactive windows.
-@abstract func resolve(
-	actor: Character,
-	target: Character #can encapulate multiple targets if character is registered as multiple in other scripts
-) -> void
+func resolve(
+	_actor: Character,
+	_target: Character #can encapulate multiple targets if character is registered as multiple in other scripts
+) -> void:
+	await get_tree().create_timer(0.1).timeout

@@ -19,27 +19,35 @@ class_name MatchHud extends Control
 @onready var _turn_label: Label = $HBox/TurnLabel
 @onready var _turn_number: Label = $HBox/TurnNumberLabel
 @onready var _phase_banner: Label = $HBox/PhaseBanner
+@onready var _anim: AnimationPlayer = $AnimationPlayer
 
 
 func _ready() -> void:
+	modulate.a = 0.0
 	_phase_banner.text = ""
 	_check_wiring.call_deferred()
 
 
 func _check_wiring() -> void:
 	if turn_manager == null:
-		push_warning("MatchHud: 'turn_manager' is not bound. The HUD will be non-functional.")
+		push_warning(
+			"MatchHud: 'turn_manager' is not bound. "
+			+ "The HUD will be non-functional."
+		)
 
 
 func _on_turn_started(team: TeamManager) -> void:
 	_turn_label.text = "Turn: %s" % team.team_str
 	_turn_number.text = "# %d" % turn_manager.current_turn
 	_phase_banner.text = "Planning"
+	_anim.play("slide_in")
 
 
 func _on_planning_finished() -> void:
 	_phase_banner.text = "Resolution"
+	_anim.play("slide_out")
 
 
 func _on_match_ended() -> void:
 	_phase_banner.text = "Match Over"
+	_anim.play("slide_in")

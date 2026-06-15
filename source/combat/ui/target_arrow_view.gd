@@ -39,12 +39,12 @@ func _draw() -> void:
 	if direction.length() <= 0.0:
 		return
 	var side := Vector2(-direction.y, direction.x)
-	var points := PackedVector2Array([
+	var _points := PackedVector2Array([
 		tip,
 		tip - direction * 14.0 + side * 6.0,
 		tip - direction * 14.0 - side * 6.0,
 	])
-	draw_colored_polygon(points, _head_color)
+	draw_colored_polygon(_points, _head_color)
 
 
 # Wires pending target updates for the bound character.
