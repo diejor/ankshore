@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://dwa0bhinxigbm" path="res://addons/networked/session/spawn/entity_spawn_policy.gd" id="8_ocmta"]
 [ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/source/scene_node_path.gd" id="8_pulmy"]
 [ext_resource type="PackedScene" uid="uid://bb2nsfunxlw3a" path="res://addons/networked/connect/ui/connect_browser.tscn" id="9_evmps"]
+[ext_resource type="Script" uid="uid://epmj8j2pdpkb" path="res://source/scenes/menus/username_edit.gd" id="10_new1d"]
 [ext_resource type="Script" uid="uid://d1xugn0ypbbto" path="res://addons/networked/transport/webrtc/webtorrent_directory.gd" id="10_rhopt"]
 [ext_resource type="Script" uid="uid://dfoggo64snch3" path="res://addons/networked/session/view/host_scene_view.gd" id="10_ut644"]
 [ext_resource type="Script" uid="uid://di4qtwvgux111" path="res://addons/networked/transport/backend_peer.gd" id="11_4hjik"]
@@ -142,6 +143,7 @@ custom_minimum_size = Vector2(252, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 placeholder_text = "Enter Username"
+script = ExtResource("10_new1d")
 
 [node name="SinglePlayer" type="Button" parent="GameUI/MenuUI/Singleplayer/VBox" unique_id=533036486]
 layout_mode = 2

@@ -1,6 +1,6 @@
 extends Button
 
-@onready var username_edit: LineEdit = %UsernameEdit
+@onready var username_edit: UsernameEdit = %UsernameEdit
 @onready var client: MultiplayerTree = %Client
 @onready var menu_ui: Control = %MenuUI
 @onready var game_ui: Control = %GameUI
@@ -9,16 +9,6 @@ extends Button
 var spawner_component: SceneNodePath
 
 @onready var ctx := Netw.ctx(client)
-
-var username: String:
-	get:
-		if username.is_empty():
-			var candidate := OS.get_environment("USERNAME")
-			if candidate.is_empty():
-				candidate = "player"
-			username = candidate
-		return username
-
 
 func _ready() -> void:
 	ctx.tree.session_entered.connect(_on_connected_to_server)
@@ -30,7 +20,7 @@ func _on_connected_to_server() -> void:
 func _on_pressed() -> void:
 	disabled = true
 	var join_payload := JoinPayload.new()
-	join_payload.username = username
+	join_payload.username = username_edit.username
 	
 	var policy := EntitySpawnPolicy.from_scene_node_path(spawner_component)
 	join_payload.spawn = policy.to_dict()
