@@ -18,12 +18,15 @@ class_name TeamState extends Resource
 ## [br]- [code]PICKING_CHARACTER[/code]: waiting for [method select_character].
 ## [br]- [code]PICKING_MOVE[/code]: waiting for [method select_move].
 ## [br]- [code]PICKING_TARGETS[/code]: waiting for [method commit_targets].
+## [br]- [code]BUILDING_STRING[/code]: attacker assembling beats before an
+##   attack move commits via [method commit_string].
 ## [br]- [code]DONE[/code]: planning finished for this turn.
 enum Phase {
 	IDLE,
 	PICKING_CHARACTER,
 	PICKING_MOVE,
 	PICKING_TARGETS,
+	BUILDING_STRING,
 	DONE,
 }
 
@@ -45,6 +48,13 @@ signal targets_committed(targets: Array[Character])
 ## Emitted after [method commit_targets] stores a pending move on
 ## [param character].
 signal action_committed(character: Character)
+
+## Emitted when [method commit_targets] selects an attack move, handing
+## off to the interactive string-building step. Carries the chosen move
+## and committed targets.
+signal string_building_started(
+	move: CombatAction, targets: Array[Character]
+)
 
 ## Emitted when [method go_back] rewinds one step in the planning state
 ## machine. Carries the phase the state returned to.
@@ -115,13 +125,17 @@ func select_move(move: CombatAction) -> void:
 	move_selected.emit(move)
 	if selected_move and selected_move.targets_self:
 		selected_targets = [active_character]
-		_commit_selected_action()
+		targets_committed.emit(selected_targets)
+		active_character.commit_move(selected_move, selected_targets)
+		_advance_after_commit()
 		return
 	_set_phase(Phase.PICKING_TARGETS)
 
 
-## Stores [param targets] and the selected move on the active character,
-## then advances to the next character or [constant Phase.DONE].
+## Stores [param targets] for the selected move. An attack move (one whose
+## [method CombatAction.builds_attack_string] is true) advances to
+## [constant Phase.BUILDING_STRING]; any other move commits directly and
+## advances to the next character or [constant Phase.DONE].
 func commit_targets(targets: Array[Character]) -> void:
 	if phase != Phase.PICKING_TARGETS:
 		push_warning("TeamState.commit_targets called outside PICKING_TARGETS.")
@@ -130,13 +144,34 @@ func commit_targets(targets: Array[Character]) -> void:
 		push_warning("TeamState.commit_targets without an active char/move.")
 		return
 	selected_targets = targets.duplicate()
-	_commit_selected_action()
-
-
-# Commits the selected action, then advances to the next planner.
-func _commit_selected_action() -> void:
 	targets_committed.emit(selected_targets)
+	if selected_move.builds_attack_string():
+		_set_phase(Phase.BUILDING_STRING)
+		string_building_started.emit(selected_move, selected_targets)
+		return
 	active_character.commit_move(selected_move, selected_targets)
+	_advance_after_commit()
+
+
+## Seals an [AttackString] from [param beats] plus the selected attack
+## move, stores it on the active character, then advances. Called by the
+## attacker's controller to close [constant Phase.BUILDING_STRING].
+func commit_string(beats: Array[AttackBeat]) -> void:
+	if phase != Phase.BUILDING_STRING:
+		push_warning("TeamState.commit_string called outside BUILDING_STRING.")
+		return
+	if active_character == null or selected_move == null:
+		push_warning("TeamState.commit_string without an active char/move.")
+		return
+	var attack := AttackString.new()
+	attack.beats = beats.duplicate()
+	attack.move = selected_move
+	active_character.commit_attack(attack, selected_targets)
+	_advance_after_commit()
+
+
+# Records the commit and advances to the next planner.
+func _advance_after_commit() -> void:
 	action_committed.emit(active_character)
 	pending_characters.erase(active_character)
 	selected_move = null
@@ -149,11 +184,15 @@ func _commit_selected_action() -> void:
 		_set_phase(Phase.PICKING_CHARACTER)
 
 
-## Rewinds one step. [constant Phase.PICKING_TARGETS] returns to
-## [constant Phase.PICKING_MOVE]; [constant Phase.PICKING_MOVE] returns
-## to [constant Phase.PICKING_CHARACTER]; other phases are no-ops.
+## Rewinds one step. [constant Phase.BUILDING_STRING] returns to
+## [constant Phase.PICKING_TARGETS]; [constant Phase.PICKING_TARGETS]
+## returns to [constant Phase.PICKING_MOVE]; [constant Phase.PICKING_MOVE]
+## returns to [constant Phase.PICKING_CHARACTER]; other phases are no-ops.
 func go_back() -> void:
 	match phase:
+		Phase.BUILDING_STRING:
+			_set_phase(Phase.PICKING_TARGETS)
+			back_navigated.emit(phase)
 		Phase.PICKING_TARGETS:
 			selected_move = null
 			selected_targets = []

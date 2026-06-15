@@ -2,24 +2,13 @@
 
 [ext_resource type="Script" uid="uid://cbpmc6f8h3dqo" path="res://source/combat/characters/character.gd" id="1_7uwtj"]
 [ext_resource type="Texture2D" uid="uid://bpxex1wkb1uvu" path="res://source/scenes/characters/myoso/assets/Myoso.png" id="2_bgf1o"]
-[ext_resource type="Script" uid="uid://cmk8ja17kw1h3" path="res://source/combat/actions/attack_string.gd" id="3_atks"]
-[ext_resource type="Script" uid="uid://qk3v1jjmitu" path="res://source/combat/actions/attack_beat.gd" id="4_beat"]
+[ext_resource type="Script" path="res://source/combat/actions/strike.gd" id="3_strike"]
+[ext_resource type="Script" path="res://source/combat/actions/grab.gd" id="4_grab"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/CharacterOverlay.tscn" id="5_overlay"]
-
-[sub_resource type="Resource" id="Beat_1"]
-script = ExtResource("4_beat")
-
-[sub_resource type="Resource" id="Beat_2"]
-script = ExtResource("4_beat")
-direction = 1
-
-[sub_resource type="Resource" id="Beat_3"]
-script = ExtResource("4_beat")
-side = 1
 
 [node name="Character" type="Node2D" unique_id=867888316 node_paths=PackedStringArray("move_list")]
 script = ExtResource("1_7uwtj")
-move_list = [NodePath("AttackString")]
+move_list = [NodePath("Strike"), NodePath("Grab")]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1507379388]
 position = Vector2(0, -62)
@@ -29,7 +18,8 @@ texture = ExtResource("2_bgf1o")
 [node name="CharacterOverlay" parent="." unique_id=422375864 instance=ExtResource("5_overlay")]
 unique_name_in_owner = true
 
-[node name="AttackString" type="Node" parent="." unique_id=180430298]
-script = ExtResource("3_atks")
-beats = Array[ExtResource("4_beat")]([SubResource("Beat_1"), SubResource("Beat_2"), SubResource("Beat_3")])
-metadata/_custom_type_script = "uid://cmk8ja17kw1h3"
+[node name="Strike" type="Node" parent="." unique_id=180430298]
+script = ExtResource("3_strike")
+
+[node name="Grab" type="Node" parent="." unique_id=180430299]
+script = ExtResource("4_grab")

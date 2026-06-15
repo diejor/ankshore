@@ -9,7 +9,7 @@ class_name PlayerController extends TeamController
 ##
 ## [br][br]
 ## Owns no view. Slot affordances (focus, step-mode visuals) live on
-## [SlotSelectionView]; the move list lives on [MoveListUI]; both bind to
+## [SlotSelectionView]; the move list lives on [MoveListContainer]; both bind to
 ## [member TeamController.state] independently.
 
 # True while a defense window is sampling input. Suppresses normal

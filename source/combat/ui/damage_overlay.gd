@@ -26,8 +26,8 @@ func _connect_team(team: TeamManager) -> void:
 		return
 	if not team.character_beat_resolved.is_connected(_on_beat_resolved):
 		team.character_beat_resolved.connect(_on_beat_resolved)
-	if not team.character_ender_resolved.is_connected(_on_ender_resolved):
-		team.character_ender_resolved.connect(_on_ender_resolved)
+	if not team.character_move_resolved.is_connected(_on_move_resolved):
+		team.character_move_resolved.connect(_on_move_resolved)
 
 
 # Detaches one team from combat text spawning.
@@ -36,8 +36,8 @@ func _disconnect_team(team: TeamManager) -> void:
 		return
 	if team.character_beat_resolved.is_connected(_on_beat_resolved):
 		team.character_beat_resolved.disconnect(_on_beat_resolved)
-	if team.character_ender_resolved.is_connected(_on_ender_resolved):
-		team.character_ender_resolved.disconnect(_on_ender_resolved)
+	if team.character_move_resolved.is_connected(_on_move_resolved):
+		team.character_move_resolved.disconnect(_on_move_resolved)
 
 
 func _on_beat_resolved(
@@ -53,16 +53,16 @@ func _on_beat_resolved(
 	_spawn(character, damage, variant)
 
 
-func _on_ender_resolved(
+func _on_move_resolved(
 	character: Character,
-	ender: int,
+	move: CombatAction,
 	hit: bool,
 	damage: int
 ) -> void:
 	if damage <= 0:
 		return
 	var variant := DamageNumber.Variant.HIT
-	if ender == AttackString.Ender.GRAB and not hit:
+	if move is Grab and not hit:
 		variant = DamageNumber.Variant.COUNTER
 	elif not hit:
 		variant = DamageNumber.Variant.CHIP

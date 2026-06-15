@@ -63,8 +63,8 @@ func _refresh_planning() -> void:
 		return
 	_move_label.text = move.name
 	var target := _first_pending_target()
-	if move is AttackString and target and target != _character:
-		_string_view.attack_string = move
+	if _character.pending_string and target and target != _character:
+		_string_view.attack_string = _character.pending_string
 	else:
 		_string_view.attack_string = null
 	_planning_preview.show()

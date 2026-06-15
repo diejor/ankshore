@@ -22,15 +22,21 @@ signal beat_telegraphed(beat: AttackBeat)
 @warning_ignore("unused_signal")
 signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
 @warning_ignore("unused_signal")
-signal ender_resolved(ender: int, hit: bool, damage: int)
+signal move_resolved(move: CombatAction, hit: bool, damage: int)
 signal pending_move_changed(move: CombatAction)
 signal pending_target_changed(target: Character)
 
 @export var stats: CharacterStats = CharacterStats.new()
 @export var move_list: Array[CombatAction] = []
 
-## Move selected for this character's next resolution step.
+## Move selected for this character's next resolution step. For an attack
+## this is the [member AttackString.move]; see [member pending_string].
 var pending_move: CombatAction = null
+
+## Player-built attack to resolve this turn, or [code]null[/code] for a
+## non-attack move. When set, [method execute_turn] runs the string
+## resolver instead of [member pending_move].
+var pending_string: AttackString = null
 
 ## Targets selected for [member pending_move].
 var pending_targets: Array[Character] = []
@@ -57,7 +63,7 @@ func _ready() -> void:
 
 ## Returns all [CombatAction] nodes attached as direct children plus
 ## any actions in [member move_list], without duplicates. Used by
-## [MoveListUI] to render the move-pick view.
+## [MoveListContainer] to render the move-pick view.
 func available_moves() -> Array[CombatAction]:
 	var result: Array[CombatAction] = [_WAIT_ACTION]
 	for child in get_children():
@@ -75,27 +81,47 @@ func is_alive() -> bool:
 	return stats != null and stats.health > 0
 
 
-## Stores the move and targets this character will execute this turn.
+## Stores a non-attack move and targets this character will execute.
 func commit_move(move: CombatAction, targets: Array[Character]) -> void:
+	pending_string = null
 	pending_move = move
 	pending_targets = targets.duplicate()
 	pending_move_changed.emit(pending_move)
 	pending_target_changed.emit(_first_pending_target())
 
 
-## Clears the move and targets committed for this turn.
+## Stores a player-built [param attack] and its targets for this turn.
+## [member pending_move] mirrors the string's capping move for previews.
+func commit_attack(
+	attack: AttackString, targets: Array[Character]
+) -> void:
+	pending_string = attack
+	pending_move = attack.move
+	pending_targets = targets.duplicate()
+	pending_move_changed.emit(pending_move)
+	pending_target_changed.emit(_first_pending_target())
+
+
+## Clears the move, string, and targets committed for this turn.
 func clear_pending_move() -> void:
 	pending_move = null
+	pending_string = null
 	pending_targets = []
 	pending_move_changed.emit(null)
 	pending_target_changed.emit(null)
 
 
-## Executes [member pending_move], then clears the pending turn data.
+## Resolves the pending attack string or move, then clears turn data.
 func execute_turn(ctx: PhaseContext) -> void:
-	if pending_move == null:
-		return
-	await pending_move.execute_async(self, pending_targets, ctx)
+	if pending_string and pending_string.move:
+		var defender := _first_live_target()
+		if defender:
+			var resolver := AttackStringResolver.new(
+				ctx, self, defender, pending_string
+			)
+			await resolver.run()
+	elif pending_move != null:
+		await pending_move.execute_async(self, pending_targets, ctx)
 	clear_pending_move()
 
 
@@ -136,6 +162,14 @@ func take_dmg(raw_damage: int, blocked: bool) -> void:
 func _first_pending_target() -> Character:
 	for target in pending_targets:
 		if target:
+			return target
+	return null
+
+
+# Returns the first living target, used when resolving an attack string.
+func _first_live_target() -> Character:
+	for target in pending_targets:
+		if target and target.is_alive():
 			return target
 	return null
 

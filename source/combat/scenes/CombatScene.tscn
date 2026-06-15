@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://source/combat/ui/DefensePromptUI.tscn" id="15_defp"]
 [ext_resource type="Script" uid="uid://cpp7582xv03uf" path="res://source/combat/ui/damage_overlay.gd" id="16_dmg"]
 [ext_resource type="PackedScene" path="res://source/combat/ui/DamageNumber.tscn" id="17_num"]
+[ext_resource type="PackedScene" path="res://source/combat/ui/AttackStringBuilderUI.tscn" id="18_bldr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ucdr0"]
 content_margin_left = 32.0
@@ -31,6 +32,10 @@ layout_mode = 3
 turn_manager = NodePath("../../TurnManager")
 
 [node name="DefensePromptUI" parent="CanvasLayer" unique_id=1562756847 instance=ExtResource("15_defp")]
+unique_name_in_owner = true
+layout_mode = 3
+
+[node name="AttackStringBuilderUI" parent="CanvasLayer" unique_id=477117764 instance=ExtResource("18_bldr")]
 unique_name_in_owner = true
 layout_mode = 3
 

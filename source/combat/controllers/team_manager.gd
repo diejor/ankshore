@@ -31,9 +31,9 @@ signal character_beat_resolved(
 	blocked: bool,
 	damage: int
 )
-signal character_ender_resolved(
+signal character_move_resolved(
 	character: Character,
-	ender: int,
+	move: CombatAction,
 	hit: bool,
 	damage: int
 )
@@ -167,8 +167,8 @@ func _on_child_entered(node: Node) -> void:
 		character.beat_resolved.connect(
 			_relay_beat_resolved.bind(character)
 		)
-		character.ender_resolved.connect(
-			_relay_ender_resolved.bind(character)
+		character.move_resolved.connect(
+			_relay_move_resolved.bind(character)
 		)
 		character.tree_exiting.connect(
 			_on_character_tree_exiting.bind(character)
@@ -192,15 +192,15 @@ func _disconnect_if_removed(character: Character) -> void:
 	var opened := _relay_defense_window_opened.bind(character)
 	var closed := _relay_defense_window_closed.bind(character)
 	var beat := _relay_beat_resolved.bind(character)
-	var ender := _relay_ender_resolved.bind(character)
+	var move := _relay_move_resolved.bind(character)
 	if character.defense_window_opened.is_connected(opened):
 		character.defense_window_opened.disconnect(opened)
 	if character.defense_window_closed.is_connected(closed):
 		character.defense_window_closed.disconnect(closed)
 	if character.beat_resolved.is_connected(beat):
 		character.beat_resolved.disconnect(beat)
-	if character.ender_resolved.is_connected(ender):
-		character.ender_resolved.disconnect(ender)
+	if character.move_resolved.is_connected(move):
+		character.move_resolved.disconnect(move)
 
 
 # Re-emits defense windows for subscribers interested in any teammate.
@@ -233,11 +233,11 @@ func _relay_beat_resolved(
 	character_beat_resolved.emit(character, beat, blocked, damage)
 
 
-# Re-emits ender resolution for subscribers interested in any teammate.
-func _relay_ender_resolved(
-	ender: int,
+# Re-emits move resolution for subscribers interested in any teammate.
+func _relay_move_resolved(
+	move: CombatAction,
 	hit: bool,
 	damage: int,
 	character: Character
 ) -> void:
-	character_ender_resolved.emit(character, ender, hit, damage)
+	character_move_resolved.emit(character, move, hit, damage)

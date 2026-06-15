@@ -49,8 +49,8 @@ func _connect_team() -> void:
 		team.character_defense_window_closed.connect(_on_closed)
 	if not team.character_beat_resolved.is_connected(_on_beat_resolved):
 		team.character_beat_resolved.connect(_on_beat_resolved)
-	if not team.character_ender_resolved.is_connected(_on_ender_resolved):
-		team.character_ender_resolved.connect(_on_ender_resolved)
+	if not team.character_move_resolved.is_connected(_on_move_resolved):
+		team.character_move_resolved.connect(_on_move_resolved)
 
 
 func _disconnect_team() -> void:
@@ -62,8 +62,8 @@ func _disconnect_team() -> void:
 		team.character_defense_window_closed.disconnect(_on_closed)
 	if team.character_beat_resolved.is_connected(_on_beat_resolved):
 		team.character_beat_resolved.disconnect(_on_beat_resolved)
-	if team.character_ender_resolved.is_connected(_on_ender_resolved):
-		team.character_ender_resolved.disconnect(_on_ender_resolved)
+	if team.character_move_resolved.is_connected(_on_move_resolved):
+		team.character_move_resolved.disconnect(_on_move_resolved)
 
 
 func _on_window_opened(
@@ -78,7 +78,6 @@ func _on_window_opened(
 		_label.modulate = Color.WHITE
 		var s := AttackString.new()
 		s.beats = [beat]
-		s.ender = AttackString.Ender.STRIKE
 		_beat_view.attack_string = s
 	else:
 		_label.text = "Parry!"
@@ -113,15 +112,15 @@ func _on_beat_resolved(
 		_show_result("HIT -%d" % damage, Color(1.0, 0.2, 0.15))
 
 
-func _on_ender_resolved(
+func _on_move_resolved(
 	character: Character,
-	ender: int,
+	move: CombatAction,
 	hit: bool,
 	damage: int
 ) -> void:
 	if character != _active_character:
 		return
-	if ender == AttackString.Ender.GRAB:
+	if move is Grab:
 		if hit:
 			_show_result("GRAB -%d" % damage, Color(1.0, 0.2, 0.15))
 		else:

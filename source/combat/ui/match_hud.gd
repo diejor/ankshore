@@ -2,10 +2,7 @@ class_name MatchHud extends Control
 
 ## Top-of-screen HUD: turn team, turn number, phase banner.
 ##
-## Subscribes to [TurnManager] signals. Phase animations live on an
-## optional [AnimationPlayer] + [SimpleAnimator] child wired into
-## [member PhaseContext.ui_animator] from [CombatScene] - this script
-## does not assume one exists.
+## Subscribes to [TurnManager] signals and reflects turn/phase changes.
 
 @export var turn_manager: TurnManager:
 	set(value):

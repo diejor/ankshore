@@ -1,12 +1,12 @@
 class_name AttackStringView extends HBoxContainer
 
-## Renders the beats and non-default ender of an [AttackString].
+## Renders the beats and finisher of an [AttackString].
 ##
 ## Pure data view: assign [member attack_string] to render, pass
-## [code]null[/code] to clear. Used as a preview during planning and as
-## the cue inside [DefensePromptUI] during resolution. Override
-## [method _build_beat] or [method _build_ender] in a subclass for
-## richer visuals; the default is single-line labels.
+## [code]null[/code] to clear. Used as a preview during planning and
+## string-building, and as the cue inside [DefensePromptUI] during
+## resolution. Override [method _build_beat] or [method _build_move_chip]
+## in a subclass for richer visuals; the default is single-line labels.
 
 @export var attack_string: AttackString:
 	set(value):
@@ -26,8 +26,8 @@ func _rebuild() -> void:
 		return
 	for beat in attack_string.beats:
 		add_child(_build_beat(beat))
-	if attack_string.ender != AttackString.Ender.STRIKE:
-		add_child(_build_ender(attack_string.ender))
+	if attack_string.move:
+		add_child(_build_move_chip(attack_string.move))
 
 
 # Builds the visual representation of one [AttackBeat].
@@ -37,8 +37,8 @@ func _build_beat(beat: AttackBeat) -> Control:
 	return label
 
 
-# Builds the ender chip.
-func _build_ender(ender: int) -> Control:
+# Builds the capping-move chip.
+func _build_move_chip(move: CombatAction) -> Control:
 	var label := Label.new()
-	label.text = "[%s]" % AttackString.Ender.find_key(ender)
+	label.text = "[%s]" % move.name
 	return label

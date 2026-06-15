@@ -40,6 +40,8 @@ func _on_phase_changed(phase: TeamState.Phase) -> void:
 			_pick_move.call_deferred()
 		TeamState.Phase.PICKING_TARGETS:
 			_pick_targets.call_deferred()
+		TeamState.Phase.BUILDING_STRING:
+			_build_string.call_deferred()
 
 
 # Picks the first pending character. No prioritization yet.
@@ -79,6 +81,28 @@ func _pick_targets() -> void:
 		if c and c.is_alive():
 			state.commit_targets([c])
 			return
+
+
+# Assembles a random beat string up to the finisher's beat cap.
+func _build_string() -> void:
+	await _think()
+	if state.phase != TeamState.Phase.BUILDING_STRING:
+		return
+	var move := state.selected_move
+	var cap: int = move.max_beats if move else 0
+	var beats: Array[AttackBeat] = []
+	for _i in randi_range(1, max(1, cap)):
+		var beat := AttackBeat.new()
+		beat.direction = (
+			AttackBeat.Direction.OVERHEAD if randf() < 0.5
+			else AttackBeat.Direction.LOW
+		)
+		beat.side = (
+			AttackBeat.StrikeSide.FRONT if randf() < 0.5
+			else AttackBeat.StrikeSide.BEHIND
+		)
+		beats.append(beat)
+	state.commit_string(beats)
 
 
 func _on_defense_window_opened(

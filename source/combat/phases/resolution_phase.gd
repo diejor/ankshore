@@ -22,9 +22,6 @@ func run(ctx: PhaseContext, turn_manager: TurnManager) -> void:
 			return _speed_rolls.get(a, 0) > _speed_rolls.get(b, 0)
 	)
 
-	if ctx.ui_animator:
-		await ctx.ui_animator.play_and_finish(&"resolution_in")
-
 	for character in _characters:
 		if not character or not character.is_alive():
 			continue
@@ -33,9 +30,6 @@ func run(ctx: PhaseContext, turn_manager: TurnManager) -> void:
 		turn_manager.action_started.emit(character)
 		await character.execute_turn(ctx)
 		turn_manager.action_finished.emit(character)
-
-	if ctx.ui_animator:
-		await ctx.ui_animator.play_and_finish(&"resolution_out")
 
 
 func _roll_speeds() -> void:
