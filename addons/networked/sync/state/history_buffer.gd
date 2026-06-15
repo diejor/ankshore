@@ -18,7 +18,7 @@ func _init(capacity: int = 16) -> void:
 	_capacity = 1
 	while _capacity < capacity:
 		_capacity <<= 1
-		
+
 	_mask = _capacity - 1
 	_slots.resize(_capacity)
 	_ticks.resize(_capacity)
@@ -34,7 +34,7 @@ func record(tick: int, value: Variant) -> void:
 	else:
 		idx = _head
 		_head = (_head + 1) & _mask
-		
+
 	_slots[idx] = value
 	_ticks[idx] = tick
 
@@ -48,27 +48,33 @@ func get_at(tick: int) -> Variant:
 	return null
 
 
-## Optimized search that populates [param out_pair] with [prev_tick, next_tick].
-## This avoids array allocation in the interpolation loop.
-func find_bracketing_ticks(tick: int, hint_tick: int, out_pair: PackedInt32Array) -> void:
+## Returns the [code](prev, next)[/code] ticks bracketing [param tick].
+##
+## [code]x[/code] is the greatest recorded tick less than or equal to
+## [param tick] or [code]-1[/code] if none exists. [code]y[/code] is the
+## smallest recorded tick strictly greater than [param tick] or
+## [code]-1[/code] if none exists.
+func bracketing_ticks(tick: int) -> Vector2i:
 	var prev_tick := -1
 	var next_tick := -1
-	
-	# Since ticks are recorded chronologically, we scan forward from head
 	for i in _count:
 		var idx := (_head + i) & _mask
 		var t := _ticks[idx]
-		
 		if t <= tick:
 			if t > prev_tick:
 				prev_tick = t
-		elif t > tick:
+		else:
 			if next_tick == -1 or t < next_tick:
 				next_tick = t
-				break # Found the first tick strictly greater
-				
-	out_pair[0] = prev_tick
-	out_pair[1] = next_tick
+				break
+	return Vector2i(prev_tick, next_tick)
+
+
+# perf: no-alloc variant for the interpolation hot path.
+func find_bracketing_ticks(tick: int, _hint_tick: int, out_pair: PackedInt32Array) -> void:
+	var pair := bracketing_ticks(tick)
+	out_pair[0] = pair.x
+	out_pair[1] = pair.y
 
 
 ## Returns [code]true[/code] if there is at least one entry recorded strictly after [param tick].
@@ -84,9 +90,11 @@ func oldest_tick() -> int:
 func newest_tick() -> int:
 	return _ticks[(_head + _count - 1) & _mask] if _count > 0 else -1
 
+
 func clear() -> void:
 	_count = 0
 	_head = 0
+
 
 func size() -> int:
 	return _count

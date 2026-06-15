@@ -1,541 +1,665 @@
-## [BackendPeer] implementation that uses WebRTC for peer-to-peer NAT traversal.
+## [BackendPeer] base for WebRTC rooms, signaling held behind a
+## [WebRTCSignaler].
 ##
-## Peers discover each other through WebTorrent-compatible tracker servers using a
-## shared [code]info_hash[/code] room ID. On [method host] the hash is copied to the
-## clipboard; clients pass that hash to [method join].
+## This base owns the [WebRTCSession] and wires it to a signaler a subclass
+## supplies through [method make_signaler], so the WebRTC peer machinery is
+## reused unchanged across every signaling transport. [TrackerWebRTCBackend] is
+## the WebTorrent implementation. [method create_host_peer] emits
+## [signal room_created] with the room id. [method create_join_peer] accepts
+## that id as its address.
+##
+## [br][br]
+## Swapping the signaling model (WebTorrent, dedicated, or direct) only
+## requires returning a different [WebRTCSignaler] from
+## [method make_signaler].
+##
+## Browser hosts are full peer-to-peer hosts. If the browser throttles an
+## unfocused tab, signaling can stall until the tab is visible again. Prefer a
+## relay or dedicated host when web-hosted rooms must stay reachable while the
+## host tab is backgrounded.
+## [br][br]
+## [b]Credentials and TURN configuration[/b]
+## [br]
+## Configure the project setting
+## [code]networked/webrtc/turn_credentials_url[/code] to point to your secure
+## or backend service that issues ephemeral TURN/STUN credentials. During
+## connection setup, the backend will dynamically query this URL to populate
+## the active [member global_ice_servers].
+## [codeblock]
+## networked/webrtc/turn_credentials_url = "https://api.mygame.com/turn"
+## [/codeblock]
+## If your credentials backend requires authentication (such as custom tokens
+## or signatures), define the project setting
+## [code]networked/webrtc/turn_credentials_headers[/code] with the headers to
+## send:
+## [codeblock]
+## PackedStringArray
+##  ┠╴"Authorization: Bearer my_secret_token"
+##  ┖╴"X-Api-Key: my_secret_api_key"
+## [/codeblock]
 @tool
+@abstract
 class_name WebRTCBackend
 extends BackendPeer
 
-## Emitted when at least one tracker WebSocket connection opens.
+## Globally cached ICE servers list. Stored class-wide to propagate dynamically
+## to all backend instances.
+static var global_ice_servers: Array[Dictionary] = []
+
+## Emitted when the signaler reports a usable signaling route.
 signal signaling_connected
-## Emitted when all tracker connections close.
+## Emitted when the signaler reports its signaling routes gone.
 signal signaling_disconnected
-## Emitted on the host when the room hash is ready to share. [param room_id] is the 20-character hex hash.
+## Emitted on the host when the room id is ready to share.
 signal room_created(room_id: String)
 
-## WebTorrent-compatible tracker URLs used for signaling.
-@export var trackers: Array[String] = [
-	"wss://tracker.openwebtorrent.com",
-	"wss://tracker.files.fm:7073/announce",
-	"wss://tracker.webtorrent.dev"
-]
+## Display name advertised by [WebTorrentDirectory] for hosted rooms.
+@export var server_name: String = ""
+
+## Optional namespace to isolate signaling and room codes on public networks.
+## Non-empty values enable short, player-friendly room codes.
+@export var signaling_namespace: String = ""
+
+@export_tool_button("Generate signaling namespace") var _generate_signaling_namespace := func() -> void:
+	signaling_namespace = _random_signaling_namespace()
+
+## Character set used to generate short room codes.
+## Excludes ambiguous characters (like 0, O, 1, I, l) by default.
+@export_multiline var room_code_characters: String = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"
 
 ## ICE server definitions passed to each [WebRTCPeerConnection].
+##
+## Each entry is one STUN or TURN server. A STUN entry needs only
+## [code]urls[/code]. A TURN relay also needs [code]username[/code] and
+## [code]credential[/code].
+## [codeblock]
+## Array[Dictionary]
+##  ┖╴{ }                                  # one entry per ICE server
+##     ┠╴urls (String or Array[String])    # {stun,turn}:host:port
+##     ┠╴username (String, TURN only)
+##     ┖╴credential (String, TURN only)
+## [/codeblock]
 @export var ice_servers: Array[Dictionary] = [
 	{ "urls": ["stun:stun.l.google.com:19302"] },
-	{ "urls": ["turn:openrelay.metered.ca:80"], "username": "openrelayproject", "credential": "openrelayproject" }
+	{
+		"urls": ["turn:openrelay.metered.ca:80"],
+		"username": "openrelayproject",
+		"credential": "openrelayproject",
+	},
+	{
+		"urls": ["turns:openrelay.metered.ca:443?transport=tcp"],
+		"username": "openrelayproject",
+		"credential": "openrelayproject",
+	},
+	{
+		"urls": ["turns:openrelay.metered.ca:443"],
+		"username": "openrelayproject",
+		"credential": "openrelayproject",
+	},
 ]
 
-var webrtc_peer: WebRTCMultiplayerPeer = null
+## Seconds a joining client waits for the native link after sending its offer
+## bundle before re-sending it, forwarded to [member WebRTCSession.connect_retry].
+@export_range(0.5, 30.0, 0.1, "suffix:s") var connect_retry: float = 8.0
 
-var _sockets: Array[WebSocketPeer] = []
+## Offer attempts a joining client makes before it leaves failure to the connect
+## budget, forwarded to [member WebRTCSession.max_connect_attempts].
+@export_range(1, 10) var max_connect_attempts: int = 3
+
+## Seconds the session waits for ICE gathering to complete before sending the
+## final offer/answer top-up, forwarded to [member WebRTCSession.gather_timeout].
+@export_range(0.5, 15.0, 0.1, "suffix:s") var gather_timeout: float = 6.0
+
+## Minimum seconds between candidate top-up bundles while ICE is gathering,
+## forwarded to [member WebRTCSession.topup_interval].
+@export_range(0.05, 5.0, 0.05, "suffix:s") var topup_interval: float = 0.25
+
+## If [code]true[/code], filters out TURN over TCP and TLS configurations on native
+## platforms (non-web) to prevent console warnings from libjuice.
+@export var filter_unsupported_turn: bool = true
+
+var _session: WebRTCSession = null
+var _signaler: WebRTCSignaler = null
 var _is_server := false
-var _info_hash := ""
-var _local_peer_id := ""
-var _server_wt_id := ""
-var _client_offer_sdp := ""
-var _client_offer_id := "" 
-var _client_candidate_queue: Array[Dictionary] = []
-var _peer_map := {} 
-var _local_godot_id := 0
-var _announce_timer := 0.0
+var _signaling_ready := false
+var _connect_started_ms := 0
+var _connect_offer_progress_sent := false
 
-## Creates a WebRTC server peer, connects to trackers, and emits [signal room_created] with the room hash.
+
+## Builds the [WebRTCSignaler] this backend signals through.
+@abstract
+func make_signaler() -> WebRTCSignaler
+
+
+## Prepares WebRTC backend by fetching secure credentials when configured.
+##
+## If the global setting [code]networked/webrtc/turn_credentials_url[/code]
+## is set in ProjectSettings, this method performs an asynchronous [HTTPRequest]
+## to fetch ICE credentials and populates [member global_ice_servers].
+## [br][br]
+## Custom headers specified in
+## [code]networked/webrtc/turn_credentials_headers[/code] are included in the
+## request. If this setting is empty, a standard request with no custom
+## headers is sent to preserve compatibility with third-party APIs.
+## [br][br]
+## The fetched JSON response must match this schema:
+## [codeblock]
+## Array
+##  ┖╴{ }
+##     ┠╴urls (String or Array)
+##     ┠╴username (String)
+##     ┖╴credential (String)
+## [/codeblock]
+func setup(tree: MultiplayerTree) -> Error:
+	if Netw.is_test_env():
+		return OK
+
+	if not global_ice_servers.is_empty():
+		return OK
+
+	var url := ""
+	if ProjectSettings.has_setting("networked/webrtc/turn_credentials_url"):
+		url = ProjectSettings.get_setting(
+			"networked/webrtc/turn_credentials_url",
+		)
+
+	if url.is_empty():
+		return OK
+
+	var headers: PackedStringArray = []
+	if ProjectSettings.has_setting(
+		"networked/webrtc/turn_credentials_headers",
+	):
+		headers = ProjectSettings.get_setting(
+			"networked/webrtc/turn_credentials_headers",
+		)
+
+	var http := HTTPRequest.new()
+	http.timeout = 5.0
+	tree.add_child(http)
+
+	var err := http.request(url, headers)
+	if err != OK:
+		Netw.dbg.warn(
+			"WebRTC credentials request initiation failed: %s",
+			[error_string(err)],
+		)
+		http.queue_free()
+		return OK
+
+	var results: Array = await http.request_completed
+	http.queue_free()
+
+	var status_code: int = results[1]
+	var response_body: PackedByteArray = results[3]
+
+	if status_code == 200:
+		var json_text := response_body.get_string_from_utf8()
+		var parsed: Variant = JSON.parse_string(json_text)
+		if typeof(parsed) == TYPE_ARRAY:
+			var servers: Array[Dictionary] = []
+			servers.assign(parsed)
+			global_ice_servers = servers
+			Netw.dbg.info(
+				"WebRTC credentials fetched successfully from %s.",
+				[url],
+			)
+		else:
+			Netw.dbg.warn(
+				"WebRTC credentials parse failed. Response was "
+				+ "not a JSON array. Falling back to default ICE servers.",
+				[],
+			)
+	else:
+		Netw.dbg.warn(
+			"WebRTC credentials fetch failed. Server responded "
+			+ "with code %d. Falling back to default ICE servers.",
+			[status_code],
+		)
+
+	return OK
+
+
+## Implements [method BackendPeer.create_host_peer] for a WebRTC room.
 func create_host_peer(_tree: MultiplayerTree) -> MultiplayerPeer:
 	Netw.dbg.trace("WebRTCBackend: create_host_peer called.")
 	_is_server = true
-	_local_godot_id = 1
-	_local_peer_id = _generate_peer_id(_local_godot_id)
-	_info_hash = _generate_hash()
-	_reset_state_vars()
+	_build_session_and_signaler()
 
-	Netw.dbg.debug(
-		"Starting Host. Local WebTorrent ID: %s... Hash: %s",
-		[_local_peer_id.substr(0, 6), _info_hash]
-	)
+	if _session.create_server() != OK:
+		_clear_session_and_signaler()
+		return null
 
-	var peer := WebRTCMultiplayerPeer.new()
-	var err := peer.create_server()
+	var err := _signaler.open("", 1)
 	if err != OK:
-		Netw.dbg.error("WebRTC create_server failed: %s", [error_string(err)])
+		Netw.dbg.error("WebRTC signaler open failed: %s", [error_string(err)])
+		_clear_session_and_signaler()
 		return null
 
-	_bind_webrtc_signals(peer)
-	webrtc_peer = peer
-	room_created.emit(_info_hash)
+	var room := _signaler.room_id()
+	room_created.emit(room)
+	Netw.dbg.info("Room session ready at `%s` (saved to clipboard).", [room])
+	DisplayServer.clipboard_set(room)
+	_register_local_room(room)
+	return _session.webrtc_peer
 
-	Netw.dbg.info(
-		"Room session ready at `%s` (saved to clipboard).",
-		[_info_hash]
-	)
-	DisplayServer.clipboard_set(_info_hash)
 
-	var tracker_err := _connect_trackers()
-	if tracker_err != OK:
-		Netw.dbg.error("WebRTC tracker connect failed: %s", [error_string(tracker_err)])
-		return null
-	return peer
-
-## Connects to the room identified by [param server_address] (the 20-char hash
-## or any string that hashes to one).
+## Implements [method BackendPeer.create_join_peer] for a WebRTC room id.
 func create_join_peer(
-	_tree: MultiplayerTree, server_address: String, _username: String = ""
+		_tree: MultiplayerTree,
+		server_address: String,
+		_username: String = "",
 ) -> MultiplayerPeer:
-	Netw.dbg.trace("WebRTCBackend: create_join_peer called at %s", [server_address])
+	Netw.dbg.trace("WebRTCBackend: create_join_peer at %s", [server_address])
 	_is_server = false
-	_local_godot_id = randi() % 1000000 + 2
-	_local_peer_id = _generate_peer_id(_local_godot_id)
+	_build_session_and_signaler()
+	if _is_local_room(server_address):
+		_session.is_local_session = true
 
-	if server_address.length() != 20:
-		_info_hash = server_address.sha1_text().substr(0, 20)
-	else:
-		_info_hash = server_address
+	var client_id := randi() % 1000000 + 2
+	# create_client opens the offer toward the server; it is announced once the
+	# signaler has an open route.
+	if _session.create_client(client_id) != OK:
+		_clear_session_and_signaler()
+		return null
 
-	_reset_state_vars()
+	_connect_started_ms = Time.get_ticks_msec()
 
-	Netw.dbg.debug(
-		"Starting Client. Local Godot ID: %d, Room Hash: %s",
-		[_local_godot_id, _info_hash]
-	)
-
-	var peer := WebRTCMultiplayerPeer.new()
-	var err := peer.create_client(_local_godot_id)
+	var err := _signaler.open(server_address, client_id)
 	if err != OK:
-		Netw.dbg.error("WebRTC create_client failed: %s", [error_string(err)])
+		Netw.dbg.error("WebRTC signaler open failed: %s", [error_string(err)])
+		_clear_session_and_signaler()
 		return null
+	_set_connect_step(&"discovery")
+	_set_connect_message("Reaching signaling...")
+	return _session.webrtc_peer
 
-	_bind_webrtc_signals(peer)
-	webrtc_peer = peer
-	Netw.dbg.trace("Client Peer Created. Generating initial WebRTC Connection to Server...")
-	_create_peer_connection(1, "")
 
-	var tracker_err := _connect_trackers()
-	if tracker_err != OK:
-		Netw.dbg.error("WebRTC tracker connect failed: %s", [error_string(tracker_err)])
-		return null
-	return peer
-
+## Implements [method BackendPeer.poll] for session and signaler state.
 func poll(dt: float) -> void:
-	if webrtc_peer:
-		webrtc_peer.poll()
+	super.poll(dt)
+	if _session:
+		_session.poll(dt)
+	if _signaler:
+		_signaler.poll(dt)
+	_poll_signaling_check()
 
-	if not _sockets.is_empty():
-		_poll_trackers(dt)
 
-func _bind_webrtc_signals(peer: WebRTCMultiplayerPeer) -> void:
-	if not peer.peer_connected.is_connected(_on_webrtc_peer_connected):
-		peer.peer_connected.connect(_on_webrtc_peer_connected)
-		peer.peer_disconnected.connect(_on_webrtc_peer_disconnected)
+## Starts closing active [WebRTCDataChannel]s before peer teardown.
+##
+## Callers that can yield should poll or await a few frames after this method
+## before freeing the tree or calling [method peer_reset_state].
+func close_channels() -> void:
+	if _session:
+		_session.close_channels()
 
-func _on_webrtc_peer_connected(id: int) -> void:
-	Netw.dbg.info(
-		"WebRTC Native Connection Established with Godot ID: %d", [id]
+
+func _build_session_and_signaler() -> void:
+	_session = WebRTCSession.new()
+	var raw_servers = (
+			global_ice_servers
+			if not global_ice_servers.is_empty()
+			else ice_servers
 	)
+	if filter_unsupported_turn:
+		_session.ice_servers = _filter_ice_servers(raw_servers)
+	else:
+		_session.ice_servers = raw_servers
+	_session.connect_retry = connect_retry
+	_session.max_connect_attempts = max_connect_attempts
+	_session.gather_timeout = gather_timeout
+	_session.topup_interval = topup_interval
+	_signaler = make_signaler()
+
+	_session.signal_out.connect(_signaler.send)
+	_session.signal_out.connect(_on_session_signal_out)
+	_signaler.received.connect(_session.deliver)
+	_session.native_connected.connect(_on_native_connected)
+	_session.native_connected.connect(_signaler.on_session_connected)
+	_session.native_disconnected.connect(_on_native_disconnected)
+	_session.failed.connect(_on_session_failed)
+	_signaler.ready.connect(_on_signaling_connected)
+	_signaler.lost.connect(_on_signaling_disconnected)
+	_signaler.unreachable.connect(_on_signaling_unreachable)
+
+
+func _clear_session_and_signaler() -> void:
+	if _session:
+		if _signaler:
+			if _session.signal_out.is_connected(_signaler.send):
+				_session.signal_out.disconnect(_signaler.send)
+			if _session.native_connected.is_connected(_signaler.on_session_connected):
+				_session.native_connected.disconnect(_signaler.on_session_connected)
+		if _session.signal_out.is_connected(_on_session_signal_out):
+			_session.signal_out.disconnect(_on_session_signal_out)
+		if _session.native_connected.is_connected(_on_native_connected):
+			_session.native_connected.disconnect(_on_native_connected)
+		if _session.native_disconnected.is_connected(_on_native_disconnected):
+			_session.native_disconnected.disconnect(_on_native_disconnected)
+		if _session.failed.is_connected(_on_session_failed):
+			_session.failed.disconnect(_on_session_failed)
+		_session.close()
+
+	if _signaler:
+		if _session:
+			if _signaler.received.is_connected(_session.deliver):
+				_signaler.received.disconnect(_session.deliver)
+		if _signaler.ready.is_connected(_on_signaling_connected):
+			_signaler.ready.disconnect(_on_signaling_connected)
+		if _signaler.lost.is_connected(_on_signaling_disconnected):
+			_signaler.lost.disconnect(_on_signaling_disconnected)
+		if _signaler.unreachable.is_connected(_on_signaling_unreachable):
+			_signaler.unreachable.disconnect(_on_signaling_unreachable)
+		_signaler.close()
+
+	_session = null
+	_signaler = null
+	_connect_offer_progress_sent = false
+
+
+func _on_native_connected(id: int) -> void:
+	Netw.dbg.info("WebRTC native connection established with id %d.", [id])
 	if not _is_server and id == 1:
-		Netw.dbg.trace("WebRTC active. Closing signaling trackers.")
-		for ws in _sockets:
-			ws.close()
-		_sockets.clear()
-		signaling_disconnected.emit()
+		var diags := _session.connection_diagnostics(1)
+		var phases: Dictionary = diags.get("phases", { })
+		var offer_ms: int = phases.get("offer_ms", 0)
+		var answer_ms: int = phases.get("answer_ms", 0)
+		var native_ms: int = phases.get("native_ms", 0)
+		var offer_t := (
+				float(offer_ms - _connect_started_ms) / 1000.0
+				if offer_ms > 0 else 0.0
+		)
+		var answer_t := (
+				float(answer_ms - _connect_started_ms) / 1000.0
+				if answer_ms > 0 else 0.0
+		)
+		var native_t := (
+				float(native_ms - _connect_started_ms) / 1000.0
+				if native_ms > 0 else 0.0
+		)
+		var total_t := (
+				float(Time.get_ticks_msec() - _connect_started_ms) / 1000.0
+		)
+		var stats: Dictionary = diags.get("candidates", { })
+		var host_count := int(stats.get("host", 0))
+		var srflx_count := int(stats.get("srflx", 0))
+		var relay_count := int(stats.get("relay", 0))
+		var relay_str := "no"
+		if relay_count > 0:
+			if host_count > 0 or srflx_count > 0:
+				relay_str = "maybe (relay candidate gathered)"
+			else:
+				relay_str = "yes"
+		Netw.dbg.info(
+			"WebRTC join established in %.1fs: offer=%.1fs "
+			+ "answer=%.1fs native=%.1fs relay=%s.",
+			[total_t, offer_t, answer_t, native_t, relay_str],
+		)
 
-func _on_webrtc_peer_disconnected(id: int) -> void:
-	Netw.dbg.info("WebRTC Native Connection Lost with Godot ID: %d", [id])
 
+func _on_native_disconnected(id: int) -> void:
+	Netw.dbg.info("WebRTC native connection lost with id %d.", [id])
+
+
+func _on_session_failed(id: int, reason: String) -> void:
+	_connect_started_ms = 0
+	var diags := _session.connection_diagnostics(id)
+	var code := StringName(reason)
+	var status := ConnectResult.Status.UNREACHABLE
+	if reason == "HOST_UNRESPONSIVE":
+		status = ConnectResult.Status.TIMED_OUT
+
+	var result := ConnectResult.unreachable(code, "", diags)
+	result.status = status
+	connect_failed.emit(result)
+
+
+func _on_signaling_connected() -> void:
+	_signaling_ready = true
+	signaling_connected.emit()
+	_set_connect_step(&"handshake")
+	_set_connect_message("Exchanging connection info...")
+
+
+func _on_signaling_disconnected() -> void:
+	_signaling_ready = false
+	signaling_disconnected.emit()
+	if not _is_server and _session and not _session._connected_ids.has(1):
+		_connect_started_ms = 0
+		var res := ConnectResult.unreachable(
+			&"SIGNALING_UNAVAILABLE",
+			"Could not reach signaling.",
+		)
+		connect_failed.emit(res)
+
+
+func _on_signaling_unreachable() -> void:
+	_signaling_ready = false
+	if not _is_server and _session and not _session._connected_ids.has(1):
+		_connect_started_ms = 0
+		var res := ConnectResult.unreachable(
+			&"SIGNALING_UNREACHABLE",
+			"Could not reach any signaling server.",
+		)
+		connect_failed.emit(res)
+
+
+func _on_session_signal_out(
+		_to_multiplayer_id: int,
+		_to_signaler_id: String,
+		kind: String,
+		_payload: Dictionary,
+) -> void:
+	if kind != "offer" or _connect_offer_progress_sent:
+		return
+	_connect_offer_progress_sent = true
+	_set_connect_step(&"traversal")
+	_set_connect_message("Negotiating peer link...")
+
+
+func _poll_signaling_check() -> void:
+	if not _is_server and _session and _connect_started_ms > 0:
+		if not _session._connected_ids.has(1):
+			var elapsed := (Time.get_ticks_msec() - _connect_started_ms) / 1000.0
+			var threshold := connect_timeout_hint() - 0.1
+			if elapsed >= threshold and not _signaling_ready:
+				_connect_started_ms = 0 # trigger once
+				var res := ConnectResult.unreachable(
+					&"SIGNALING_UNAVAILABLE",
+					"Could not reach signaling.",
+				)
+				connect_failed.emit(res)
+
+
+## Returns the active room id, or the parent default.
 func get_join_address() -> String:
-	if not _info_hash.is_empty():
-		return _info_hash
+	if _signaler and not _signaler.room_id().is_empty():
+		return _signaler.room_id()
 	return super.get_join_address()
 
 
+## Returns a [code]"Room ID"[/code] [AddressHint].
 func get_address_hint() -> AddressHint:
+	var placeholder := (
+			"5-char code"
+			if not signaling_namespace.is_empty()
+			else "20-char hex"
+	)
 	return AddressHint.make(
-		"Room Hash",
-		"20-char hex",
+		"Room ID",
+		placeholder,
 		"Room identifier copied from the host (also auto-copied to clipboard "
 		+ "on host).",
 		false,
-		false
+		false,
 	)
+## Keeps [method BackendPeer.query_server_info] unsupported for room ids.
 
+
+##
+## WebRTC discovery uses signaling. An [AuthProbeClient] probe would need a full
+## ICE handshake, which is too expensive for browser refresh.
+func query_server_info(
+		_address: String,
+		_timeout: float = 2.0,
+) -> ServerInfoResult:
+	return ServerInfoResult.unsupported()
+
+
+## Budgets the connect timeout for the retry-aware WebRTC join, covering the
+## initial ICE gather plus every re-send window so a stalled attempt re-sends
+## rather than failing on the first try.
+func connect_timeout_hint() -> float:
+	return gather_timeout + connect_retry * float(max_connect_attempts) + 4.0
+
+
+## Preserves authored WebRTC settings after [method Resource.duplicate].
+func copy_from(source: BackendPeer) -> void:
+	if source is WebRTCBackend:
+		var other := source as WebRTCBackend
+		server_name = other.server_name
+		signaling_namespace = other.signaling_namespace
+		room_code_characters = other.room_code_characters
+		ice_servers = other.ice_servers.duplicate(true)
+		connect_retry = other.connect_retry
+		max_connect_attempts = other.max_connect_attempts
+		gather_timeout = other.gather_timeout
+		topup_interval = other.topup_interval
+		filter_unsupported_turn = other.filter_unsupported_turn
+
+
+## Clears the active session and signaler.
 func peer_reset_state() -> void:
-	Netw.dbg.trace("WebRTCBackend: Resetting Peer State.")
-	if webrtc_peer:
-		webrtc_peer.close()
-	webrtc_peer = null
-	for ws in _sockets:
-		ws.close()
-	_sockets.clear()
+	Netw.dbg.trace("WebRTCBackend: resetting peer state.")
+	if _signaler and not _signaler.room_id().is_empty():
+		_unregister_local_room(_signaler.room_id())
+	_clear_session_and_signaler()
 	_is_server = false
-	_info_hash = ""
-	_local_peer_id = ""
-	_reset_state_vars()
-	_local_godot_id = 0
+	_signaling_ready = false
+	_connect_started_ms = 0
 
-func _reset_state_vars() -> void:
-	_server_wt_id = ""
-	_client_offer_sdp = ""
-	_client_offer_id = ""
-	_announce_timer = 0.0
-	_client_candidate_queue.clear()
-	_peer_map.clear()
 
-func _generate_hash() -> String:
-	var chars := "0123456789abcdef"
-	var hash_str := ""
-	for i in 20: 
-		hash_str += chars[randi() % chars.length()]
-	return hash_str
+## Returns a diagnostics snapshot for [param peer_id] from the session.
+func get_connection_diagnostics(peer_id: int) -> Dictionary:
+	if _session:
+		return _session.connection_diagnostics(peer_id)
+	return { }
 
-func _generate_peer_id(godot_id: int) -> String:
-	var chars := "0123456789abcdef"
-	var prefix := ""
-	for i in 10:
-		prefix += chars[randi() % chars.length()]
-	return prefix + str(godot_id).pad_zeros(10)
 
-func _connect_trackers() -> Error:
-	_sockets.clear()
-	var connected_count := 0
-	var now := Time.get_ticks_usec()
-	
-	for url in trackers:
-		Netw.dbg.trace("Connecting to Tracker: %s", [url])
-		var ws := WebSocketPeer.new()
-		if ws.connect_to_url(url) == OK:
-			_sockets.append(ws)
-			ws.set_meta("url", url)
-			ws.set_meta("connect_time", now)
-			connected_count += 1
-		else:
-			Netw.dbg.warn(
-				"Failed to connect to Tracker: %s", [url],
-				func(m): push_warning(m)
-			)
-	
-	
-	if connected_count == 0:
-		return ERR_CANT_CONNECT
-	
-	return OK
+## Returns the display name for this backend.
+func get_display_name() -> String:
+	return "WebRTC"
 
-func _poll_trackers(dt: float) -> void:
-	var any_open := false
-	_announce_timer += dt
-	
-	var should_reannounce = false
-	if not _is_server and _server_wt_id.is_empty() and _announce_timer > 2.0:
-		should_reannounce = true
-		_announce_timer = 0.0
-	
-	const TRACKER_CONNECT_TIMEOUT_USEC := 10_000_000
-	
-	var had_sockets := not _sockets.is_empty()
-	var to_remove: Array[WebSocketPeer] = []
-	var now := Time.get_ticks_usec()
-	for ws in _sockets:
-		if ws.get_ready_state() == WebSocketPeer.STATE_CLOSED:
-			var url: String = ws.get_meta("url", "Unknown")
-			Netw.dbg.warn(
-				"Tracker connection failed: %s", [url],
-				func(m): push_warning(m)
-			)
-			to_remove.append(ws)
-			continue
-		
-		if ws.get_ready_state() == WebSocketPeer.STATE_CONNECTING:
-			var connect_time: int = ws.get_meta("connect_time", 0)
-			if connect_time > 0 and \
-					now - connect_time > TRACKER_CONNECT_TIMEOUT_USEC:
-				var url: String = ws.get_meta("url", "Unknown")
-				Netw.dbg.warn(
-					"Tracker connection timed out: %s", [url],
-					func(m): push_warning(m)
-				)
-				ws.close()
-				to_remove.append(ws)
-				continue
-		
-		ws.poll()
-		var state := ws.get_ready_state()
-		
-		if state == WebSocketPeer.STATE_CLOSED:
-			var url: String = ws.get_meta("url", "Unknown")
-			Netw.dbg.warn(
-				"Tracker connection closed: %s", [url],
-				func(m): push_warning(m)
-			)
-			to_remove.append(ws)
-			continue
-		
-		if state == WebSocketPeer.STATE_OPEN:
-			any_open = true
-			if not ws.has_meta("announced") or should_reannounce:
-				if not ws.has_meta("announced"):
-					Netw.dbg.debug(
-						"Tracker Connected: %s",
-						[ws.get_meta("url", "Unknown")]
-					)
-				elif should_reannounce:
-					Netw.dbg.trace(
-						"Re-announcing Client Offer to find Host..."
-					)
-				
-				_announce_to_tracker(ws)
-				
-				if not ws.has_meta("announced"):
-					ws.set_meta("announced", true)
-					signaling_connected.emit()
-			
-			while ws.get_available_packet_count() > 0:
-				_parse_packet(ws.get_packet())
-	
-	for ws in to_remove:
-		_sockets.erase(ws)
-	
-	if had_sockets and not any_open and _sockets.is_empty():
-		Netw.dbg.info(
-			"All trackers closed. Signaling Disconnected.",
-			func(m): push_warning(m)
-		)
-		signaling_disconnected.emit()
 
-func _announce_to_tracker(ws: WebSocketPeer) -> void:
-	var offers := []
-	if not _is_server and not _client_offer_sdp.is_empty():
-		if _client_offer_id.is_empty():
-			_client_offer_id = _generate_hash()
-		
-		offers.append({
-			"offer": { "type": "offer", "sdp": _client_offer_sdp },
-			"offer_id": _client_offer_id
-		})
-		Netw.dbg.trace("Announcing to tracker WITH Client Offer.")
-	else:
-		Netw.dbg.trace("Announcing to tracker without offer.")
-	
-	var announce_msg := {
-		"action": "announce",
-		"info_hash": _info_hash,
-		"peer_id": _local_peer_id,
-		"numwant": 50,
-		"offers": offers
-	}
-	_send_to_socket(ws, announce_msg)
+# Filters out TURN TCP/TLS servers since libjuice only supports TURN UDP.
+static func _filter_ice_servers(
+		servers: Array[Dictionary],
+) -> Array[Dictionary]:
+	# Web browsers support TURN over TCP/TLS natively. Native desktop/mobile
+	# WebRTC (libjuice) is UDP-only and will print warnings for TCP/TLS URLs.
+	if OS.has_feature("web"):
+		return servers
 
-func _parse_packet(packet: PackedByteArray) -> void:
-	var json_string := packet.get_string_from_utf8()
-	var parsed = JSON.parse_string(json_string)
-	
-	if typeof(parsed) != TYPE_DICTIONARY:
-		return
-	var data: Dictionary = parsed
-	
-	if data.has("warning") or data.has("failure reason"):
-		Netw.dbg.warn("TRACKER ERROR: %s", [json_string],
-				func(m): push_warning(m))
-		return
-	
-	if data.get("info_hash", "") != _info_hash:
-		return
-	
-	var remote_peer_id: String = data.get("peer_id", "")
-	
-	if remote_peer_id == _local_peer_id or remote_peer_id.length() != 20:
-		return
-	
-	var godot_id: int = remote_peer_id.substr(10, 10).to_int()
-	
-	if not _is_server and _server_wt_id.is_empty():
-		_server_wt_id = remote_peer_id
-		Netw.dbg.debug("Client found Server WT_ID: %s...",
-				[_server_wt_id.substr(0, 6)])
-		_flush_candidates()
-	
-	if not webrtc_peer.has_peer(godot_id):
-		Netw.dbg.info("Discovered New Peer! WT_ID: %s... Godot ID: %d",
-				[remote_peer_id.substr(0, 6), godot_id])
-		_create_peer_connection(godot_id, remote_peer_id)
-	
-	if data.has("offer_id"):
-		_peer_map[remote_peer_id + "_offer_id"] = data.get("offer_id")
-	
-	if data.has("offer"):
-		var payload: Dictionary = data.get("offer")
-		if payload.get("type") == "candidate":
-			Netw.dbg.debug(
-				"Received Tunneled [CANDIDATE] from Godot ID: %d", [godot_id]
-			)
-			_handle_candidate(godot_id, payload)
-		else:
-			Netw.dbg.debug("Received [OFFER] from Godot ID: %d", [godot_id])
-			_handle_offer(godot_id, payload)
-	
-	elif data.has("answer"):
-		var payload: Dictionary = data.get("answer")
-		if payload.get("type") == "candidate":
-			Netw.dbg.debug(
-				"Received Tunneled [CANDIDATE] from Godot ID: %d", [godot_id]
-			)
-			_handle_candidate(godot_id, payload)
-		else:
-			Netw.dbg.debug("Received [ANSWER] from Godot ID: %d", [godot_id])
-			_handle_answer(godot_id, payload)
-
-func _create_peer_connection(godot_id: int, remote_peer_id: String) -> void:
-	Netw.dbg.trace(
-		"Initializing WebRTCPeerConnection for Godot ID: %d", [godot_id]
+	var filtered: Array[Dictionary] = []
+	filtered.assign(
+		servers.map(_map_ice_server).filter(_is_ice_server_valid),
 	)
-	var peer_connection := WebRTCPeerConnection.new()
-	peer_connection.initialize({ "iceServers": ice_servers })
-	
-	peer_connection.session_description_created.connect(
-			_on_session_description_created.bind(godot_id, remote_peer_id))
-	peer_connection.ice_candidate_created.connect(
-			_on_ice_candidate_created.bind(remote_peer_id))
-	
-	webrtc_peer.add_peer(peer_connection, godot_id) 
-	
-	if not _is_server and godot_id == 1:
-		Netw.dbg.trace("Client calling create_offer() for Godot ID 1")
-		peer_connection.create_offer()
+	return filtered
 
-func _handle_offer(godot_id: int, offer_data: Dictionary) -> void:
-	if webrtc_peer.has_peer(godot_id):
-		Netw.dbg.debug(
-			"Setting Remote Description (OFFER) for Godot ID: %d", [godot_id]
-		)
-		var connection: WebRTCPeerConnection = \
-				webrtc_peer.get_peer(godot_id).get("connection")
-		connection.set_remote_description("offer", offer_data.get("sdp", ""))
 
-func _handle_answer(godot_id: int, answer_data: Dictionary) -> void:
-	if webrtc_peer.has_peer(godot_id):
-		Netw.dbg.debug(
-			"Setting Remote Description (ANSWER) for Godot ID: %d", [godot_id]
-		)
-		var connection: WebRTCPeerConnection = \
-				webrtc_peer.get_peer(godot_id).get("connection")
-		connection.set_remote_description("answer", answer_data.get("sdp", ""))
+# Filters unsupported URLs from a server, returning {} if none remain.
+static func _map_ice_server(server: Dictionary) -> Dictionary:
+	var urls = server.get("urls") as Array
+	assert(urls != null, "ICE server configuration is missing 'urls' key")
 
-func _handle_candidate(godot_id: int, candidate_data: Dictionary) -> void:
-	if webrtc_peer.has_peer(godot_id):
-		var connection: WebRTCPeerConnection = \
-				webrtc_peer.get_peer(godot_id).get("connection")
-		connection.add_ice_candidate(
-			candidate_data.get("sdpMid", ""),
-			candidate_data.get("sdpMLineIndex", 0),
-			candidate_data.get("candidate", "")
-		)
+	var clean_urls = urls.filter(_is_url_supported_native)
+	if clean_urls.is_empty():
+		return { }
 
-func _on_session_description_created(
-		type: String, sdp: String, godot_id: int, remote_peer_id: String) -> void:
-	Netw.dbg.debug("Local SDP Created: [%s] for Godot ID: %d",
-			[type.to_upper(), godot_id])
-	var connection: WebRTCPeerConnection = \
-			webrtc_peer.get_peer(godot_id).get("connection")
-	connection.set_local_description(type, sdp)
-	
-	if type == "offer" and not _is_server:
-		_client_offer_sdp = sdp
-		var pushed_early := false
-		for ws in _sockets:
-			if ws.get_ready_state() == WebSocketPeer.STATE_OPEN:
-				Netw.dbg.trace(
-					"Tracker already open. Pushing Client Offer immediately!"
-				)
-				_announce_to_tracker(ws)
-				ws.set_meta("announced", true)
-				pushed_early = true
-		
-		if pushed_early:
-			signaling_connected.emit()
-		
+	var copy := server.duplicate()
+	copy["urls"] = clean_urls
+	return copy
+
+
+# Returns true if the processed server dictionary is not empty.
+static func _is_ice_server_valid(server: Dictionary) -> bool:
+	return not server.is_empty()
+
+
+# Returns true if a URL is not secure TURN (TLS) or TURN over TCP.
+static func _is_url_supported_native(url: String) -> bool:
+	var u := url.to_lower().strip_edges()
+	return not (
+			u.begins_with("turns:")
+			or u.contains("transport=tcp")
+			or u.contains("transport=tls")
+	)
+
+
+# Registers a room ID as active locally on this machine.
+static func _register_local_room(room_id: String) -> void:
+	if room_id.is_empty():
 		return
-	
-	var msg := {
-		"action": "announce",
-		"info_hash": _info_hash,
-		"peer_id": _local_peer_id,
-		"to_peer_id": remote_peer_id,
-	}
-	msg[type] = { "type": type, "sdp": sdp }
-	
-	if type == "answer" and _peer_map.has(remote_peer_id + "_offer_id"):
-		msg["offer_id"] = _peer_map[remote_peer_id + "_offer_id"]
-	
-	Netw.dbg.trace("Sending [%s] payload to tracker.", [type.to_upper()])
-	_broadcast(msg)
+	var path := "user://local_webrtc_rooms.txt"
+	var rooms: Array[String] = []
+	if FileAccess.file_exists(path):
+		var file := FileAccess.open(path, FileAccess.READ)
+		if file:
+			while not file.eof_reached():
+				var line := file.get_line().strip_edges()
+				if not line.is_empty():
+					rooms.append(line)
+	if not rooms.has(room_id):
+		rooms.append(room_id)
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file:
+		for r in rooms:
+			file.store_line(r)
 
-func _on_ice_candidate_created(media: String, index: int, name: String, remote_peer_id: String) -> void:
-	var target_peer := remote_peer_id
-	if not _is_server:
-		if _server_wt_id.is_empty():
-			_client_candidate_queue.append({
-				"candidate": name,
-				"sdpMid": media,
-				"sdpMLineIndex": index
-			})
-			return
-		target_peer = _server_wt_id
-	
-	var msg := {
-		"action": "announce",
-		"info_hash": _info_hash,
-		"peer_id": _local_peer_id,
-		"to_peer_id": target_peer
-	}
-	
-	var payload := {
-		"type": "candidate",
-		"candidate": name,
-		"sdpMid": media,
-		"sdpMLineIndex": index
-	}
-	
-	if _is_server:
-		msg["answer"] = payload
-		if _peer_map.has(target_peer + "_offer_id"):
-			msg["offer_id"] = _peer_map[target_peer + "_offer_id"]
+
+# Unregisters a room ID.
+static func _unregister_local_room(room_id: String) -> void:
+	if room_id.is_empty():
+		return
+	var path := "user://local_webrtc_rooms.txt"
+	if not FileAccess.file_exists(path):
+		return
+	var rooms: Array[String] = []
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file:
+		while not file.eof_reached():
+			var line := file.get_line().strip_edges()
+			if not line.is_empty() and line != room_id:
+				rooms.append(line)
+	if rooms.is_empty():
+		DirAccess.remove_absolute(path)
 	else:
-		msg["offer"] = payload
-		msg["offer_id"] = _generate_hash()
-	
-	Netw.dbg.trace("Sending Tunneled [CANDIDATE] to Tracker.")
-	_broadcast(msg)
+		var write_file := FileAccess.open(path, FileAccess.WRITE)
+		if write_file:
+			for r in rooms:
+				write_file.store_line(r)
 
-func _flush_candidates() -> void:
-	if _client_candidate_queue.size() > 0:
-		Netw.dbg.debug(
-			"Flushing %d queued candidates to Server.",
-			[_client_candidate_queue.size()]
-		)
-	
-	for c in _client_candidate_queue:
-		var msg := {
-			"action": "announce",
-			"info_hash": _info_hash,
-			"peer_id": _local_peer_id,
-			"to_peer_id": _server_wt_id,
-			"offer_id": _generate_hash(),
-			"offer": {
-				"type": "candidate",
-				"candidate": c.get("candidate"),
-				"sdpMid": c.get("sdpMid"),
-				"sdpMLineIndex": c.get("sdpMLineIndex")
-			}
-		}
-		_broadcast(msg)
-	_client_candidate_queue.clear()
 
-func _broadcast(data: Dictionary) -> void:
-	for ws in _sockets:
-		_send_to_socket(ws, data)
+# Returns true if the room ID was hosted locally.
+static func _is_local_room(room_id: String) -> bool:
+	if room_id.is_empty():
+		return false
+	var path := "user://local_webrtc_rooms.txt"
+	if not FileAccess.file_exists(path):
+		return false
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file:
+		while not file.eof_reached():
+			var line := file.get_line().strip_edges()
+			if line == room_id:
+				return true
+	return false
 
-func _send_to_socket(ws: WebSocketPeer, data: Dictionary) -> void:
-	if ws.get_ready_state() == WebSocketPeer.STATE_OPEN:
-		var json_str := JSON.stringify(data)
-		ws.send_text(json_str)
 
-func _get_backend_warnings(_tree: MultiplayerTree) -> PackedStringArray:
-	return []
+# Builds a fresh random namespace for the editor tool button.
+func _random_signaling_namespace() -> String:
+	const CHARS := "abcdefghijklmnopqrstuvwxyz0123456789"
+	var out := ""
+	for i in 15:
+		out += CHARS[randi() % CHARS.length()]
+	return out

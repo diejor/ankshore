@@ -1,24 +1,28 @@
+@icon("res://addons/networked/assets/MultiplayerSceneManager.svg")
 @tool
 class_name MultiplayerSceneManager
 extends MultiplayerSpawner
-
 ## Central authority that manages multiplayer scenes for all connected players.
 ##
 ## Extends [MultiplayerSpawner] to replicate scene levels to clients.
-## Add level scenes to the spawn list via the [member add_to_spawn_list] property.
+## Add level scenes to the spawn list via the
+## [member add_to_spawn_list] property.
 ##
+## [br][br]
 ## [b]Spawnable-scene registration must match on both sides.[/b]
 ## [MultiplayerSpawner] uses the spawnable-scenes list as an index-based
-## protocol; if the server and client lists differ, spawns are dropped
+## protocol, if the server and client lists differ, spawns are dropped
 ## silently on the client. Each [MultiplayerSceneManager] logs its
 ## registered set at [code]info[/code] level on configure for
 ## diff-friendly debugging.
 ##
+## [br][br]
 ## [b]Spawned scenes are not visible to peers until admitted.[/b]
 ## Even after the server activates a scene, the wrapper's
 ## [InterestGate] gates spawn-replication per peer. A peer only
 ## receives the scene after [method MultiplayerScene.connect_peer] is
-## called for it (typically transitively via [method MultiplayerScene.register_player]).
+## called for it, typically transitively via
+## [method MultiplayerScene.register_player].
 ## See [MultiplayerScene] for the full invariant.
 ## [codeblock]
 ## # Listen for scenes becoming available:
@@ -67,17 +71,20 @@ enum EmptyAction {
 }
 
 ## Helper property to add level scenes to the spawn list via the inspector.
-@export_custom(PROPERTY_HINT_ARRAY_TYPE, "24/17:SceneNodePath:MultiplayerSpawner")
+@export_custom(
+	PROPERTY_HINT_ARRAY_TYPE,
+	"24/17:SceneNodePath:MultiplayerSpawner",
+)
 var add_to_spawn_list: SceneNodePath:
 	set(value):
 		if Engine.is_editor_hint() and value != null:
 			var path: String = value.scene_path
-			
+
 			if not path.is_empty():
 				if not _has_spawnable_scene_path(path):
 					add_spawnable_scene(path)
 					notify_property_list_changed()
-		
+
 		add_to_spawn_list = null
 
 ## Optional. Delegates level instantiation to this callable.
@@ -86,7 +93,7 @@ var add_to_spawn_list: SceneNodePath:
 var level_spawn_function: Callable
 
 ## Per-scene spawn data used by [method activate_scene].
-var scene_spawn_data: Dictionary[StringName, Variant] = {}
+var scene_spawn_data: Dictionary[StringName, Variant] = { }
 
 ## All currently active [Scene] instances, keyed by their level's Node name.
 var active_scenes: Dictionary[StringName, MultiplayerScene]
@@ -102,9 +109,10 @@ var scene_paths: Array[String]:
 			clear_spawnable_scenes()
 		return scene_paths
 
-var _scene_configs: Dictionary = {}
-var _scene_cache: Dictionary[String, PackedScene] = {}
-var _scene_paths: Dictionary[StringName, String] = {}
+var _scene_configs: Dictionary = { }
+var _scene_cache: Dictionary[String, PackedScene] = { }
+var _scene_paths: Dictionary[StringName, String] = { }
+var _debug_viewports: Node
 
 
 func _get_property_list() -> Array[Dictionary]:
@@ -114,20 +122,24 @@ func _get_property_list() -> Array[Dictionary]:
 	for i in get_spawnable_scene_count():
 		var path := get_spawnable_scene(i)
 		var basename := path.get_file().get_basename()
-		props.append({
-			"name": "scene_config/%s/load_mode" % basename,
-			"type": TYPE_INT,
-			"hint": PROPERTY_HINT_ENUM,
-			"hint_string": "ON_DEMAND,ON_STARTUP",
-			"usage": PROPERTY_USAGE_DEFAULT,
-		})
-		props.append({
-			"name": "scene_config/%s/empty_action" % basename,
-			"type": TYPE_INT,
-			"hint": PROPERTY_HINT_ENUM,
-			"hint_string": "KEEP_ACTIVE,FREEZE,DESTROY",
-			"usage": PROPERTY_USAGE_DEFAULT,
-		})
+		props.append(
+			{
+				"name": "scene_config/%s/load_mode" % basename,
+				"type": TYPE_INT,
+				"hint": PROPERTY_HINT_ENUM,
+				"hint_string": "ON_DEMAND,ON_STARTUP",
+				"usage": PROPERTY_USAGE_DEFAULT,
+			},
+		)
+		props.append(
+			{
+				"name": "scene_config/%s/empty_action" % basename,
+				"type": TYPE_INT,
+				"hint": PROPERTY_HINT_ENUM,
+				"hint_string": "KEEP_ACTIVE,FREEZE,DESTROY",
+				"usage": PROPERTY_USAGE_DEFAULT,
+			},
+		)
 	return props
 
 
@@ -163,6 +175,28 @@ func _get(property: StringName) -> Variant:
 	return _scene_configs[level_name].get(key, null)
 
 
+## Sets the [enum LoadMode] and [enum EmptyAction] policy for
+## [param scene_name] programmatically, equivalent to configuring the
+## scene through the inspector's [code]scene_config/...[/code] section.
+##
+## [param scene_name] is the basename of the registered scene file (e.g.
+## [code]&"Level1"[/code] for [code]res://levels/Level1.tscn[/code]).
+##
+## Useful for runtime policy changes (e.g. bomber/daily switching from
+## [constant LoadMode.ON_STARTUP] to [constant LoadMode.ON_DEMAND] for
+## post-match scenes) and for tests configuring lifecycle without
+## reaching into [code]_set("scene_config/...", ...)[/code].
+func set_scene_lifecycle_policy(
+		scene_name: StringName,
+		load_mode: LoadMode,
+		empty_action: EmptyAction,
+) -> void:
+	_scene_configs[scene_name] = {
+		"load_mode": load_mode,
+		"empty_action": empty_action,
+	}
+
+
 func _has_spawnable_scene_path(target_path: String) -> bool:
 	for i in get_spawnable_scene_count():
 		if get_spawnable_scene(i) == target_path:
@@ -172,10 +206,10 @@ func _has_spawnable_scene_path(target_path: String) -> bool:
 
 func _init() -> void:
 	spawn_path = "."
-	
+
 	if Engine.is_editor_hint():
 		return
-	
+
 	configured.connect(_on_configured)
 	scene_spawned.connect(_on_scene_spawned)
 	scene_despawned.connect(_on_scene_despawned)
@@ -184,39 +218,37 @@ func _init() -> void:
 func _enter_tree() -> void:
 	if Engine.is_editor_hint():
 		return
-	
+
 	spawn_function = _spawn_scene_node
 	spawn_path = "."
 	add_to_group("scene_managers")
-	
+
 	var mt := NetwServices.register(self, MultiplayerSceneManager)
 	assert(
 		is_instance_valid(mt),
-		"SceneManager must be a descendant of a MultiplayerTree"
+		"SceneManager must be a descendant of a MultiplayerTree",
 	)
-	
-	if not mt.player_joined.is_connected(handle_player_joined):
-		mt.player_joined.connect(handle_player_joined)
-	
-	if not mt.configured.is_connected(configured.emit):
-		mt.configured.connect(configured.emit)
+
+	if not mt.session_entered.is_connected(configured.emit):
+		mt.session_entered.connect(configured.emit)
+	if not mt.session_ended.is_connected(_on_session_ended):
+		mt.session_ended.connect(_on_session_ended)
 
 
 func _exit_tree() -> void:
 	if Engine.is_editor_hint():
 		return
-	
+
 	var mt := NetwServices.unregister(self, MultiplayerSceneManager)
 	assert(
 		is_instance_valid(mt),
-		"SceneManager must be a descendant of a MultiplayerTree"
+		"SceneManager must be a descendant of a MultiplayerTree",
 	)
-	
-	if mt.player_joined.is_connected(handle_player_joined):
-		mt.player_joined.disconnect(handle_player_joined)
-	
-	if mt.configured.is_connected(configured.emit):
-		mt.configured.disconnect(configured.emit)
+
+	if mt.session_entered.is_connected(configured.emit):
+		mt.session_entered.disconnect(configured.emit)
+	if mt.session_ended.is_connected(_on_session_ended):
+		mt.session_ended.disconnect(_on_session_ended)
 
 	active_scenes.clear()
 
@@ -224,7 +256,7 @@ func _exit_tree() -> void:
 # Returns the stored config for [param name].
 func _get_config(name: StringName) -> Dictionary:
 	if not _scene_configs.has(name):
-		return {"load_mode": LoadMode.ON_STARTUP, "empty_action": EmptyAction.FREEZE}
+		return { "load_mode": LoadMode.ON_STARTUP, "empty_action": EmptyAction.FREEZE }
 	return _scene_configs[name]
 
 
@@ -233,7 +265,8 @@ func preload_scene(name: StringName) -> void:
 	var path := _scene_paths.get(name, "")
 	if path.is_empty():
 		Netw.dbg.error(
-			"Cannot preload scene '%s': not found.", [name],
+			"Cannot preload scene '%s': not found.",
+			[name],
 			func(m): push_error(m)
 		)
 		return
@@ -244,6 +277,13 @@ func preload_scene(name: StringName) -> void:
 	Netw.dbg.info("Scene '%s' preloaded.", [name])
 
 
+## Returns [code]true[/code] when [param name] is cached by
+## [method preload_scene].
+func is_scene_preloaded(name: StringName) -> bool:
+	var path := _scene_paths.get(name, "")
+	return not path.is_empty() and _scene_cache.has(path)
+
+
 ## Instantiates and adds [param name] to the scene tree.
 func spawn_scene(name: StringName) -> void:
 	if active_scenes.has(name):
@@ -251,7 +291,8 @@ func spawn_scene(name: StringName) -> void:
 	var path := _scene_paths.get(name, "")
 	if path.is_empty():
 		Netw.dbg.error(
-			"Cannot spawn scene '%s': not found.", [name],
+			"Cannot spawn scene '%s': not found.",
+			[name],
 			func(m): push_error(m)
 		)
 		return
@@ -259,8 +300,10 @@ func spawn_scene(name: StringName) -> void:
 	spawn(path)
 
 
-## Ensures [param name] is spawned and forces its level's process mode to INHERIT.
-func activate_scene(name: StringName) -> void:
+## Ensures [param name] is spawned and forces its level's process mode to
+## [constant Node.PROCESS_MODE_INHERIT]. Returns the [MultiplayerScene], or
+## [code]null[/code] if activation failed.
+func activate_scene(name: StringName) -> MultiplayerScene:
 	Netw.dbg.trace("activate_scene('%s') called.", [name])
 	if not active_scenes.has(name):
 		if level_spawn_function.is_valid():
@@ -268,17 +311,20 @@ func activate_scene(name: StringName) -> void:
 			spawn(data)
 		else:
 			spawn_scene(name)
-	
+
 	var scene := active_scenes.get(name) as MultiplayerScene
 	if not scene:
 		Netw.dbg.error(
-			"Failed to activate scene '%s'.", [name], func(m): push_error(m)
+			"Failed to activate scene '%s'.",
+			[name],
+			func(m): push_error(m)
 		)
-		return
-	
+		return null
+
 	scene.level.process_mode = Node.PROCESS_MODE_INHERIT
 	Netw.dbg.info("Scene '%s' activated.", [name])
 	scene_activated.emit(scene)
+	return scene
 
 
 ## Sets the scene level's process mode to DISABLED.
@@ -286,7 +332,8 @@ func freeze_scene(name: StringName) -> void:
 	var scene := active_scenes.get(name) as MultiplayerScene
 	if not scene:
 		Netw.dbg.warn(
-			"Cannot freeze scene '%s': not active.", [name],
+			"Cannot freeze scene '%s': not active.",
+			[name],
 			func(m): push_warning(m)
 		)
 		return
@@ -299,7 +346,8 @@ func destroy_scene(name: StringName) -> void:
 	var scene := active_scenes.get(name) as MultiplayerScene
 	if not scene:
 		Netw.dbg.warn(
-			"Cannot destroy scene '%s': not active.", [name],
+			"Cannot destroy scene '%s': not active.",
+			[name],
 			func(m): push_warning(m)
 		)
 		return
@@ -331,7 +379,8 @@ func spawn_scenes() -> void:
 		Netw.dbg.warn("No scene levels are registered.", func(m): push_warning(m))
 		return
 	Netw.dbg.info(
-		"Checking %d scene levels for ON_STARTUP.", [_scene_paths.size()]
+		"Checking %d scene levels for ON_STARTUP.",
+		[_scene_paths.size()],
 	)
 	for name: StringName in _scene_paths:
 		if _get_config(name)["load_mode"] == LoadMode.ON_STARTUP:
@@ -341,7 +390,7 @@ func spawn_scenes() -> void:
 # Spawn function used by [MultiplayerSpawner].
 func _spawn_scene_node(data: Variant) -> Node:
 	var level: Node
-	
+
 	if level_spawn_function.is_valid():
 		level = level_spawn_function.call(data)
 		if not is_instance_valid(level):
@@ -360,55 +409,24 @@ func _spawn_scene_node(data: Variant) -> Node:
 	else:
 		Netw.dbg.error("invalid spawn data.", func(m): push_error(m))
 		return null
-	
+
 	var scene_scene: PackedScene = (SERVER_SCENE
-		if multiplayer.is_server() else CLIENT_SCENE)
+			if multiplayer.is_server() else CLIENT_SCENE)
 	var scene: MultiplayerScene = scene_scene.instantiate()
-	
+
 	scene.level = level
 	scene.tree_entered.connect(scene_spawned.emit.bind(scene))
 	scene.tree_exited.connect(scene_despawned.emit.bind(scene))
-	
+
 	return scene
 
 
-## Called by [MultiplayerTree] to handle an accepted player join.
-##
-## Activates the target scene, dispatches to the configured spawner, and
-## emits [signal MultiplayerTree.player_scene_ready].
-## [br][br]
-## When [member ResolvedJoin.scene_name] is empty (no
-## [member JoinPayload.spawner_component_path] was provided), this is a no-op.
-func handle_player_joined(rj: ResolvedJoin) -> void:
-	if not multiplayer.is_server():
-		return
-
-	if rj.scene_name.is_empty():
-		return
-
-	await activate_scene(rj.scene_name)
-	var scene := active_scenes.get(rj.scene_name) as MultiplayerScene
-	assert(scene, "activate_scene must guarantee scene presence")
-
-	var spawner := _spawner_in(scene, rj.spawner_path)
-	var player := spawner.instantiate_player(rj)
-	var target_scene := await _resolve_hydrated_spawn_scene(player, scene)
-	target_scene.add_player(player)
-
-	var tree := MultiplayerTree.for_node(self)
-	if tree:
-		tree.player_scene_ready.emit(rj, target_scene)
-
-
-func _spawner_in(scene: MultiplayerScene, path: NodePath) -> SpawnerComponent:
-	var node := scene.level.get_node(path)
-	assert(node is SpawnerComponent,
-		"ResolvedJoin.spawner_path didn't point at a SpawnerComponent")
-	return node
-
-
+## Server-side. Returns the [MultiplayerScene] a freshly instantiated
+## [param player] should enter, honoring a [TPComponent]'s stored scene over
+## [param fallback_scene]. Used by [SpawnPolicy] implementations.
 func _resolve_hydrated_spawn_scene(
-	player: Node, fallback_scene: MultiplayerScene
+		player: Node,
+		fallback_scene: MultiplayerScene,
 ) -> MultiplayerScene:
 	var save: SaveComponent = player.get_node_or_null("%SaveComponent")
 	if save:
@@ -443,15 +461,17 @@ func _on_scene_spawned(node: Node) -> void:
 	active_scenes[scene.level.name] = scene
 	if multiplayer.is_server():
 		scene.despawned.connect(
-			_on_player_left_scene.bind(StringName(scene.level.name)))
+			_on_player_left_scene.bind(StringName(scene.level.name)),
+		)
 		_apply_empty_action_if_needed.call_deferred(StringName(scene.level.name))
 
 
 func _on_player_left_scene(player: Node, scene_name: StringName) -> void:
 	Netw.dbg.debug(
-		"Player left scene '%s'. Evaluating empty action.", [scene_name]
+		"Player left scene '%s'. Evaluating empty action.",
+		[scene_name],
 	)
-	_apply_empty_action_if_needed(scene_name)
+	_apply_empty_action_if_needed.call_deferred(scene_name)
 
 
 func _on_scene_despawned(node: Node) -> void:
@@ -473,17 +493,46 @@ func _on_configured() -> void:
 		registered.append(get_spawnable_scene(i))
 	Netw.dbg.info(
 		"SceneManager (%s): %d spawnable scene(s) registered: %s",
-		[role, registered.size(), registered]
+		[role, registered.size(), registered],
 	)
 
 	if multiplayer.is_server():
-		var debug_viewports: Node = VIEWPORTS_DEBUG.instantiate()
-		child_entered_tree.connect(debug_viewports.get("_on_node_entered"))
-		child_exiting_tree.connect(debug_viewports.get("_on_node_exited"))
-		add_child(debug_viewports)
+		_debug_viewports = VIEWPORTS_DEBUG.instantiate()
+		child_entered_tree.connect(_debug_viewports.get("_on_node_entered"))
+		child_exiting_tree.connect(_debug_viewports.get("_on_node_exited"))
+		add_child(_debug_viewports)
 
 		spawn_scenes.call_deferred()
 		_emit_startup_scenes_spawned.call_deferred()
+
+
+# Mirror of [method _on_configured]. Despawns every active scene so a re-host
+# rebuilds from empty, restores the spawnable list the [member scene_paths]
+# getter consumed, and frees the debug viewports node. Freeing each scene runs
+# its [InterestGate]'s _exit_tree, which unregisters from [InterestService] and
+# clears the "layer already has a bound gate" error on the second session.
+func _on_session_ended() -> void:
+	for scene: MultiplayerScene in active_scenes.values().duplicate():
+		if not is_instance_valid(scene):
+			continue
+		if scene.get_parent():
+			scene.get_parent().remove_child(scene)
+		scene.free()
+	active_scenes.clear()
+
+	# The scene_paths getter consumes the spawnable list via
+	# clear_spawnable_scenes, so re-add it and drop the array cache. The next
+	# session re-consumes the same index-based protocol from a clean slate. The
+	# default-world path registers through _scene_paths instead and is left
+	# untouched so a same-tree re-host keeps its world.
+	for path: String in scene_paths:
+		if not _has_spawnable_scene_path(path):
+			add_spawnable_scene(path)
+	scene_paths.clear()
+
+	if is_instance_valid(_debug_viewports):
+		_debug_viewports.free()
+	_debug_viewports = null
 
 
 func _emit_startup_scenes_spawned() -> void:
@@ -510,13 +559,31 @@ func _configure_default(scene_path: String) -> void:
 		"empty_action": EmptyAction.KEEP_ACTIVE,
 	}
 	Netw.dbg.debug(
-		"Default scene configured: '%s' -> '%s'.", [basename, scene_path]
+		"Default scene configured: '%s' -> '%s'.",
+		[basename, scene_path],
 	)
 
 
-# Returns all scene paths set via [method _configure_default].
-# Used to restore configuration after [method Node.duplicate].
-func _get_configured_paths() -> Array[String]:
+## Returns all registered scene paths. The list includes inspector entries,
+## scenes added via [method add_spawnable_scene], and defaults registered
+## by [MultiplayerTree] when a world scene is dropped as a direct child.
+##
+## Useful for restoring configuration after [method Node.duplicate] and
+## for mirroring registration onto secondary scene managers (e.g. test
+## harnesses spinning up client peers).
+func get_configured_paths() -> Array[String]:
 	var paths: Array[String] = []
 	paths.assign(_scene_paths.values())
+	for i in get_spawnable_scene_count():
+		var path := get_spawnable_scene(i)
+		if not paths.has(path):
+			paths.append(path)
 	return paths
+
+
+## Returns the active [enum LoadMode] and [enum EmptyAction] policy for
+## [param scene_name] as a dictionary with keys [code]load_mode[/code] and
+## [code]empty_action[/code]. Unconfigured scenes return the documented
+## defaults ([constant LoadMode.ON_STARTUP], [constant EmptyAction.FREEZE]).
+func get_scene_lifecycle_policy(scene_name: StringName) -> Dictionary:
+	return _get_config(scene_name)

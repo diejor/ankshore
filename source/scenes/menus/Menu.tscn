@@ -1,109 +1,71 @@
 [gd_scene format=3 uid="uid://dfvoo60p3ut6n"]
 
 [ext_resource type="Script" uid="uid://nvo7iaquaaob" path="res://source/scenes/menus/button.gd" id="1_uubjt"]
-[ext_resource type="Script" uid="uid://bu4t1igemybop" path="res://addons/networked/session/join_payload.gd" id="2_ut644"]
 [ext_resource type="Script" uid="uid://c3yabfbvm8gyo" path="res://addons/networked/session/multiplayer_tree.gd" id="3_1iwnb"]
+[ext_resource type="Script" uid="uid://bo5uh52f6sln5" path="res://addons/networked/session/default_server_info_source.gd" id="3_4hjik"]
 [ext_resource type="Script" uid="uid://cgyucu72xh732" path="res://addons/networked/transport/websocket_backend.gd" id="5_tbyx2"]
 [ext_resource type="Script" uid="uid://lb7h272e5fhb" path="res://addons/networked/session/multiplayer_scene/scene_manager.gd" id="5_xc8cl"]
-[ext_resource type="Script" uid="uid://cy006uvidc4y" path="res://addons/tube/tube_client.gd" id="8_6rjpa"]
+[ext_resource type="Script" uid="uid://dwa0bhinxigbm" path="res://addons/networked/session/spawn/entity_spawn_policy.gd" id="8_ocmta"]
 [ext_resource type="Script" uid="uid://2ydebdu4do8m" path="res://addons/networked/addons/scene_node_path/source/scene_node_path.gd" id="8_pulmy"]
-[ext_resource type="PackedScene" uid="uid://buvcsv4w31hx" path="res://addons/networked/nodes/client/ConnectServerUI.tscn" id="9_evmps"]
-[ext_resource type="Script" uid="uid://t4pe7yqc3pnt" path="res://addons/tube/tube_context.gd" id="9_ut644"]
-[ext_resource type="Script" uid="uid://dfoggo64snch3" path="res://addons/networked/session/multiplayer_scene/active_scene_view.gd" id="10_ut644"]
+[ext_resource type="PackedScene" uid="uid://bb2nsfunxlw3a" path="res://addons/networked/connect/ui/connect_browser.tscn" id="9_evmps"]
+[ext_resource type="Script" uid="uid://d1xugn0ypbbto" path="res://addons/networked/transport/webrtc/webtorrent_directory.gd" id="10_rhopt"]
+[ext_resource type="Script" uid="uid://dfoggo64snch3" path="res://addons/networked/session/view/host_scene_view.gd" id="10_ut644"]
+[ext_resource type="Script" uid="uid://di4qtwvgux111" path="res://addons/networked/transport/backend_peer.gd" id="11_4hjik"]
 [ext_resource type="PackedScene" uid="uid://vj1s4e7rbmsn" path="res://addons/networked/nodes/tp/TPLayer.tscn" id="11_ocmta"]
-[ext_resource type="Script" uid="uid://domi8t23qrsdh" path="res://addons/networked/sync/clock/network_clock.gd" id="11_tbyx2"]
-
-[sub_resource type="Resource" id="Resource_ocmta"]
-script = ExtResource("8_pulmy")
-scene_path = "uid://xkil2cmplfcd"
-node_path = "%Myoso/Components/SpawnerComponent"
-
-[sub_resource type="Resource" id="Resource_4hjik"]
-script = ExtResource("2_ut644")
-spawner_component_path = SubResource("Resource_ocmta")
-metadata/_custom_type_script = "uid://bu4t1igemybop"
-
-[sub_resource type="Theme" id="Theme_5yleq"]
+[ext_resource type="Script" uid="uid://domi8t23qrsdh" path="res://addons/networked/sync/clock/multiplayer_clock.gd" id="11_tbyx2"]
+[ext_resource type="Script" uid="uid://covt80wkpucga" path="res://addons/networked/transport/webrtc/tracker_webrtc_backend.gd" id="12_j3c00"]
+[ext_resource type="Script" uid="uid://dqd358q7xpmeq" path="res://addons/networked/transport/enet_backend.gd" id="13_u0fbj"]
+[ext_resource type="Script" uid="uid://b8xpp6r4y1ku2" path="res://addons/networked/transport/steam/steam_backend.gd" id="17_rhopt"]
 
 [sub_resource type="Resource" id="Resource_j3c00"]
 script = ExtResource("5_tbyx2")
 metadata/_custom_type_script = "uid://cgyucu72xh732"
 
-[sub_resource type="Resource" id="Resource_tbyx2"]
-script = ExtResource("9_ut644")
-app_id = "CQM{fi?D$<2}BuQ"
-trackers_urls = Array[String](["wss://tracker.openwebtorrent.com", "wss://tracker.files.fm:7073/announce", "wss://tracker.btorrent.xyz/", "wss://tracker.ghostchu-services.top:443/announce"])
-stun_servers_urls = Array[String](["stun:stun.l.google.com:19302", "stun:stun.cloudflare.com:3478", "stun:stun.bethesda.net:3478"])
-metadata/_custom_type_script = "uid://t4pe7yqc3pnt"
+[sub_resource type="Resource" id="Resource_rhopt"]
+script = ExtResource("3_4hjik")
+metadata/_custom_type_script = "uid://bo5uh52f6sln5"
 
-[sub_resource type="Resource" id="Resource_evmps"]
+[sub_resource type="Resource" id="Resource_u0fbj"]
+script = ExtResource("8_ocmta")
+metadata/_custom_type_script = "uid://dwa0bhinxigbm"
+
+[sub_resource type="Theme" id="Theme_5yleq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_pulmy"]
+
+[sub_resource type="Resource" id="Resource_new1d"]
 script = ExtResource("8_pulmy")
 scene_path = "uid://xkil2cmplfcd"
-node_path = "%Myoso/Components/SpawnerComponent"
+node_path = "%Myoso/Components/MultiplayerEntity"
+
+[sub_resource type="Resource" id="Resource_tbyx2"]
+script = ExtResource("12_j3c00")
+signaling_namespace = "gbd6qjccns8cbcz"
+metadata/_custom_type_script = "uid://covt80wkpucga"
+
+[sub_resource type="Resource" id="Resource_ocmta"]
+script = ExtResource("13_u0fbj")
+metadata/_custom_type_script = "uid://dqd358q7xpmeq"
+
+[sub_resource type="Resource" id="Resource_fql6l"]
+script = ExtResource("17_rhopt")
+metadata/_custom_type_script = "uid://b8xpp6r4y1ku2"
+
+[sub_resource type="Resource" id="Resource_4hjik"]
+script = ExtResource("8_pulmy")
+scene_path = "uid://xkil2cmplfcd"
+node_path = "%Myoso/Components/MultiplayerEntity"
 
 [node name="Control" type="Node" unique_id=487292563]
-
-[node name="MenuUI" type="Control" parent="." unique_id=1970906618]
-unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="Button" type="Button" parent="MenuUI" unique_id=533036486]
-layout_mode = 0
-offset_left = 409.0
-offset_top = 307.0
-offset_right = 724.0
-offset_bottom = 437.0
-script = ExtResource("1_uubjt")
-join_payload = SubResource("Resource_4hjik")
-
-[node name="PlayGame" type="Label" parent="MenuUI/Button" unique_id=1431192076]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 32
-text = "play game!!!!"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Label" type="Label" parent="MenuUI" unique_id=1876916828]
-layout_mode = 0
-offset_left = 332.0
-offset_top = 105.0
-offset_right = 803.0
-offset_bottom = 220.3179
-theme = SubResource("Theme_5yleq")
-theme_override_font_sizes/font_size = 67
-text = "ANKSHORE!!!!!!"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="UsernameEdit" type="LineEdit" parent="MenuUI" unique_id=1164204733]
-unique_name_in_owner = true
-visible = false
-layout_mode = 0
-offset_left = 451.0
-offset_top = 235.0
-offset_right = 674.0
-offset_bottom = 280.0
-placeholder_text = "Enter Username"
 
 [node name="Client" type="Node" parent="." unique_id=1939008143]
 unique_name_in_owner = true
 script = ExtResource("3_1iwnb")
 backend = SubResource("Resource_j3c00")
-use_listen_server = true
+app_id = &"468oblvbohrbypd"
+server_info_source = SubResource("Resource_rhopt")
+spawn_policy = SubResource("Resource_u0fbj")
 metadata/_custom_type_script = "uid://c3yabfbvm8gyo"
-
-[node name="TubeClient" type="Node" parent="Client" unique_id=495222064]
-script = ExtResource("8_6rjpa")
-context = SubResource("Resource_tbyx2")
-metadata/_custom_type_script = "uid://cy006uvidc4y"
 
 [node name="MultiplayerLobbyManager" type="MultiplayerSpawner" parent="Client" unique_id=953236085]
 _spawnable_scenes = PackedStringArray("uid://xkil2cmplfcd", "uid://dta1ona6odgmr")
@@ -128,8 +90,72 @@ metadata/_custom_type_script = "uid://dfoggo64snch3"
 
 [node name="TPLayer" parent="Client" unique_id=1002194750 instance=ExtResource("11_ocmta")]
 
-[node name="ConnectServerUI" parent="." unique_id=99213129 instance=ExtResource("9_evmps")]
-spawner_node = SubResource("Resource_evmps")
+[node name="WebTorrentDirectory" type="Node" parent="Client" unique_id=3234678]
+script = ExtResource("10_rhopt")
+browser_filter_uid = "ankshore"
+metadata/_custom_type_script = "uid://d1xugn0ypbbto"
 
-[connection signal="pressed" from="MenuUI/Button" to="MenuUI/Button" method="_on_pressed"]
-[connection signal="connect_player" from="ConnectServerUI" to="Client" method="connect_player"]
+[node name="GameUI" type="Control" parent="." unique_id=938817348]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Title" type="Label" parent="GameUI" unique_id=1876916828]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 7.0
+offset_right = 497.0
+offset_bottom = 122.3179
+theme = SubResource("Theme_5yleq")
+theme_override_font_sizes/font_size = 67
+text = "ANKSHORE!!!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MenuUI" type="TabContainer" parent="GameUI" unique_id=614597869]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 289.0
+offset_top = 132.0
+offset_right = 870.0
+offset_bottom = 605.0
+theme_override_styles/panel = SubResource("StyleBoxEmpty_pulmy")
+current_tab = 0
+
+[node name="Singleplayer" type="MarginContainer" parent="GameUI/MenuUI" unique_id=138698339]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 64
+metadata/_tab_index = 0
+
+[node name="VBox" type="VBoxContainer" parent="GameUI/MenuUI/Singleplayer" unique_id=1382179695]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="UsernameEdit" type="LineEdit" parent="GameUI/MenuUI/Singleplayer/VBox" unique_id=1164204733]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(252, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+placeholder_text = "Enter Username"
+
+[node name="SinglePlayer" type="Button" parent="GameUI/MenuUI/Singleplayer/VBox" unique_id=533036486]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Play Game!!"
+script = ExtResource("1_uubjt")
+spawner_component = SubResource("Resource_new1d")
+
+[node name="Multiplayer" parent="GameUI/MenuUI" unique_id=99213129 node_paths=PackedStringArray("tree") instance=ExtResource("9_evmps")]
+visible = false
+layout_mode = 2
+tree = NodePath("../../../Client")
+backend_templates = Array[ExtResource("11_4hjik")]([SubResource("Resource_tbyx2"), SubResource("Resource_ocmta"), SubResource("Resource_fql6l")])
+spawner_options = Array[ExtResource("8_pulmy")]([SubResource("Resource_4hjik")])
+metadata/_tab_index = 1
+
+[connection signal="pressed" from="GameUI/MenuUI/Singleplayer/VBox/SinglePlayer" to="GameUI/MenuUI/Singleplayer/VBox/SinglePlayer" method="_on_pressed"]
