@@ -2,43 +2,29 @@ class_name Character extends Node2D
 
 ## Represents a participant in a combat encounter on the battlefield.
 
-enum DefenseKind { BLOCK, PARRY }
-
 @warning_ignore("unused_signal")
-signal action_finished(action: CombatAction)
+signal action_finished(action: CharacterAction)
 signal health_depleted
 @warning_ignore("unused_signal")
 signal will_depleted
 @warning_ignore("unused_signal")
 signal courage_depleted
-signal defense_window_opened(
-	kind: DefenseKind,
-	beat: AttackBeat,
-	window_sec: float
-)
+signal defense_window_opened(beat: AttackBeat, window_sec: float)
 signal defense_window_closed(result: DefenseInput)
 @warning_ignore("unused_signal")
 signal beat_telegraphed(beat: AttackBeat)
 @warning_ignore("unused_signal")
 signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
-@warning_ignore("unused_signal")
-signal move_resolved(move: CombatAction, hit: bool, damage: int)
-signal pending_move_changed(move: CombatAction)
+signal pending_action_changed(action: CharacterAction)
 signal pending_target_changed(target: Character)
 
 @export var stats: CharacterStats = CharacterStats.new()
-@export var move_list: Array[CombatAction] = []
+@export var move_list: Array[CharacterAction] = []
 
-## Move selected for this character's next resolution step. For an attack
-## this is the [member AttackString.move]; see [member pending_string].
-var pending_move: CombatAction = null
+## Action selected for this character's next resolution step.
+var pending_action: CharacterAction = null
 
-## Player-built attack to resolve this turn, or [code]null[/code] for a
-## non-attack move. When set, [method execute_turn] runs the string
-## resolver instead of [member pending_move].
-var pending_string: AttackString = null
-
-## Targets selected for [member pending_move].
+## Targets selected for [member pending_action].
 var pending_targets: Array[Character] = []
 
 ## Parent team manager caching property.
@@ -61,13 +47,13 @@ func _ready() -> void:
 	_update_facing_direction()
 
 
-## Returns all [CombatAction] nodes attached as direct children plus
+## Returns all [CharacterAction] nodes attached as direct children plus
 ## any actions in [member move_list], without duplicates. Used by
 ## [MoveListContainer] to render the move-pick view.
-func available_moves() -> Array[CombatAction]:
-	var result: Array[CombatAction] = [_WAIT_ACTION]
+func available_moves() -> Array[CharacterAction]:
+	var result: Array[CharacterAction] = [_WAIT_ACTION]
 	for child in get_children():
-		if child is CombatAction:
+		if child is CharacterAction:
 			result.append(child)
 	for action in move_list:
 		if action and not result.has(action):
@@ -81,58 +67,43 @@ func is_alive() -> bool:
 	return stats != null and stats.health > 0
 
 
-## Stores a non-attack move and targets this character will execute.
-func commit_move(move: CombatAction, targets: Array[Character]) -> void:
-	pending_string = null
-	pending_move = move
-	pending_targets = targets.duplicate()
-	pending_move_changed.emit(pending_move)
-	pending_target_changed.emit(_first_pending_target())
-
-
-## Stores a player-built [param attack] and its targets for this turn.
-## [member pending_move] mirrors the string's capping move for previews.
-func commit_attack(
-	attack: AttackString, targets: Array[Character]
+## Stores the action and targets this character will resolve this turn.
+## For a [CombatAction], pass the player-built [param attack_string].
+func commit_action(
+	action: CharacterAction,
+	targets: Array[Character],
+	attack_string: AttackString = null
 ) -> void:
-	pending_string = attack
-	pending_move = attack.move
+	pending_action = action
 	pending_targets = targets.duplicate()
-	pending_move_changed.emit(pending_move)
+	if action is CombatAction:
+		(action as CombatAction).attack_string = attack_string
+	pending_action_changed.emit(pending_action)
 	pending_target_changed.emit(_first_pending_target())
 
 
-## Clears the move, string, and targets committed for this turn.
-func clear_pending_move() -> void:
-	pending_move = null
-	pending_string = null
+## Clears the action and targets committed for this turn.
+func clear_pending_action() -> void:
+	if pending_action is CombatAction:
+		(pending_action as CombatAction).attack_string = null
+	pending_action = null
 	pending_targets = []
-	pending_move_changed.emit(null)
+	pending_action_changed.emit(null)
 	pending_target_changed.emit(null)
 
 
-## Resolves the pending attack string or move, then clears turn data.
+## Resolves [member pending_action], then clears the pending turn data.
 func execute_turn(ctx: PhaseContext) -> void:
-	if pending_string and pending_string.move:
-		var defender := _first_live_target()
-		if defender:
-			var resolver := AttackStringResolver.new(
-				ctx, self, defender, pending_string
-			)
-			await resolver.run()
-	elif pending_move != null:
-		await pending_move.execute_async(self, pending_targets, ctx)
-	clear_pending_move()
+	if pending_action:
+		await pending_action.resolve(self, pending_targets, ctx)
+	clear_pending_action()
 
 
-## Opens a defense window and awaits the defending controller's result.
-func request_defense(
-	kind: DefenseKind,
-	beat: AttackBeat,
-	window_sec: float
-) -> DefenseInput:
+## Opens a block-read window for [param beat] and awaits the defending
+## controller's result.
+func request_defense(beat: AttackBeat, window_sec: float) -> DefenseInput:
 	_defense_window_active = true
-	defense_window_opened.emit(kind, beat, window_sec)
+	defense_window_opened.emit(beat, window_sec)
 	get_tree().create_timer(window_sec).timeout.connect(
 		_complete_defense_timeout
 	)
@@ -143,7 +114,7 @@ func request_defense(
 	return result
 
 
-## Reports the defender's reaction back to the resolver.
+## Reports the defender's reaction back to the resolving string.
 func complete_defense(result: DefenseInput) -> void:
 	if not _defense_window_active:
 		return
@@ -162,14 +133,6 @@ func take_dmg(raw_damage: int, blocked: bool) -> void:
 func _first_pending_target() -> Character:
 	for target in pending_targets:
 		if target:
-			return target
-	return null
-
-
-# Returns the first living target, used when resolving an attack string.
-func _first_live_target() -> Character:
-	for target in pending_targets:
-		if target and target.is_alive():
 			return target
 	return null
 

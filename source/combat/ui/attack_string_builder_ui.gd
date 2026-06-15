@@ -128,7 +128,6 @@ func _close() -> void:
 func _refresh_view() -> void:
 	var preview := AttackString.new()
 	preview.beats = _beats
-	preview.move = _move
 	_string_view.attack_string = preview
 	var cap: int = _move.max_beats if _move else 0
 	_label.text = "Build String  %d / %d" % [_beats.size(), cap]

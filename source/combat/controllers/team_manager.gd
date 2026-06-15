@@ -17,7 +17,6 @@ enum Team {
 signal character_added(character: Character)
 signal character_defense_window_opened(
 	character: Character,
-	kind: Character.DefenseKind,
 	beat: AttackBeat,
 	window_sec: float
 )
@@ -29,12 +28,6 @@ signal character_beat_resolved(
 	character: Character,
 	beat: AttackBeat,
 	blocked: bool,
-	damage: int
-)
-signal character_move_resolved(
-	character: Character,
-	move: CombatAction,
-	hit: bool,
 	damage: int
 )
 
@@ -133,7 +126,7 @@ func run_planning() -> Array[Character]:
 
 	for character in tracked_characters:
 		if character:
-			character.clear_pending_move()
+			character.clear_pending_action()
 	state.action_committed.connect(on_action_committed)
 	state.begin_planning(pending_characters())
 	if state.phase != TeamState.Phase.DONE:
@@ -167,9 +160,6 @@ func _on_child_entered(node: Node) -> void:
 		character.beat_resolved.connect(
 			_relay_beat_resolved.bind(character)
 		)
-		character.move_resolved.connect(
-			_relay_move_resolved.bind(character)
-		)
 		character.tree_exiting.connect(
 			_on_character_tree_exiting.bind(character)
 		)
@@ -192,27 +182,21 @@ func _disconnect_if_removed(character: Character) -> void:
 	var opened := _relay_defense_window_opened.bind(character)
 	var closed := _relay_defense_window_closed.bind(character)
 	var beat := _relay_beat_resolved.bind(character)
-	var move := _relay_move_resolved.bind(character)
 	if character.defense_window_opened.is_connected(opened):
 		character.defense_window_opened.disconnect(opened)
 	if character.defense_window_closed.is_connected(closed):
 		character.defense_window_closed.disconnect(closed)
 	if character.beat_resolved.is_connected(beat):
 		character.beat_resolved.disconnect(beat)
-	if character.move_resolved.is_connected(move):
-		character.move_resolved.disconnect(move)
 
 
 # Re-emits defense windows for subscribers interested in any teammate.
 func _relay_defense_window_opened(
-	kind: Character.DefenseKind,
 	beat: AttackBeat,
 	window_sec: float,
 	character: Character
 ) -> void:
-	character_defense_window_opened.emit(
-		character, kind, beat, window_sec
-	)
+	character_defense_window_opened.emit(character, beat, window_sec)
 
 
 # Re-emits defense completion for subscribers interested in any teammate.
@@ -231,13 +215,3 @@ func _relay_beat_resolved(
 	character: Character
 ) -> void:
 	character_beat_resolved.emit(character, beat, blocked, damage)
-
-
-# Re-emits move resolution for subscribers interested in any teammate.
-func _relay_move_resolved(
-	move: CombatAction,
-	hit: bool,
-	damage: int,
-	character: Character
-) -> void:
-	character_move_resolved.emit(character, move, hit, damage)

@@ -1,4 +1,4 @@
-class_name ItemAction extends CombatAction
+class_name ItemAction extends CharacterAction
 
 ## Concrete action representing the usage of a consumable inventory item.
 ##
@@ -6,5 +6,9 @@ class_name ItemAction extends CombatAction
 
 
 ## Triggers consumable item application logic on targets.
-func execute(_actor: Character, _targets: Array[Character]) -> void:
+func resolve(
+	_actor: Character,
+	_targets: Array[Character],
+	_ctx: PhaseContext
+) -> void:
 	pass

@@ -28,7 +28,7 @@ func _ready() -> void:
 	if _character.stats == null:
 		_refresh_preview_data()
 		return
-	_character.pending_move_changed.connect(_on_pending_move_changed)
+	_character.pending_action_changed.connect(_on_pending_action_changed)
 	_character.pending_target_changed.connect(_on_pending_target_changed)
 	_target_arrow.character = _character
 	_bind_stats(_character.stats)
@@ -56,15 +56,16 @@ func _on_health_changed(current: int, max_val: int) -> void:
 
 # Updates the committed action preview from character state.
 func _refresh_planning() -> void:
-	var move := _character.pending_move
-	if move == null:
+	var action := _character.pending_action
+	if action == null:
 		_planning_preview.hide()
 		_string_view.attack_string = null
 		return
-	_move_label.text = move.name
+	_move_label.text = action.name
 	var target := _first_pending_target()
-	if _character.pending_string and target and target != _character:
-		_string_view.attack_string = _character.pending_string
+	var attack := action as CombatAction
+	if attack and attack.attack_string and target and target != _character:
+		_string_view.attack_string = attack.attack_string
 	else:
 		_string_view.attack_string = null
 	_planning_preview.show()
@@ -78,7 +79,7 @@ func _refresh_preview_data() -> void:
 	_planning_preview.show()
 
 
-func _on_pending_move_changed(_move: CombatAction) -> void:
+func _on_pending_action_changed(_action: CharacterAction) -> void:
 	_refresh_planning()
 
 

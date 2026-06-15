@@ -61,26 +61,19 @@ func _handle_slot_confirm() -> void:
 
 func _on_defense_window_opened(
 	character: Character,
-	kind: Character.DefenseKind,
 	_beat: AttackBeat,
 	window_sec: float
 ) -> void:
-	var mode := _DefenseCapture.Mode.BLOCK
-	if kind == Character.DefenseKind.PARRY:
-		mode = _DefenseCapture.Mode.PARRY
-	_start_capture(character, mode, window_sec)
+	_start_capture(character, window_sec)
 
 
-# Begins listening for one defense reaction. Resolves on the first
+# Begins listening for one block reaction. Resolves on the first
 # qualifying press or timer expiry.
 func _start_capture(
 	character: Character,
-	mode: int,
 	window_sec: float
 ) -> void:
 	var capture := _DefenseCapture.new()
-	@warning_ignore("int_as_enum_without_cast")
-	capture.mode = mode
 	capture.character = character
 	_active_defense = capture
 
@@ -95,17 +88,11 @@ func _start_capture(
 	_active_defense = null
 
 
-## Single-use input gate for one defense window. Resolves on the first
+## Single-use input gate for one block window. Resolves on the first
 ## qualifying press or on timer expiry, whichever comes first.
 class _DefenseCapture extends RefCounted:
-	## Block samples direction keys; parry samples [code]ui_accept[/code].
-	enum Mode { BLOCK, PARRY }
-
 	## Emitted exactly once when the capture resolves (input or timeout).
 	signal resolved
-
-	## Which input shape this capture is sampling.
-	var mode: Mode = Mode.BLOCK
 
 	## Character whose defense window this capture answers.
 	var character: Character = null
@@ -119,10 +106,6 @@ class _DefenseCapture extends RefCounted:
 	## Feeds [param event] into the capture. No-op once resolved.
 	func handle_event(event: InputEvent) -> void:
 		if _done:
-			return
-		if mode == Mode.PARRY:
-			if event.is_action_pressed("ui_accept"):
-				_finish(DefenseInput.parry())
 			return
 		var triggered := false
 		for action: String in ["ui_left", "ui_right", "ui_down"]:

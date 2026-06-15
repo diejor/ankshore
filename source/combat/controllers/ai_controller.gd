@@ -10,9 +10,6 @@ class_name AIController extends TeamController
 ## defense window. Tunable per encounter.
 @export_range(0.0, 1.0) var block_skill: float = 0.5
 
-## Probability the AI lands a parry against a grab ender.
-@export_range(0.0, 1.0) var parry_skill: float = 0.3
-
 ## Seconds the AI waits before responding to a phase change. Provides
 ## human-readable pacing in lieu of a real animation track.
 @export var think_delay_sec: float = 0.25
@@ -107,14 +104,10 @@ func _build_string() -> void:
 
 func _on_defense_window_opened(
 	character: Character,
-	kind: Character.DefenseKind,
 	beat: AttackBeat,
 	window_sec: float
 ) -> void:
-	if kind == Character.DefenseKind.PARRY:
-		_react_parry.call_deferred(character, window_sec)
-	else:
-		_react_block.call_deferred(character, beat, window_sec)
+	_react_block.call_deferred(character, beat, window_sec)
 
 
 # Picks a block direction; wrong guesses miss on the vertical axis.
@@ -137,17 +130,6 @@ func _react_block(
 		else AttackBeat.Direction.OVERHEAD
 	)
 	defender.complete_defense(DefenseInput.block(wrong_dir, beat.side))
-
-
-# Rolls against [member parry_skill] for the grab ender.
-func _react_parry(defender: Character, window_sec: float) -> void:
-	await get_tree().create_timer(window_sec * 0.5).timeout
-	if defender == null:
-		return
-	if randf() < parry_skill:
-		defender.complete_defense(DefenseInput.parry())
-	else:
-		defender.complete_defense(DefenseInput.none())
 
 
 # Yields long enough for the player to read the AI's decision.

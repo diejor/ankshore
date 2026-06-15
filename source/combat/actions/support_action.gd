@@ -1,10 +1,14 @@
-class_name SupportAction extends CombatAction
+class_name SupportAction extends CharacterAction
 
 ## Concrete action representing a defensive or supportive skill.
 ##
-## Standardizes heal and buff application and targets list.
+## Standardizes heal and buff application across a target list.
 
 
 ## Executes healing or support modifications on targets.
-func execute(_actor: Character, _targets: Array[Character]) -> void:
+func resolve(
+	_actor: Character,
+	_targets: Array[Character],
+	_ctx: PhaseContext
+) -> void:
 	pass

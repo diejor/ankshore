@@ -1,14 +1,14 @@
 class_name DefenseInput extends RefCounted
 
-## Defender reaction sample for one beat or ender.
+## Defender reaction sample for one beat.
 ##
 ## Produced by the defender's [TeamController] in response to
-## [signal Character.defense_window_opened], and consumed by
-## [AttackStringResolver] via [signal Character.defense_window_closed].
-## The struct reports what the defender did, not whether it succeeded -
-## the resolver scores it against the active [AttackBeat].
+## [signal Character.defense_window_opened], and consumed by [AttackString]
+## via [signal Character.defense_window_closed]. The struct reports what
+## the defender did, not whether it succeeded - the string scores it
+## against the active [AttackBeat].
 
-enum Kind { NONE, BLOCK, PARRY }
+enum Kind { NONE, BLOCK }
 
 ## What the defender attempted.
 var kind: Kind = Kind.NONE
@@ -32,12 +32,6 @@ static func block(
 	d.kind = Kind.BLOCK
 	d.direction = dir
 	d.side = s
-	return d
-
-
-static func parry() -> DefenseInput:
-	var d := DefenseInput.new()
-	d.kind = Kind.PARRY
 	return d
 
 

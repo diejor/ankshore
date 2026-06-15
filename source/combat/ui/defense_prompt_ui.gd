@@ -1,10 +1,10 @@
 class_name DefensePromptUI extends Control
 
-## Cue shown when the local team's defender has an open defense window.
+## Cue shown when the local team's defender has an open block window.
 ##
-## Visualizes the incoming [AttackBeat] (or parry prompt) and a countdown,
-## hides once the controller closes the window. Bind to the local
-## [TeamManager] - the AI's own defenses do not need a prompt.
+## Visualizes the incoming [AttackBeat] and a countdown, hides once the
+## controller closes the window. Bind to the local [TeamManager] - the
+## AI's own defenses do not need a prompt.
 
 @export var team: TeamManager:
 	set(value):
@@ -49,8 +49,6 @@ func _connect_team() -> void:
 		team.character_defense_window_closed.connect(_on_closed)
 	if not team.character_beat_resolved.is_connected(_on_beat_resolved):
 		team.character_beat_resolved.connect(_on_beat_resolved)
-	if not team.character_move_resolved.is_connected(_on_move_resolved):
-		team.character_move_resolved.connect(_on_move_resolved)
 
 
 func _disconnect_team() -> void:
@@ -62,27 +60,19 @@ func _disconnect_team() -> void:
 		team.character_defense_window_closed.disconnect(_on_closed)
 	if team.character_beat_resolved.is_connected(_on_beat_resolved):
 		team.character_beat_resolved.disconnect(_on_beat_resolved)
-	if team.character_move_resolved.is_connected(_on_move_resolved):
-		team.character_move_resolved.disconnect(_on_move_resolved)
 
 
 func _on_window_opened(
 	_character: Character,
-	kind: Character.DefenseKind,
 	beat: AttackBeat,
 	window_sec: float
 ) -> void:
 	_active_character = _character
-	if kind == Character.DefenseKind.BLOCK:
-		_label.text = "Block!"
-		_label.modulate = Color.WHITE
-		var s := AttackString.new()
-		s.beats = [beat]
-		_beat_view.attack_string = s
-	else:
-		_label.text = "Parry!"
-		_label.modulate = Color.WHITE
-		_beat_view.attack_string = null
+	_label.text = "Block!"
+	_label.modulate = Color.WHITE
+	var s := AttackString.new()
+	s.beats = [beat]
+	_beat_view.attack_string = s
 	_start_window(window_sec)
 
 
@@ -110,28 +100,6 @@ func _on_beat_resolved(
 		_show_result("CHIP -%d" % damage, Color(1.0, 0.85, 0.2))
 	else:
 		_show_result("HIT -%d" % damage, Color(1.0, 0.2, 0.15))
-
-
-func _on_move_resolved(
-	character: Character,
-	move: CombatAction,
-	hit: bool,
-	damage: int
-) -> void:
-	if character != _active_character:
-		return
-	if move is Grab:
-		if hit:
-			_show_result("GRAB -%d" % damage, Color(1.0, 0.2, 0.15))
-		else:
-			_show_result("PARRY", Color(0.25, 0.9, 0.35))
-		return
-	if hit:
-		_show_result("HIT -%d" % damage, Color(1.0, 0.2, 0.15))
-	elif damage > 0:
-		_show_result("CHIP -%d" % damage, Color(1.0, 0.85, 0.2))
-	else:
-		_show_result("BLOCKED", Color(0.25, 0.9, 0.35))
 
 
 func _show_result(text: String, color: Color) -> void:

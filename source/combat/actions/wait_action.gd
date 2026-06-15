@@ -1,4 +1,4 @@
-class_name WaitAction extends CombatAction
+class_name WaitAction extends CharacterAction
 
 ## Default self-targeted action that spends the turn without effects.
 
@@ -9,14 +9,9 @@ func _init() -> void:
 
 
 ## Leaves [param actor] unchanged.
-func execute(_actor: Character, _targets: Array[Character]) -> void:
-	pass
-
-
-## Completes immediately; idle animations may loop and never finish.
-func execute_async(
-	actor: Character,
-	targets: Array[Character],
+func resolve(
+	_actor: Character,
+	_targets: Array[Character],
 	_ctx: PhaseContext
 ) -> void:
-	execute(actor, targets)
+	pass

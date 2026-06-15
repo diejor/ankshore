@@ -90,7 +90,7 @@ func _current_mode(character: Character) -> int:
 	return Mode.COMMIT
 
 
-func _build_item(action: CombatAction, mode: int, index: int) -> Control:
+func _build_item(action: CharacterAction, mode: int, index: int) -> Control:
 	if mode == Mode.COMMIT:
 		var button := Button.new()
 		button.text = action.name
@@ -110,7 +110,7 @@ func _clear() -> void:
 	_items.clear()
 
 
-func _on_pressed(action: CombatAction) -> void:
+func _on_pressed(action: CharacterAction) -> void:
 	if team_state:
 		team_state.select_move(action)
 

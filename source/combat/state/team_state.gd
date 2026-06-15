@@ -39,7 +39,7 @@ signal active_character_changed(character: Character)
 
 ## Emitted when [method select_move] commits a move for the active
 ## character. Carries the chosen move.
-signal move_selected(move: CombatAction)
+signal move_selected(move: CharacterAction)
 
 ## Emitted when [method commit_targets] commits targets for the selected
 ## move. Carries the final target list.
@@ -78,7 +78,7 @@ var pending_characters: Array[Character] = []
 var active_character: Character = null
 
 ## Move chosen by the active character. Cleared on commit or back-nav.
-var selected_move: CombatAction = null
+var selected_move: CharacterAction = null
 
 ## Targets accumulated during [constant Phase.PICKING_TARGETS].
 var selected_targets: Array[Character] = []
@@ -117,7 +117,7 @@ func select_character(character: Character) -> void:
 
 ## Commits [param move] as the active character's chosen move and
 ## advances to [constant Phase.PICKING_TARGETS].
-func select_move(move: CombatAction) -> void:
+func select_move(move: CharacterAction) -> void:
 	if phase != Phase.PICKING_MOVE:
 		push_warning("TeamState.select_move called outside PICKING_MOVE.")
 		return
@@ -126,16 +126,15 @@ func select_move(move: CombatAction) -> void:
 	if selected_move and selected_move.targets_self:
 		selected_targets = [active_character]
 		targets_committed.emit(selected_targets)
-		active_character.commit_move(selected_move, selected_targets)
+		active_character.commit_action(selected_move, selected_targets)
 		_advance_after_commit()
 		return
 	_set_phase(Phase.PICKING_TARGETS)
 
 
-## Stores [param targets] for the selected move. An attack move (one whose
-## [method CombatAction.builds_attack_string] is true) advances to
-## [constant Phase.BUILDING_STRING]; any other move commits directly and
-## advances to the next character or [constant Phase.DONE].
+## Stores [param targets] for the selected move. A [CombatAction] advances
+## to [constant Phase.BUILDING_STRING]; any other action commits directly
+## and advances to the next character or [constant Phase.DONE].
 func commit_targets(targets: Array[Character]) -> void:
 	if phase != Phase.PICKING_TARGETS:
 		push_warning("TeamState.commit_targets called outside PICKING_TARGETS.")
@@ -145,17 +144,17 @@ func commit_targets(targets: Array[Character]) -> void:
 		return
 	selected_targets = targets.duplicate()
 	targets_committed.emit(selected_targets)
-	if selected_move.builds_attack_string():
+	if selected_move is CombatAction:
 		_set_phase(Phase.BUILDING_STRING)
 		string_building_started.emit(selected_move, selected_targets)
 		return
-	active_character.commit_move(selected_move, selected_targets)
+	active_character.commit_action(selected_move, selected_targets)
 	_advance_after_commit()
 
 
-## Seals an [AttackString] from [param beats] plus the selected attack
-## move, stores it on the active character, then advances. Called by the
-## attacker's controller to close [constant Phase.BUILDING_STRING].
+## Seals an [AttackString] from [param beats], stores it on the active
+## character's [CombatAction], then advances. Called by the attacker's
+## controller to close [constant Phase.BUILDING_STRING].
 func commit_string(beats: Array[AttackBeat]) -> void:
 	if phase != Phase.BUILDING_STRING:
 		push_warning("TeamState.commit_string called outside BUILDING_STRING.")
@@ -165,8 +164,7 @@ func commit_string(beats: Array[AttackBeat]) -> void:
 		return
 	var attack := AttackString.new()
 	attack.beats = beats.duplicate()
-	attack.move = selected_move
-	active_character.commit_attack(attack, selected_targets)
+	active_character.commit_action(selected_move, selected_targets, attack)
 	_advance_after_commit()
 
 
