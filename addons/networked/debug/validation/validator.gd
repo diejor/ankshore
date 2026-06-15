@@ -1,6 +1,6 @@
 ## Base class for the Networked phased validation engine.
 ##
-## Validators plug into [method NetworkedDebugReporter._execute_validators] and
+## Validators plug into validation runner [code]_execute_validators[/code] and
 ## are invoked in phase order. If any validator in a phase returns errors, later
 ## phases are skipped — preventing cascading failures (e.g. heuristic checks on
 ## a structurally broken node).
@@ -32,14 +32,17 @@ var phase: int = STRUCTURAL
 
 ## Override to implement validation logic.
 ## [br][br]
-## [param trigger] is the operation name (e.g. [code]"player_spawn"[/code]).
+## [param _trigger] is the operation name (e.g. [code]"player_spawn"[/code]).
 ## [br][br]
-## [param ctx] is a raw [Dictionary] whose keys depend on [param trigger]:
-## [br]
+## [param _ctx] is a raw [Dictionary] whose keys depend on [param _trigger]:
 ## [codeblock]
-## "player_spawn" -> { player: Node, mt: MultiplayerTree }
+## Dictionary
+##  ┖╴"player_spawn"
+##     ┖╴{ }
+##        ┠╴player (Node)
+##        ┖╴mt (MultiplayerTree)
 ## [/codeblock]
-## [br]
+##
 ## Return an empty array to indicate the check passed.
 func execute(_trigger: String, _ctx: Dictionary) -> Array[String]:
 	return []

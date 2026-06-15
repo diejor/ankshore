@@ -100,7 +100,7 @@ naming/scene_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/tube/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogic/plugin.cfg", "res://addons/networked/plugin.cfg", "res://addons/script-ide/plugin.cfg")
 
 [file_customization]
 
@@ -180,6 +180,8 @@ select_character={
 [networked]
 
 config="res://networked_config.tres"
+webrtc/turn_credentials_url="https://bomber.diejorarr.workers.dev/"
+webrtc/turn_credentials_headers=PackedStringArray("X-Turn-Auth-Token: dictador123=")
 
 [rendering]
 
