@@ -8,3 +8,6 @@ class_name ItemAction extends CharacterAction
 ## Triggers consumable item application logic on targets.
 func resolve(_actor: Character, _target: Character) -> void:
 	pass
+
+func splash()-> void:
+	pass

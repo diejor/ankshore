@@ -3,7 +3,7 @@
 ## Abstract base for anything a character commits during one turn.
 ##
 ## A turn action resolves via [method resolve]. Non-combat actions (wait,
-## support, item) apply their effects directly; [CombatAction] wraps an
+## support) apply their effects directly; [CombatAction] wraps an
 ## [AttackString] and plays it against a target.
 
 ## True when this action commits against the actor itself without entering
@@ -15,5 +15,5 @@
 ## Async - may await animations or interactive windows.
 @abstract func resolve(
 	actor: Character,
-	target: Character
+	target: Character #can encapulate multiple targets if character is registered as multiple in other scripts
 ) -> void

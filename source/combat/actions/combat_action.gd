@@ -1,6 +1,6 @@
 class_name CombatAction extends CharacterAction
 
-## A character action that plays a player-built [AttackString] against a
+## A character action that plays a preset [AttackString] against a
 ## target.
 ##
 ## Wraps an [member attack_string] assembled during planning.

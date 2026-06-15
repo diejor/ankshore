@@ -103,3 +103,5 @@ unique_name_in_owner = true
 script = ExtResource("7_ucdr0")
 team = NodePath("..")
 metadata/_custom_type_script = "uid://bvj5pt4nu7nn7"
+
+[editable path="AllyTeam"]
