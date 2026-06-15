@@ -54,7 +54,7 @@ func _disconnect_state() -> void:
 
 
 func _on_started(
-	move: CombatAction, _targets: Array[Character]
+	move: CombatAction, _target: Character
 ) -> void:
 	_move = move
 	_beats = []

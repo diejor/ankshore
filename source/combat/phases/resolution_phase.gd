@@ -4,7 +4,7 @@ class_name ResolutionPhase extends RefCounted
 ## initiative order.
 ##
 ## Each character's pending move is awaited in turn. Dead actors and
-## moves whose targets are all dead are skipped. The phase plays out to
+## moves whose target is dead are skipped. The phase plays out to
 ## completion - once planning commits, nothing interrupts it.
 
 var _characters: Array[Character]
@@ -15,7 +15,7 @@ func _init(p_characters: Array[Character]) -> void:
 	_characters = p_characters
 
 
-func run(ctx: PhaseContext, turn_manager: TurnManager) -> void:
+func run(turn_manager: TurnManager) -> void:
 	_roll_speeds()
 	_characters.sort_custom(
 		func(a: Character, b: Character) -> bool:
@@ -28,7 +28,7 @@ func run(ctx: PhaseContext, turn_manager: TurnManager) -> void:
 		if not _has_live_target(character):
 			continue
 		turn_manager.action_started.emit(character)
-		await character.execute_turn(ctx)
+		await character.execute_turn()
 		turn_manager.action_finished.emit(character)
 
 
@@ -42,7 +42,5 @@ func _roll_speeds() -> void:
 
 
 func _has_live_target(character: Character) -> bool:
-	for target in character.pending_targets:
-		if target and target.is_alive():
-			return true
-	return false
+	var target := character.pending_target
+	return target != null and target.is_alive()

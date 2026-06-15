@@ -9,7 +9,7 @@ class_name PlanningPhase extends RefCounted
 
 ## Runs each team's planning sequence in attacker-first order and
 ## returns the combined character list. [ResolutionPhase] sorts by speed.
-func run(_ctx: PhaseContext, turn_manager: TurnManager) -> Array[Character]:
+func run(turn_manager: TurnManager) -> Array[Character]:
 	var all_characters: Array[Character] = []
 	for team in _teams_in_order(turn_manager):
 		turn_manager.planning_team_started.emit(team)

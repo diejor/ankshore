@@ -10,9 +10,7 @@ class_name TargetArrowView extends Line2D
 		if character:
 			_connect_character(character)
 		if is_node_ready():
-			_refresh(character.pending_targets[0] if (
-				character and not character.pending_targets.is_empty()
-			) else null)
+			_refresh(character.pending_target if character else null)
 
 var _target: Character = null
 var _head_color: Color = Color(1.0, 0.18, 0.12, 0.95)
@@ -24,9 +22,7 @@ func _ready() -> void:
 	global_position = Vector2.ZERO
 	width = 4.0
 	default_color = _head_color
-	_refresh(character.pending_targets[0] if (
-		character and not character.pending_targets.is_empty()
-	) else null)
+	_refresh(character.pending_target if character else null)
 
 
 func _process(_delta: float) -> void:

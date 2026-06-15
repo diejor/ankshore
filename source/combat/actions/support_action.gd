@@ -5,10 +5,6 @@ class_name SupportAction extends CharacterAction
 ## Standardizes heal and buff application across a target list.
 
 
-## Executes healing or support modifications on targets.
-func resolve(
-	_actor: Character,
-	_targets: Array[Character],
-	_ctx: PhaseContext
-) -> void:
+## Executes healing or support modifications on the target.
+func resolve(_actor: Character, _target: Character) -> void:
 	pass

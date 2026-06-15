@@ -6,9 +6,5 @@ class_name ItemAction extends CharacterAction
 
 
 ## Triggers consumable item application logic on targets.
-func resolve(
-	_actor: Character,
-	_targets: Array[Character],
-	_ctx: PhaseContext
-) -> void:
+func resolve(_actor: Character, _target: Character) -> void:
 	pass

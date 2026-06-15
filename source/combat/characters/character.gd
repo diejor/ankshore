@@ -24,8 +24,8 @@ signal pending_target_changed(target: Character)
 ## Action selected for this character's next resolution step.
 var pending_action: CharacterAction = null
 
-## Targets selected for [member pending_action].
-var pending_targets: Array[Character] = []
+## Target selected for [member pending_action].
+var pending_target: Character = null
 
 ## Parent team manager caching property.
 var team_manager: TeamManager:
@@ -67,35 +67,35 @@ func is_alive() -> bool:
 	return stats != null and stats.health > 0
 
 
-## Stores the action and targets this character will resolve this turn.
+## Stores the action and target this character will resolve this turn.
 ## For a [CombatAction], pass the player-built [param attack_string].
 func commit_action(
 	action: CharacterAction,
-	targets: Array[Character],
+	target: Character,
 	attack_string: AttackString = null
 ) -> void:
 	pending_action = action
-	pending_targets = targets.duplicate()
+	pending_target = target
 	if action is CombatAction:
 		(action as CombatAction).attack_string = attack_string
 	pending_action_changed.emit(pending_action)
-	pending_target_changed.emit(_first_pending_target())
+	pending_target_changed.emit(pending_target)
 
 
-## Clears the action and targets committed for this turn.
+## Clears the action and target committed for this turn.
 func clear_pending_action() -> void:
 	if pending_action is CombatAction:
 		(pending_action as CombatAction).attack_string = null
 	pending_action = null
-	pending_targets = []
+	pending_target = null
 	pending_action_changed.emit(null)
 	pending_target_changed.emit(null)
 
 
 ## Resolves [member pending_action], then clears the pending turn data.
-func execute_turn(ctx: PhaseContext) -> void:
+func execute_turn() -> void:
 	if pending_action:
-		await pending_action.resolve(self, pending_targets, ctx)
+		await pending_action.resolve(self, pending_target)
 	clear_pending_action()
 
 
@@ -129,12 +129,7 @@ func take_dmg(raw_damage: int, blocked: bool) -> void:
 		health_depleted.emit()
 
 
-# Returns the first selected target for single-target views.
-func _first_pending_target() -> Character:
-	for target in pending_targets:
-		if target:
-			return target
-	return null
+
 
 
 # Closes unanswered defense windows so resolution cannot stall.

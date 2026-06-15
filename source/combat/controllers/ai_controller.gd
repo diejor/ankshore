@@ -36,7 +36,7 @@ func _on_phase_changed(phase: TeamState.Phase) -> void:
 		TeamState.Phase.PICKING_MOVE:
 			_pick_move.call_deferred()
 		TeamState.Phase.PICKING_TARGETS:
-			_pick_targets.call_deferred()
+			_pick_target.call_deferred()
 		TeamState.Phase.BUILDING_STRING:
 			_build_string.call_deferred()
 
@@ -66,7 +66,7 @@ func _pick_move() -> void:
 
 
 # Picks the first live enemy character as the target.
-func _pick_targets() -> void:
+func _pick_target() -> void:
 	await _think()
 	if state.phase != TeamState.Phase.PICKING_TARGETS:
 		return
@@ -76,7 +76,7 @@ func _pick_targets() -> void:
 	for slot in enemy.slots:
 		var c := slot.get_character()
 		if c and c.is_alive():
-			state.commit_targets([c])
+			state.commit_target(c)
 			return
 
 

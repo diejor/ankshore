@@ -15,15 +15,13 @@ class_name AttackString extends Resource
 
 ## Plays the string against [param defender], awaiting each beat's defense
 ## window. Returns once damage has been applied.
-func resolve(
-	attacker: Character, defender: Character, ctx: PhaseContext
-) -> void:
+func resolve(attacker: Character, defender: Character) -> void:
 	var combo_locked := false
 	for beat in beats:
 		if not defender.is_alive():
 			return
 		defender.beat_telegraphed.emit(beat)
-		await _windup(ctx)
+		await _windup(defender)
 		var blocked: bool
 		if combo_locked:
 			blocked = false
@@ -56,8 +54,10 @@ func _apply_damage(
 	return final
 
 
-# Brief windup pause; per-beat animation clips plug in here later.
-func _windup(ctx: PhaseContext) -> void:
-	var tree := ctx.turn_manager.get_tree() if ctx.turn_manager else null
+# Brief windup pause; per-beat animation clips plug in here later. The
+# attacker's swing and the defender's reaction will play on the [Character]
+# nodes themselves - no shared context needed.
+func _windup(defender: Character) -> void:
+	var tree := defender.get_tree()
 	if tree:
 		await tree.create_timer(0.15).timeout

@@ -9,9 +9,5 @@ func _init() -> void:
 
 
 ## Leaves [param actor] unchanged.
-func resolve(
-	_actor: Character,
-	_targets: Array[Character],
-	_ctx: PhaseContext
-) -> void:
+func resolve(_actor: Character, _target: Character) -> void:
 	pass

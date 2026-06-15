@@ -56,7 +56,7 @@ func _handle_slot_confirm() -> void:
 		TeamState.Phase.PICKING_CHARACTER:
 			state.select_character(character)
 		TeamState.Phase.PICKING_TARGETS:
-			state.commit_targets([character])
+			state.commit_target(character)
 
 
 func _on_defense_window_opened(

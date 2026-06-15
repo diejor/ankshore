@@ -62,7 +62,7 @@ func _refresh_planning() -> void:
 		_string_view.attack_string = null
 		return
 	_move_label.text = action.name
-	var target := _first_pending_target()
+	var target := _character.pending_target
 	var attack := action as CombatAction
 	if attack and attack.attack_string and target and target != _character:
 		_string_view.attack_string = attack.attack_string
@@ -87,12 +87,7 @@ func _on_pending_target_changed(_target: Character) -> void:
 	_refresh_planning()
 
 
-# Returns the first committed target for single-target previews.
-func _first_pending_target() -> Character:
-	for target in _character.pending_targets:
-		if target:
-			return target
-	return null
+
 
 
 # Hook for a future Will bar.

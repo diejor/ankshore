@@ -16,21 +16,9 @@ class_name CombatAction extends CharacterAction
 var attack_string: AttackString = null
 
 
-func resolve(
-	actor: Character,
-	targets: Array[Character],
-	ctx: PhaseContext
-) -> void:
+func resolve(actor: Character, target: Character) -> void:
 	if attack_string == null:
 		return
-	var defender := _first_live(targets)
-	if defender == null:
+	if target == null or not target.is_alive():
 		return
-	await attack_string.resolve(actor, defender, ctx)
-
-
-func _first_live(targets: Array[Character]) -> Character:
-	for target in targets:
-		if target and target.is_alive():
-			return target
-	return null
+	await attack_string.resolve(actor, target)

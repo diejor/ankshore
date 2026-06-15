@@ -4,7 +4,7 @@ class_name TeamState extends Resource
 ##
 ## The model in an MVC sense. Holds the planning state machine
 ## ([member phase], [member active_character], [member selected_move],
-## [member selected_targets]). Nodes mutate via the [code]select_*[/code]
+## [member selected_target]). Nodes mutate via the [code]select_*[/code]
 ## methods; views subscribe to the signals.
 ##
 ## [br][br]
@@ -17,7 +17,7 @@ class_name TeamState extends Resource
 ## [br]- [code]IDLE[/code]: not planning.
 ## [br]- [code]PICKING_CHARACTER[/code]: waiting for [method select_character].
 ## [br]- [code]PICKING_MOVE[/code]: waiting for [method select_move].
-## [br]- [code]PICKING_TARGETS[/code]: waiting for [method commit_targets].
+## [br]- [code]PICKING_TARGETS[/code]: waiting for [method commit_target].
 ## [br]- [code]BUILDING_STRING[/code]: attacker assembling beats before an
 ##   attack move commits via [method commit_string].
 ## [br]- [code]DONE[/code]: planning finished for this turn.
@@ -41,19 +41,19 @@ signal active_character_changed(character: Character)
 ## character. Carries the chosen move.
 signal move_selected(move: CharacterAction)
 
-## Emitted when [method commit_targets] commits targets for the selected
-## move. Carries the final target list.
-signal targets_committed(targets: Array[Character])
+## Emitted when [method commit_target] commits target for the selected
+## move. Carries the final target.
+signal target_committed(target: Character)
 
-## Emitted after [method commit_targets] stores a pending move on
+## Emitted after [method commit_target] stores a pending move on
 ## [param character].
 signal action_committed(character: Character)
 
-## Emitted when [method commit_targets] selects an attack move, handing
+## Emitted when [method commit_target] selects an attack move, handing
 ## off to the interactive string-building step. Carries the chosen move
-## and committed targets.
+## and committed target.
 signal string_building_started(
-	move: CombatAction, targets: Array[Character]
+	move: CombatAction, target: Character
 )
 
 ## Emitted when [method go_back] rewinds one step in the planning state
@@ -70,7 +70,7 @@ signal planning_finished
 var phase: Phase = Phase.IDLE
 
 ## Characters that still need to plan this turn. Drained by
-## [method commit_targets]; reset by [method begin_planning].
+## [method commit_target]; reset by [method begin_planning].
 var pending_characters: Array[Character] = []
 
 ## Character currently being planned for. [code]null[/code] in
@@ -80,8 +80,8 @@ var active_character: Character = null
 ## Move chosen by the active character. Cleared on commit or back-nav.
 var selected_move: CharacterAction = null
 
-## Targets accumulated during [constant Phase.PICKING_TARGETS].
-var selected_targets: Array[Character] = []
+## Target accumulated during [constant Phase.PICKING_TARGETS].
+var selected_target: Character = null
 
 
 ## Resets state and starts a new planning sequence for [param roster].
@@ -92,7 +92,7 @@ var selected_targets: Array[Character] = []
 func begin_planning(roster: Array[Character]) -> void:
 	pending_characters = roster.duplicate()
 	selected_move = null
-	selected_targets = []
+	selected_target = null
 	_set_active(null)
 	if pending_characters.is_empty():
 		_set_phase(Phase.DONE)
@@ -124,31 +124,31 @@ func select_move(move: CharacterAction) -> void:
 	selected_move = move
 	move_selected.emit(move)
 	if selected_move and selected_move.targets_self:
-		selected_targets = [active_character]
-		targets_committed.emit(selected_targets)
-		active_character.commit_action(selected_move, selected_targets)
+		selected_target = active_character
+		target_committed.emit(selected_target)
+		active_character.commit_action(selected_move, selected_target)
 		_advance_after_commit()
 		return
 	_set_phase(Phase.PICKING_TARGETS)
 
 
-## Stores [param targets] for the selected move. A [CombatAction] advances
+## Stores [param target] for the selected move. A [CombatAction] advances
 ## to [constant Phase.BUILDING_STRING]; any other action commits directly
 ## and advances to the next character or [constant Phase.DONE].
-func commit_targets(targets: Array[Character]) -> void:
+func commit_target(target: Character) -> void:
 	if phase != Phase.PICKING_TARGETS:
-		push_warning("TeamState.commit_targets called outside PICKING_TARGETS.")
+		push_warning("TeamState.commit_target called outside PICKING_TARGETS.")
 		return
 	if active_character == null or selected_move == null:
-		push_warning("TeamState.commit_targets without an active char/move.")
+		push_warning("TeamState.commit_target without an active char/move.")
 		return
-	selected_targets = targets.duplicate()
-	targets_committed.emit(selected_targets)
+	selected_target = target
+	target_committed.emit(selected_target)
 	if selected_move is CombatAction:
 		_set_phase(Phase.BUILDING_STRING)
-		string_building_started.emit(selected_move, selected_targets)
+		string_building_started.emit(selected_move, selected_target)
 		return
-	active_character.commit_action(selected_move, selected_targets)
+	active_character.commit_action(selected_move, selected_target)
 	_advance_after_commit()
 
 
@@ -164,7 +164,7 @@ func commit_string(beats: Array[AttackBeat]) -> void:
 		return
 	var attack := AttackString.new()
 	attack.beats = beats.duplicate()
-	active_character.commit_action(selected_move, selected_targets, attack)
+	active_character.commit_action(selected_move, selected_target, attack)
 	_advance_after_commit()
 
 
@@ -173,7 +173,7 @@ func _advance_after_commit() -> void:
 	action_committed.emit(active_character)
 	pending_characters.erase(active_character)
 	selected_move = null
-	selected_targets = []
+	selected_target = null
 	_set_active(null)
 	if pending_characters.is_empty():
 		_set_phase(Phase.DONE)
@@ -193,7 +193,7 @@ func go_back() -> void:
 			back_navigated.emit(phase)
 		Phase.PICKING_TARGETS:
 			selected_move = null
-			selected_targets = []
+			selected_target = null
 			_set_phase(Phase.PICKING_MOVE)
 			back_navigated.emit(phase)
 		Phase.PICKING_MOVE:

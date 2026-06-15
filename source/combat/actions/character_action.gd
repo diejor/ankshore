@@ -11,10 +11,9 @@
 @export var targets_self: bool = false
 
 
-## Resolves this action for [param actor] against [param targets].
+## Resolves this action for [param actor] against [param target].
 ## Async - may await animations or interactive windows.
 @abstract func resolve(
 	actor: Character,
-	targets: Array[Character],
-	ctx: PhaseContext
+	target: Character
 ) -> void

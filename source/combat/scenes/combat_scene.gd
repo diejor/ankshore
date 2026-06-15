@@ -3,8 +3,7 @@ class_name CombatScene extends Node2D
 ## Entry point for a combat encounter.
 ##
 ## The scene file wires the static structure (teams, controllers);
-## this script constructs the shared runtime state
-## ([InspectionState], [PhaseContext]), binds views to the
+## this script constructs the shared [InspectionState], binds views to the
 ## [TeamState]-backed models, and kicks off [method TurnManager.run_match].
 
 @onready var _turn_manager: TurnManager = %TurnManager
@@ -31,10 +30,7 @@ func _ready() -> void:
 		return
 	_inspection = InspectionState.new()
 	_bind_views()
-	var ctx := PhaseContext.new()
-	ctx.turn_manager = _turn_manager
-	ctx.inspection_state = _inspection
-	await _turn_manager.run_match(ctx)
+	await _turn_manager.run_match()
 
 
 # Attaches scene-authored views to the runtime state they observe.

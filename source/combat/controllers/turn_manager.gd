@@ -38,7 +38,7 @@ var _running: bool = false
 
 ## Runs the full match loop until [method _is_match_over] returns true.
 ## Call once from the scene bootstrap.
-func run_match(ctx: PhaseContext) -> void:
+func run_match() -> void:
 	if _running:
 		push_error("TurnManager.run_match called while already running.")
 		return
@@ -50,12 +50,12 @@ func run_match(ctx: PhaseContext) -> void:
 
 		planning_started.emit()
 		var planning := PlanningPhase.new()
-		var characters: Array[Character] = await planning.run(ctx, self)
+		var characters: Array[Character] = await planning.run(self)
 		planning_finished.emit()
 
 		resolution_started.emit()
 		var resolution := ResolutionPhase.new(characters)
-		await resolution.run(ctx, self)
+		await resolution.run(self)
 		resolution_finished.emit()
 
 		turn_ended.emit(attacker_team)
