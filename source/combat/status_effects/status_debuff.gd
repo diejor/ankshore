@@ -1,0 +1,1 @@
+class_name status_debuff extends status_effect

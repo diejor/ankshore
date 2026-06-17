@@ -62,7 +62,7 @@ var health: int = 500
 var will: int = 100
 
 ## Active status effects and modifiers currently applied
-var active_buffs: Array[CombatBuff] = []
+var active_buffs: Array[status_effect] = []
 
 
 
@@ -96,19 +96,19 @@ func recalculate_stats() -> void:
 
 	for buff in active_buffs:
 		match buff.type:
-			CombatBuff.StatType.HEALTH:
+			status_effect.StatType.HEALTH:
 				max_health += buff.flat_value
-			CombatBuff.StatType.DAMAGE:
+			status_effect.StatType.DAMAGE:
 				damage += buff.flat_value
-			CombatBuff.StatType.WILL:
+			status_effect.StatType.WILL:
 				max_will += buff.flat_value
-			CombatBuff.StatType.DEFENSE:
+			status_effect.StatType.DEFENSE:
 				defense += buff.flat_value
-			CombatBuff.StatType.BLOCKING_DEFENSE:
+			status_effect.StatType.BLOCKING_DEFENSE:
 				blocking_defense += buff.flat_value
-			CombatBuff.StatType.COURAGE:
+			status_effect.StatType.COURAGE:
 				courage += buff.flat_value
-			CombatBuff.StatType.SPEED:
+			status_effect.StatType.SPEED:
 				speed += buff.flat_value
 
 

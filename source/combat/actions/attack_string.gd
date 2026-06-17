@@ -14,6 +14,7 @@ class_name AttackString extends Resource
 
 var chipDamage: float  = .1
 
+
 ## Plays the string against [param defender], awaiting each beat's defense
 ## window. Returns once damage has been applied.
 func resolve(attacker: Character, defender: Character) -> void:
@@ -54,7 +55,7 @@ func _apply_damage(
 	var raw: int = beat.damage + attacker.stats.damage
 	if blocked:
 		@warning_ignore("unsafe_call_argument")
-		raw = int(round(raw * beat.chip_pct))
+		raw = int(round(((raw * beat.chip_pct)+5))) #add modifier
 	var final: int = defender.stats.damage_taken(raw, blocked)
 	defender.take_dmg(final, blocked)
 	return final

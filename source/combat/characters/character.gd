@@ -18,6 +18,9 @@ signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
 signal pending_action_changed(action: CharacterAction)
 signal pending_target_changed(target: Character)
 
+
+var status_effect_list: Array[status_effect]
+
 @export var stats: CharacterStats = CharacterStats.new()
 @export var move_list: Array[CharacterAction] = []
 

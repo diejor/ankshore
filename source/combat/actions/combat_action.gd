@@ -22,7 +22,12 @@ var attack_string: AttackString = null
 @export var chipCalculation :float = .1
 
 ## The amount of will used up when performing a move. Base Will usage will be 0.
-@export var will_cost: int 
+@export var will_cost: int
+
+## speed of attack
+var attack_speed: float
+
+var chip_damage_modifier: float
 
 ## performs the actions of the attack string and the move
 func resolve(actor: Character, target: Character) -> void:
