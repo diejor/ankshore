@@ -1,0 +1,1 @@
+class_name chip_damage_stat extends Node

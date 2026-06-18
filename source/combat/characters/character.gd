@@ -18,7 +18,7 @@ signal beat_resolved(beat: AttackBeat, blocked: bool, damage: int)
 signal pending_action_changed(action: CharacterAction)
 signal pending_target_changed(target: Character)
 
-
+##Status effects and their interactions
 var status_effect_list: Array[status_effect]
 
 @export var stats: CharacterStats = CharacterStats.new()
@@ -104,6 +104,8 @@ func clear_pending_action() -> void:
 
 ## Resolves [member pending_action], then clears the pending turn data.
 func execute_turn() -> void:
+	stats.will += 5
+	stats.turn_ended()
 	if pending_action:
 		if pending_action is CombatAction and pending_target:
 			await play_attack(pending_target)

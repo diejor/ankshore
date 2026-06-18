@@ -7,7 +7,6 @@ class_name damage_up_buff extends status_buff
 
 func _init() -> void:
 	status_name = "Damage Up"
-	type = StatType.DAMAGE
-	flat_value = 15
+	core_change_types[StatType.DAMAGE] = 10
 	duration = 3
 	

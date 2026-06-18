@@ -8,6 +8,8 @@ class_name CombatAction extends CharacterAction
 ## Maximum beats the attacker may append while building the string.
 @export var max_beats: int = 4
 
+@export var damage_scale: int = 20
+
 ## Seconds the attacker has to build the string before it auto-seals.
 @export var build_time_sec: float = 2.0
 

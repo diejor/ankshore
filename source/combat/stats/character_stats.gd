@@ -14,8 +14,8 @@ signal will_changed(current: int, max_val: int)
 ## Emitted by [method change_courage] after [member courage] is adjusted.
 signal courage_changed(current: int, max_val: int)
 
-## Emitted after [member active_buffs] is mutated. UI views bind to this
-## to re-render buff/debuff icons. Callers that mutate [member active_buffs]
+## Emitted after [member active_status] is mutated. UI views bind to this
+## to re-render buff/debuff icons. Callers that mutate [member active_status]
 ## directly should emit this themselves until proper add/remove helpers
 ## exist.
 @warning_ignore("unused_signal")
@@ -60,14 +60,31 @@ var speed: int = 10
 ## Active health and will points
 var health: int = 500
 var will: int = 100
+ 
+
+const STAT_NAMES = { 
+	status_effect.StatType.HEALTH: "max_health",
+	status_effect.StatType.DAMAGE: "damage",
+	status_effect.StatType.WILL: "max_will",
+	status_effect.StatType.DEFENSE: "defense",
+	status_effect.StatType.BLOCKING_DEFENSE: "blocking_defense",
+	status_effect.StatType.COURAGE: "courage",
+	status_effect.StatType.SPEED: "speed"
+}
+
+## Character extra stats
+@export var extra_stats: Array[extra_stat]
+
 
 ## Active status effects and modifiers currently applied
-var active_buffs: Array[status_effect] = []
+var active_status: Array[status_effect] = []
 
-
-
-
-
+func turn_ended() -> void:
+	for status in active_status:
+		status.tick()
+		if status.duration <= 0:
+			active_status.erase(status)
+	recalculate_stats()
 
 
 #functions
@@ -86,6 +103,7 @@ func setup_stats() -> void:
 
 ## Iterates through all active buffs to modify base stats.
 func recalculate_stats() -> void:
+	# resets everything to base
 	max_health = base_max_health
 	damage = base_damage
 	max_will = base_max_will
@@ -93,23 +111,47 @@ func recalculate_stats() -> void:
 	blocking_defense = base_blocking_defense
 	courage = base_courage
 	speed = base_speed
+	for ex in extra_stats:
+		ex.reset_to_zero()
+	
+	# checks core stats
+	for status in active_status:
+		for change in status.core_change_types:
+			var amount: int = status.core_change_types[change]
+			var stat_name: String = STAT_NAMES.get(change)
+			if stat_name:
+				var current: int = get(stat_name)
+				set(stat_name, current + amount) 
+		# checks extra stats
+		for ext_change in status.extra_change_types:
+			var index: int = extra_stats.find(ext_change) 
+			if index == -1:
+				ext_change.change_stat(status.extra_change_types[ext_change])
+				extra_stats.append(ext_change)
+			else:
+				extra_stats[index].change_stat(status.extra_change_types[ext_change])
+					
+	# if extra stat has not been changed, remove
+	for ex in extra_stats:
+		if ex.extra_stat_num == 0:
+			extra_stats.erase(ex)
 
-	for buff in active_buffs:
-		match buff.type:
-			status_effect.StatType.HEALTH:
-				max_health += buff.flat_value
-			status_effect.StatType.DAMAGE:
-				damage += buff.flat_value
-			status_effect.StatType.WILL:
-				max_will += buff.flat_value
-			status_effect.StatType.DEFENSE:
-				defense += buff.flat_value
-			status_effect.StatType.BLOCKING_DEFENSE:
-				blocking_defense += buff.flat_value
-			status_effect.StatType.COURAGE:
-				courage += buff.flat_value
-			status_effect.StatType.SPEED:
-				speed += buff.flat_value
+	#for buff in active_status:
+		#match buff.type:
+			#status_effect.StatType.HEALTH:
+				#max_health += buff.flat_value
+			#status_effect.StatType.DAMAGE:
+				#damage += buff.flat_value
+			#status_effect.StatType.WILL:
+				#max_will += buff.flat_value
+			#status_effect.StatType.DEFENSE:
+				#defense += buff.flat_value
+			#status_effect.StatType.BLOCKING_DEFENSE:
+				#blocking_defense += buff.flat_value
+			#status_effect.StatType.COURAGE:
+				#courage += buff.flat_value
+			#status_effect.StatType.SPEED:
+				#speed += buff.flat_value
 
 
 ## Adjusts active health by [param change_value] (damage is negative).
