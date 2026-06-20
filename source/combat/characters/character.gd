@@ -19,7 +19,7 @@ signal pending_action_changed(action: CharacterAction)
 signal pending_target_changed(target: Character)
 
 ##Status effects and their interactions
-var status_effect_list: Array[status_effect]
+@export var status_effect_list: Array[status_effect]
 
 @export var stats: CharacterStats = CharacterStats.new()
 @export var move_list: Array[CharacterAction] = []
@@ -208,3 +208,8 @@ func _play_reaction(anim_name: StringName) -> void:
 	await _anim.animation_finished
 	if _anim.current_animation == anim_name:
 		play_idle()
+		
+
+func add_status_effect(status: status_effect) -> void:
+	status_effect_list.append(status_effect)
+	

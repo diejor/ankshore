@@ -1,1 +1,1 @@
-class_name chip_damage_stat extends Node
+class_name chip_damage_stat extends Resource

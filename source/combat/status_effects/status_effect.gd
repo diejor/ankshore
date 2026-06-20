@@ -15,7 +15,10 @@ enum StatType {
 	SPEED,
 }
 
+
+
 @export var status_name: String = "Status Effect Base"
+
 
 ## The stat that is modified by this status effect.
 @export var type: StatType = StatType.HEALTH
@@ -31,6 +34,9 @@ var core_change_types: Dictionary[StatType, int]
 
 ## Number of turns this effect remains active.
 @export var duration: int = 3
+
+func status_effect(dura: int) -> void:
+	duration = 3
 
 func _init() ->void:
 	return

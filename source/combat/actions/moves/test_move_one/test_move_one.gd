@@ -9,4 +9,6 @@ func _init() -> void:
 
 func resolve(actor: Character, target: Character) -> void:
 	super.resolve(actor, target)
+	var status: status_effect = damage_up_buff.new()
+	actor.add_status_effect(status)
 	print("hello test move One")
