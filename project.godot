@@ -113,6 +113,7 @@ folder_colors={
 "res://source/scenes/DialogueStuff/DialogicCharacter/zBroly/": "green",
 "res://source/scenes/DialogueStuff/DialogicText/": "pink",
 "res://source/scenes/characters/myoso/": "blue",
+"res://source/scenes/characters/pia/": "blue",
 "res://source/scenes/characters/zBrolyNpcTester/": "blue"
 }
 
