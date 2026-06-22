@@ -29,7 +29,7 @@ signal buffs_changed(buffs: Array)
 var levelCapEXP: int = 100 # level cap exp, increases ex
 var currentEXP: int = 0
 
-## Level One Basic Stats
+## Level One basic core Stats
 var oneMaxHealth: int = 500
 var oneDamage: int = 10
 var oneMax_will: int = 100
